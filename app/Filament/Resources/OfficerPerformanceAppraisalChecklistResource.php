@@ -10,7 +10,10 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Util\Filter;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 
 class OfficerPerformanceAppraisalChecklistResource extends Resource
@@ -27,6 +30,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
     {
         return $form
             ->schema([
+
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
                     ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
@@ -46,6 +50,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Toggle::make('has_formation_commander_comments'),
                 Forms\Components\Toggle::make('has_formation_commander_signature'),
                 Forms\Components\Toggle::make('has_serviceperson_signature'),
+
             ]);
     }
 
@@ -54,6 +59,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('serviceperson.military_name')
+                    ->label('Name')
                     ->searchable(['number', 'first_name', 'last_name']),
                 Tables\Columns\TextColumn::make('appraisal_start_at')
                     ->label('Form')
@@ -93,9 +99,22 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
 
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('appraisal_end_at')
-                    ->label('Appraisal Year')
-                    ->options(['2021']),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('appraisal_start_at'),
+                        Forms\Components\DatePicker::make('appraisal_end_at'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['appraisal_start_at'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['appraisal_end_at'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
+                            );
+                    })
 
             ])
             ->actions([
@@ -103,6 +122,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                ExportBulkAction::make(),
             ]);
     }
 

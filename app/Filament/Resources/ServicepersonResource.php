@@ -59,7 +59,7 @@ class ServicepersonResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('military_name')
-                    ->label('name'),
+                    ->label('Name'),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date('d M Y'),
                 Tables\Columns\TextColumn::make('enlistmentType.name'),
