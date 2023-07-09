@@ -17,15 +17,20 @@ return new class extends Migration
                 ->constrained('servicepeople', 'number', 'officer_appraisal_checklist');
             $table->dateTime('appraisal_start_at');
             $table->dateTime('appraisal_end_at');
-            $table->boolean('is_appointment_correct');
-            $table->boolean('company_commander_assessment_completed')->nullable();
-            $table->boolean('has_company_commander_comments')->nullable();
-            $table->boolean('has_company_commander_signature')->nullable();
-            $table->boolean('has_unit_commander_comments')->nullable();
-            $table->boolean('has_unit_commander_signature')->nullable();
-            $table->boolean('has_formation_commander_comments')->nullable();
-            $table->boolean('has_formation_commander_signature')->nullable();
-            $table->boolean('has_serviceperson_signature')->nullable();
+            $table->boolean('is_appointment_correct')->default(true);
+            //Company Command
+            $table->boolean('has_company_commander')->default(false);
+            $table->boolean('company_commander_assessment_completed')->default(false);
+            $table->boolean('has_company_commander_comments')->default(false);
+            $table->boolean('has_company_commander_signature')->default(false);
+            // Unit Command
+            $table->boolean('has_unit_commander')->default(false);
+            $table->boolean('has_unit_commander_comments')->default(false);
+            $table->boolean('has_unit_commander_signature')->default(false);
+            //Formation Command
+            $table->boolean('has_formation_commander_comments')->default(false);
+            $table->boolean('has_formation_commander_signature')->default(false);
+            $table->boolean('has_serviceperson_signature')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

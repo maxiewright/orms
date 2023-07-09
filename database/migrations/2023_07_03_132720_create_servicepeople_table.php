@@ -25,6 +25,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('serviceperson_number')
+                ->first()
+                ->constrained('servicepeople', 'number');
+        });
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
@@ -24,6 +25,10 @@ class Serviceperson extends Model
         'assumption_date' => 'date',
     ];
 
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
     public function rank(): BelongsTo
     {
         return $this->belongsTo(Rank::class);

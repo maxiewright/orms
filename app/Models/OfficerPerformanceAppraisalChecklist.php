@@ -65,6 +65,14 @@ class OfficerPerformanceAppraisalChecklist extends Model
             && $this->isCompletedByFormationCommander();
     }
 
+    public function isComplete(): bool
+    {
+        return $this->isCompletedByCompanyCommander()
+            && $this->isCompletedByUnitCommander()
+            && $this->isCompletedByFormationCommander()
+            && $this->isSignedByServiceperson();
+    }
+
 
     public function year(): Attribute
     {

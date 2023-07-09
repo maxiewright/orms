@@ -59,6 +59,7 @@ class ServicepersonResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('military_name')
+                    ->searchable(['number', 'first_name', 'last_name'])
                     ->label('Name'),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date('d M Y'),

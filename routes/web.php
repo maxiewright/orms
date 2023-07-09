@@ -28,4 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+
+Route::view('change-password', 'auth.change-password')
+    ->middleware('verified')
+    ->name('password.change');
+
+Route::post('change-password', [ChangePasswordController::class, 'store'])
+    ->name('password.change');
