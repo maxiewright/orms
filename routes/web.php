@@ -29,9 +29,9 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::view('change-password', 'auth.change-password')
-    ->middleware('verified')
-    ->name('password.change');
-
-Route::post('change-password', [ChangePasswordController::class, 'store'])
-    ->name('password.change');
+//Route::view('change-password', 'auth.change-password')
+//    ->middleware('verified')
+//    ->name('password.change');
+//
+//Route::post('change-password', [ChangePasswordController::class, 'store'])
+//    ->name('password.change');
