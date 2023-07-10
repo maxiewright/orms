@@ -21,7 +21,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     protected static function booted()
     {
         static::creating(fn(User $user) => [
-            $user->username = $user->serviceperson_number,
+            $user->name = $user->serviceperson_number,
             $user->password = bcrypt('Password1')
         ]);
 
@@ -32,7 +32,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
                 Str::lower(Str::substr($serviceperson->first_name, 0, 1));
 
             $user->update([
-               'username' => $userName,
+               'name' => $userName,
             ]);
         });
     }

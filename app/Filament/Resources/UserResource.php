@@ -37,6 +37,10 @@ class UserResource extends Resource
                     ->confirmed()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email_confirmation'),
+                Forms\Components\Select::make('user.roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
             ])->columns(3);
     }
 
@@ -44,15 +48,13 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('serviceperson.military_name')
+                    ->label('Name')
+                    ->searchable(['number', 'first_name', 'last_name']),
+                Tables\Columns\TextColumn::make('name')
+                ->label('username'),
                 Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('serviceperson_number'),
+                Tables\Columns\TextColumn::make('roles.name')
             ])
             ->filters([
                 //

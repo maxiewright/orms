@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
         foreach ($admins as $admin){
             User::query()->create([
                 'serviceperson_number' => $admin[0],
-                'username' => $admin[1],
+                'name' => $admin[1],
                 'email' => $admin[2],
                 'email_verified_at' => now(),
                 'password' => Hash::make('Password1')

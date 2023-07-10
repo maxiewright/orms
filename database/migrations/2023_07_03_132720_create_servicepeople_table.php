@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreignId('rank_id')->constrained();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('military_name')->virtualAs('concat(first_name, \' \', last_name)');
-            $table->dateTime('date_of_birth');
+            $table->foreignId('gender_id')->nullable()->constrained();
+            $table->dateTime('date_of_birth')->nullable();
             $table->foreignId('enlistment_type_id')->constrained();
-            $table->dateTime('enlistment_date');
+            $table->dateTime('enlistment_date')->nullable();
             $table->dateTime('assumption_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
