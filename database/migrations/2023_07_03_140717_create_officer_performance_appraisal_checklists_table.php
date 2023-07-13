@@ -18,9 +18,10 @@ return new class extends Migration
             $table->dateTime('appraisal_start_at');
             $table->dateTime('appraisal_end_at');
             $table->boolean('is_appointment_correct')->default(true);
+            $table->boolean('is_assessment_rubric_complete')->default(false);
+
             //Company Command
             $table->boolean('has_company_commander')->default(false);
-            $table->boolean('company_commander_assessment_completed')->default(false);
             $table->boolean('has_company_commander_comments')->default(false);
             $table->boolean('has_company_commander_signature')->default(false);
             // Unit Command

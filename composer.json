@@ -21,6 +21,7 @@
         "spatie/laravel-sluggable": "^3.5"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
         "bfinlay/laravel-excel-seeder": "^3.3",
         "doctrine/dbal": "^3.6",
         "fakerphp/faker": "^1.9.1",

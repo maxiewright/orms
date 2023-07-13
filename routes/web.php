@@ -22,16 +22,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
-//Route::view('change-password', 'auth.change-password')
-//    ->middleware('verified')
-//    ->name('password.change');
-//
-//Route::post('change-password', [ChangePasswordController::class, 'store'])
-//    ->name('password.change');
+//Route::prefix('filament')->as('filament.')->group(function (){
+//    Route::prefix('pages')->as('pages.')->group(function (){
+//        Route::get('my-profile', \App\Filament\Pages\MyProfile::class)
+//        ->name('my-profile');
+//    });
+//});

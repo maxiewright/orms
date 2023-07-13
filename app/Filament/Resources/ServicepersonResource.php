@@ -26,18 +26,21 @@ class ServicepersonResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('number')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\Select::make('formation_id')
                     ->relationship('formation', 'name')
                     ->required(),
+                Forms\Components\TextInput::make('number')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\Select::make('rank_id')
                     ->relationship('rank', 'name')
                     ->required(),
                 Forms\Components\TextInput::make('first_name')
                     ->required(),
                 Forms\Components\TextInput::make('last_name')
+                    ->required(),
+                Forms\Components\Select::make('gender_id')
+                    ->relationship('gender', 'name')
                     ->required(),
                 Forms\Components\DatePicker::make('date_of_birth')
                     ->required()
@@ -68,26 +71,31 @@ class ServicepersonResource extends Resource
                     ->date('d M Y'),
                 Tables\Columns\TextColumn::make('assumption_date')
                     ->date('d M Y'),
-                Tables\Columns\TextColumn::make('officerPerformanceAppraisalChecklists.year')
-                    ->label('Appraisals'),
-
             ])
             ->filters([
-        //
-    ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
-            ExportBulkAction::make(),
-        ]);
+                Tables\Filters\SelectFilter::make('rank')
+                    ->relationship('rank', 'regiment_abbreviation')
+                    ->multiple(),
+                Tables\Filters\SelectFilter::make('enlistment_type')
+                    ->relationship('enlistmentType', 'name')
+                    ->multiple(),
+                 Tables\Filters\SelectFilter::make('gender')
+                     ->relationship('gender', 'name')
+
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+                ExportBulkAction::make(),
+            ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\OfficerPerformanceAppraisalChecklistsRelationManager::class,
+
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\RankEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +31,11 @@ class Serviceperson extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function gender(): BelongsTo
+    {
+        return $this->belongsTo(Gender::class);
+    }
     public function rank(): BelongsTo
     {
         return $this->belongsTo(Rank::class);
@@ -47,6 +54,11 @@ class Serviceperson extends Model
     public function officerPerformanceAppraisalChecklists(): HasMany
     {
         return $this->hasMany(OfficerPerformanceAppraisalChecklist::class);
+    }
+
+    public function scopeOfficers(Builder $query)
+    {
+        $query->where('rank_id', '>=', RankEnum::O1);
     }
 
     protected function militaryName(): Attribute

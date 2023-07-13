@@ -13,6 +13,6 @@ class PasswordChanged
             return $next($request);
         }
 
-        return redirect()->route('password.change');
+        return redirect()->route('profile.edit');
     }
 }

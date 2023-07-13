@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,60 +18,83 @@ class OfficerPerformanceAppraisalChecklist extends Model
         'appraisal_start_at' => 'datetime',
         'appraisal_end_at' => 'datetime',
         'is_appointment_correct' => 'boolean',
-        'company_commander_assessment_completed' => 'boolean',
+        'is_assessment_rubric_complete' => 'boolean',
+        // Company Commander
+        'has_company_commander' => 'boolean',
         'has_company_commander_comments' => 'boolean',
         'has_company_commander_signature' => 'boolean',
+        // Unit Commander
         'has_unit_commander_comments' => 'boolean',
         'has_unit_commander_signature' => 'boolean',
+        // Formation Commander
         'has_formation_commander_comments' => 'boolean',
         'has_formation_commander_signature' => 'boolean',
+        // Serviceperson
         'has_serviceperson_signature' => 'boolean',
     ];
 
-    public function isCompletedByCompanyCommander(): bool
+    public function scopeCompletedByCompanyCommander(Builder $query): void
+    {
+        $query->where('is_appointment_correct', true)
+            ->where('is_assessment_rubric_complete', true)
+            ->where('has_company_commander_comments', true)
+            ->where('has_company_commander_signature', true);
+    }
+
+    public function completedByCompanyCommander(): bool
     {
         return $this->is_appointment_correct
-            && $this->company_commander_assessment_completed
+            && $this->is_assessment_rubric_complete
             && $this->has_company_commander_comments
             && $this->has_company_commander_signature;
     }
 
-    public function isCompletedByUnitCommander(): bool
+    public function scopeCompletedByUnitCommander(Builder $query): void
+    {
+        $query
+            ->where('has_unit_commander_comments', true)
+            ->where('has_unit_commander_signature', true);
+    }
+
+    public function completedByUnitCommander(): bool
     {
         return $this->has_unit_commander_comments
             && $this->has_unit_commander_signature;
     }
 
-    public function isCompletedByFormationCommander(): bool
+    public function scopeCompletedByFormationCommander(Builder $query): void
+    {
+        $query
+            ->where('has_formation_commander_comments', true)
+            ->where('has_formation_commander_signature', true);
+    }
+
+    public function completedByFormationCommander(): bool
     {
         return $this->has_formation_commander_comments
             && $this->has_formation_commander_signature;
     }
 
-    public function isSignedByServiceperson()
+    public function signedByServiceperson()
     {
         return $this->has_serviceperson_signature;
     }
 
-    public function hasNoCompanyCommander(): bool
+    public function scopeCompleted(Builder $query): void
     {
-        return !$this->isCompletedByCompanyCommander()
-            && $this->isCompletedByUnitCommander();
+        $query
+            ->completedByCompanyCommander()
+            ->completedByUnitCommander()
+            ->completedByFormationCommander()
+            ->where('has_serviceperson_signature', true);
     }
 
-    public function hasNoUnitCommander(): bool
+    public function completed(): bool
     {
-        return !$this->isCompletedByCompanyCommander()
-            && !$this->isCompletedByUnitCommander()
-            && $this->isCompletedByFormationCommander();
-    }
-
-    public function isComplete(): bool
-    {
-        return $this->isCompletedByCompanyCommander()
-            && $this->isCompletedByUnitCommander()
-            && $this->isCompletedByFormationCommander()
-            && $this->isSignedByServiceperson();
+        return $this->completedByCompanyCommander()
+            && $this->completedByUnitCommander()
+            && $this->completedByFormationCommander()
+            && $this->signedByServiceperson();
     }
 
 

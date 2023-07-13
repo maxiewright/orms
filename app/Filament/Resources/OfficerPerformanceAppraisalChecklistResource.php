@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RankEnum;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\Pages;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\RelationManagers;
 use App\Models\OfficerPerformanceAppraisalChecklist;
@@ -11,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Util\Filter;
@@ -33,29 +35,32 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
             ->schema([
                 Forms\Components\Fieldset::make('Basic Info')->schema([
                     Forms\Components\Select::make('serviceperson_number')
-                        ->relationship('serviceperson', 'number')
+                        ->relationship('serviceperson', 'number',
+                            fn(Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
                         ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
                         ->searchable(['number', 'first_name', 'last_name'])
                         ->required(),
-
                     Forms\Components\DatePicker::make('appraisal_start_at')
-                        ->required(),
+                        ->required()
+                        ->before('appraisal_end_at'),
                     Forms\Components\DatePicker::make('appraisal_end_at')
-                        ->required(),
+                        ->required()
+                        ->after('appraisal_start_at')
+                        ->beforeOrEqual('today'),
                 ]),
                 // Verification
                 Forms\Components\Fieldset::make('Appointment & Assessment Verification')->schema([
                     Forms\Components\Toggle::make('is_appointment_correct')
                         ->label('Did the officer hold the appointment identified on the appraisal for the period assessed?')
                         ->required()
-                    , Forms\Components\Toggle::make('company_commander_assessment_completed')
+                    , Forms\Components\Toggle::make('is_assessment_rubric_complete')
                         ->label('Is the assessment rubric complete?')
                         ->required(),
                 ])->columns(1),
                 //Company Command
                 Forms\Components\Fieldset::make('Company Commander')->schema([
                     Forms\Components\Toggle::make('has_company_commander')
-                        ->label('This officer has a company commander?'),
+                        ->label('Does this officer have a company commander?'),
                     Forms\Components\Toggle::make('has_company_commander_comments')
                         ->label('Does it have company commander comments?')
                         ->rule(new RequireIfFieldIsTrue('has_company_commander', 'company commander')),
@@ -103,11 +108,14 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Columns\TextColumn::make('appraisal_end_at')
                     ->label('To')
                     ->date('d M Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereYear('appraisal_end_at', $search);
+                    }),
                 Tables\Columns\IconColumn::make('is_appointment_correct')
                     ->label('Appointment Correct')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('company_commander_assessment_completed')
+                Tables\Columns\IconColumn::make('is_assessment_rubric_complete')
                     ->label('Rubric Complete')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('has_company_commander_comments')
@@ -148,7 +156,15 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                                 $data['appraisal_end_at'],
                                 fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
                             );
-                    })
+                    }),
+                Tables\Filters\Filter::make('appraisal_end_at')
+                    ->query(fn(Builder $query): Builder => $query->completedByCompanyCommander()),
+                Tables\Filters\Filter::make('completed_by_unit_commander')
+                    ->query(fn(Builder $query): Builder => $query->completedByUnitCommander()),
+                Tables\Filters\Filter::make('completed_by_formation_commander')
+                    ->query(fn(Builder $query): Builder => $query->completedByFormationCommander()),
+                Tables\Filters\Filter::make('completed')
+                    ->query(fn(Builder $query): Builder => $query->completed()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum FormationEnum
+enum FormationEnum: int
 {
 
 }
