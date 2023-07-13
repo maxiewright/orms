@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServicepersonResource\Pages;
-use App\Filament\Resources\ServicepersonResource\RelationManagers;
 use App\Models\Serviceperson;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class ServicepersonResource extends Resource
@@ -79,8 +76,8 @@ class ServicepersonResource extends Resource
                 Tables\Filters\SelectFilter::make('enlistment_type')
                     ->relationship('enlistmentType', 'name')
                     ->multiple(),
-                 Tables\Filters\SelectFilter::make('gender')
-                     ->relationship('gender', 'name')
+                Tables\Filters\SelectFilter::make('gender')
+                    ->relationship('gender', 'name'),
 
             ])
             ->actions([

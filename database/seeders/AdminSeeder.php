@@ -16,13 +16,13 @@ class AdminSeeder extends Seeder
             [250, '250davida', 'addison.david@ttdf.mil.tt'],
         ];
 
-        foreach ($admins as $admin){
+        foreach ($admins as $admin) {
             User::query()->create([
                 'serviceperson_number' => $admin[0],
                 'name' => $admin[1],
                 'email' => $admin[2],
                 'email_verified_at' => now(),
-                'password' => Hash::make('Password1')
+                'password' => Hash::make('Password1'),
             ]);
         }
 

@@ -11,12 +11,12 @@ class GenderSeeder extends Seeder
     {
         $genders = [
             'male',
-            'female'
+            'female',
         ];
 
-        foreach ($genders as $gender){
+        foreach ($genders as $gender) {
             Gender::create([
-                'name' => $gender
+                'name' => $gender,
             ]);
         }
     }

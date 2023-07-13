@@ -34,5 +34,4 @@ class Handler extends ExceptionHandler
             ? response()->json(['message' => $exception->getMessage()], 401)
             : redirect()->guest($exception->redirectTo() ?? route('filament.auth.login'));
     }
-
 }

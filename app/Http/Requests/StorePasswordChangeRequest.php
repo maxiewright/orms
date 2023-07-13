@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -27,5 +26,4 @@ class StorePasswordChangeRequest extends FormRequest
             'password_confirmation' => 'required',
         ];
     }
-
 }

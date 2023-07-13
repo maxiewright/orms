@@ -7,7 +7,6 @@ use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -20,9 +19,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     protected static function booted()
     {
-        static::creating(fn(User $user) => [
+        static::creating(fn (User $user) => [
             $user->name = $user->serviceperson_number,
-            $user->password = bcrypt('Password1')
+            $user->password = bcrypt('Password1'),
         ]);
 
         static::created(function (User $user) {
@@ -32,7 +31,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
                 Str::lower(Str::substr($serviceperson->first_name, 0, 1));
 
             $user->update([
-               'name' => $userName,
+                'name' => $userName,
             ]);
         });
     }
@@ -76,7 +75,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessFilament(): bool
     {
-//        return str_ends_with($this->email, '@ttdf.mil.tt');
+        //        return str_ends_with($this->email, '@ttdf.mil.tt');
         return true;
     }
 

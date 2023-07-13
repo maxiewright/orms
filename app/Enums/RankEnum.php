@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum RankEnum :int
+enum RankEnum: int
 {
     case E1 = 1;
     case E2 = 2;

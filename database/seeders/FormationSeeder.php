@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Formation;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FormationSeeder extends Seeder
@@ -31,7 +30,7 @@ class FormationSeeder extends Seeder
             ],
         ];
 
-        foreach ($formations as $formation){
+        foreach ($formations as $formation) {
             Formation::create([
                 'name' => $formation['name'],
                 'short_name' => $formation['short_name'],
@@ -40,5 +39,4 @@ class FormationSeeder extends Seeder
         }
 
     }
-
 }

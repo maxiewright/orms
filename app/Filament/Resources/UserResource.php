@@ -3,16 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
@@ -30,7 +27,7 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                     ->searchable(['number', 'first_name', 'last_name'])
                     ->required(),
                 Forms\Components\TextInput::make('email')
@@ -42,7 +39,7 @@ class UserResource extends Resource
                 Forms\Components\Select::make('user.roles')
                     ->relationship('roles', 'name')
                     ->multiple()
-                    ->preload()
+                    ->preload(),
             ])->columns(3);
     }
 
@@ -54,9 +51,9 @@ class UserResource extends Resource
                     ->label('Name')
                     ->searchable(['number', 'first_name', 'last_name']),
                 Tables\Columns\TextColumn::make('name')
-                ->label('username'),
+                    ->label('username'),
                 Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('roles.name')
+                Tables\Columns\TextColumn::make('roles.name'),
             ])
             ->filters([
                 //
@@ -68,14 +65,14 @@ class UserResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -83,5 +80,5 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 }

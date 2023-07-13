@@ -15,14 +15,13 @@ class OfficerPerformanceAppraisalChecklistsRelationManager extends RelationManag
 
     protected static ?string $recordTitleAttribute = 'serviceperson_number';
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                     ->searchable(['number', 'first_name', 'last_name'])
                     ->required(),
                 Forms\Components\DateTimePicker::make('appraisal_start_at')
@@ -85,7 +84,7 @@ class OfficerPerformanceAppraisalChecklistsRelationManager extends RelationManag
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

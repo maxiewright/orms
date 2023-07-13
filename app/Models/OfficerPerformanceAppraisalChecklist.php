@@ -97,11 +97,10 @@ class OfficerPerformanceAppraisalChecklist extends Model
             && $this->signedByServiceperson();
     }
 
-
     public function year(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->appraisal_end_at?->format('Y')
+            get: fn () => $this->appraisal_end_at?->format('Y')
         );
     }
 

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\RankEnum;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\Pages;
-use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\RelationManagers;
 use App\Models\OfficerPerformanceAppraisalChecklist;
 use App\Rules\RequireIfFieldIsTrue;
 use Filament\Forms;
@@ -12,12 +11,9 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\Util\Filter;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-
 
 class OfficerPerformanceAppraisalChecklistResource extends Resource
 {
@@ -36,8 +32,8 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Basic Info')->schema([
                     Forms\Components\Select::make('serviceperson_number')
                         ->relationship('serviceperson', 'number',
-                            fn(Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                            fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                         ->searchable(['number', 'first_name', 'last_name'])
                         ->required(),
                     Forms\Components\DatePicker::make('appraisal_start_at')
@@ -52,8 +48,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Appointment & Assessment Verification')->schema([
                     Forms\Components\Toggle::make('is_appointment_correct')
                         ->label('Did the officer hold the appointment identified on the appraisal for the period assessed?')
-                        ->required()
-                    , Forms\Components\Toggle::make('is_assessment_rubric_complete')
+                        ->required(), Forms\Components\Toggle::make('is_assessment_rubric_complete')
                         ->label('Is the assessment rubric complete?')
                         ->required(),
                 ])->columns(1),
@@ -150,21 +145,21 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         return $query
                             ->when(
                                 $data['appraisal_start_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
                             )
                             ->when(
                                 $data['appraisal_end_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
                             );
                     }),
                 Tables\Filters\Filter::make('appraisal_end_at')
-                    ->query(fn(Builder $query): Builder => $query->completedByCompanyCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByCompanyCommander()),
                 Tables\Filters\Filter::make('completed_by_unit_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByUnitCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByUnitCommander()),
                 Tables\Filters\Filter::make('completed_by_formation_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByFormationCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByFormationCommander()),
                 Tables\Filters\Filter::make('completed')
-                    ->query(fn(Builder $query): Builder => $query->completed()),
+                    ->query(fn (Builder $query): Builder => $query->completed()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

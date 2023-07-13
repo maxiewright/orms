@@ -14,7 +14,7 @@ class EnlistmentType extends Model
 
     protected $guarded = [];
 
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
@@ -25,6 +25,4 @@ class EnlistmentType extends Model
     {
         return $this->hasMany(Serviceperson::class);
     }
-
-
 }

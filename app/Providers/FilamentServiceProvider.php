@@ -2,14 +2,10 @@
 
 namespace App\Providers;
 
-use App\Filament\Pages\MyProfile;
 use Filament\Facades\Filament;
-use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\UserMenuItem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use JeffGreco13\FilamentBreezy\FilamentBreezy;
-
 
 class FilamentServiceProvider extends ServiceProvider
 {
@@ -30,14 +26,14 @@ class FilamentServiceProvider extends ServiceProvider
                     ->letters()
                     ->numbers()
                     ->mixedCase()
-                    ->uncompromised(3)
+                    ->uncompromised(3),
             ]
         );
 
         Filament::registerNavigationGroups([
             'servicepeople',
             'officers',
-            'access control'
+            'access control',
         ]);
     }
 }

@@ -10,8 +10,6 @@ use Illuminate\View\View;
 
 class ChangePasswordController extends Controller
 {
-
-
     public function create(): View
     {
         return view('auth.change-password');
@@ -21,10 +19,9 @@ class ChangePasswordController extends Controller
     {
         Auth::user()->update([
             'password' => Hash::make($request->get('password')),
-            'password_changed_at' => now()
+            'password_changed_at' => now(),
         ]);
 
         return redirect()->intended()->with('success', 'Password changed!');
     }
-
 }

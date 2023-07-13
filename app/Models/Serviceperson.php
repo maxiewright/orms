@@ -16,9 +16,11 @@ class Serviceperson extends Model
     use HasFactory;
 
     protected $primaryKey = 'number';
+
     public $incrementing = false;
 
     protected $table = 'servicepeople';
+
     protected $guarded = [];
 
     protected $casts = [
@@ -36,6 +38,7 @@ class Serviceperson extends Model
     {
         return $this->belongsTo(Gender::class);
     }
+
     public function rank(): BelongsTo
     {
         return $this->belongsTo(Rank::class);
@@ -64,25 +67,25 @@ class Serviceperson extends Model
     protected function militaryName(): Attribute
     {
         return Attribute::make(
-            get: fn() => ($this->rank_id <= 6)
-                ? $this->number . ' ' . $this->rank->regiment_abbreviation . ' ' . $this->last_name . ' ' . substr($this->first_name, 0, 1)
-                : $this->number . ' ' . $this->rank->regiment_abbreviation . ' ' . substr($this->first_name, 0, 1) . ' ' . $this->last_name
+            get: fn () => ($this->rank_id <= 6)
+                ? $this->number.' '.$this->rank->regiment_abbreviation.' '.$this->last_name.' '.substr($this->first_name, 0, 1)
+                : $this->number.' '.$this->rank->regiment_abbreviation.' '.substr($this->first_name, 0, 1).' '.$this->last_name
         );
     }
 
     protected function fullMilitaryName(): Attribute
     {
         return Attribute::make(
-            get: fn() => ($this->rank_id <= 6)
-                ? $this->number . ' ' . $this->rank->regiment_abbreviation . ' ' . $this->last_name . ', ' . $this->first_name
-                : $this->number . ' ' . $this->rank->regiment_abbreviation . ' ' . $this->first_name . ' ' . $this->last_name
+            get: fn () => ($this->rank_id <= 6)
+                ? $this->number.' '.$this->rank->regiment_abbreviation.' '.$this->last_name.', '.$this->first_name
+                : $this->number.' '.$this->rank->regiment_abbreviation.' '.$this->first_name.' '.$this->last_name
         );
     }
 
     public function officerTwoDate(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->assumption_date->addYears(1)
+            get: fn () => $this->assumption_date->addYears(1)
         );
 
     }
@@ -90,7 +93,7 @@ class Serviceperson extends Model
     public function officerThreeDate(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->assumption_date->addYears(3)
+            get: fn () => $this->assumption_date->addYears(3)
         );
 
     }
@@ -98,7 +101,7 @@ class Serviceperson extends Model
     public function officerFourDate(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->assumption_date->addYears(7)
+            get: fn () => $this->assumption_date->addYears(7)
         );
 
     }
@@ -106,10 +109,8 @@ class Serviceperson extends Model
     public function officerFiveDate(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->assumption_date->addYears(14)
+            get: fn () => $this->assumption_date->addYears(14)
         );
 
     }
-
-
 }

@@ -3,13 +3,11 @@
 namespace App\Http\Livewire\Auth;
 
 use Filament\Facades\Filament;
-use Illuminate\Auth\Events\Registered;
+use Filament\Forms;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use JeffGreco13\FilamentBreezy\FilamentBreezy;
 use Livewire\Component;
-use Filament\Forms;
-
 
 class ChangePassword extends Component implements Forms\Contracts\HasForms
 {
@@ -18,13 +16,14 @@ class ChangePassword extends Component implements Forms\Contracts\HasForms
     public $current_password;
 
     public $password;
+
     public $password_confirm;
 
     public function mount()
     {
-//        if (Filament::auth()->check()) {
-//            return redirect(config("filament.home_url"));
-//        }
+        //        if (Filament::auth()->check()) {
+        //            return redirect(config("filament.home_url"));
+        //        }
     }
 
     public function messages(): array
@@ -59,7 +58,7 @@ class ChangePassword extends Component implements Forms\Contracts\HasForms
     {
         $preparedData = [
             'password' => Hash::make($data['password']),
-            'password_confirmed_at' => now()
+            'password_confirmed_at' => now(),
         ];
 
         return $preparedData;
@@ -73,9 +72,9 @@ class ChangePassword extends Component implements Forms\Contracts\HasForms
 
         $user->update($preparedData);
 
-//        Filament::auth()->login($user->fresh(), true);
+        //        Filament::auth()->login($user->fresh(), true);
 
-        return redirect()->to('/'. config('filament.path'));
+        return redirect()->to('/'.config('filament.path'));
     }
 
     public function render(): View

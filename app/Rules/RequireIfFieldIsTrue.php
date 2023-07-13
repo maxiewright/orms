@@ -12,9 +12,10 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
     protected array $data = [];
 
     public function __construct(
-        protected string  $dependencyField,
+        protected string $dependencyField,
         protected ?string $dependencyFieldName = null
-    ){}
+    ) {
+    }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -29,7 +30,7 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
 
     private function dependencyFieldName(): string
     {
-        return (!$this->dependencyFieldName)
+        return (! $this->dependencyFieldName)
             ? Str::lower(Str::replace('_', ' ', $this->dependencyField))
             : $this->dependencyFieldName;
 
