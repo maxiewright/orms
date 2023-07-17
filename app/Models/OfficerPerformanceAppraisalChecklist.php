@@ -24,6 +24,7 @@ class OfficerPerformanceAppraisalChecklist extends Model
         'has_company_commander_comments' => 'boolean',
         'has_company_commander_signature' => 'boolean',
         // Unit Commander
+        'has_unit_commander' => 'boolean',
         'has_unit_commander_comments' => 'boolean',
         'has_unit_commander_signature' => 'boolean',
         // Grading and Discipline
@@ -94,22 +95,26 @@ class OfficerPerformanceAppraisalChecklist extends Model
 
     public function scopeCompleted(Builder $query): void
     {
-        $query
-            ->completedByCompanyCommander()
+        (!$this->has_unit_commander)
+            ? $query->completedByCompanyCommander()
+            ->completedByFormationCommander()
+            ->where('has_serviceperson_signature', true)
+            
+            : $query->completedByCompanyCommander()
             ->completedByUnitCommander()
             ->completedByFormationCommander()
             ->where('has_serviceperson_signature', true);
+
     }
 
     public function completed(): bool
     {
-        if ($this->has_company_commander && !$this->has_unit_commander) {
-            return $this->completedByCompanyCommander()
-                && $this->completedByFormationCommander()
-                && $this->signedByServiceperson();
-        }
+        return (!$this->has_unit_commander)
+            ? $this->completedByCompanyCommander()
+            && $this->completedByFormationCommander()
+            && $this->signedByServiceperson()
 
-        return $this->completedByCompanyCommander()
+            : $this->completedByCompanyCommander()
             && $this->completedByUnitCommander()
             && $this->completedByFormationCommander()
             && $this->signedByServiceperson();
