@@ -29,21 +29,25 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
     {
         return $form
             ->schema([
+                // Basic Information
                 Forms\Components\Fieldset::make('Basic Info')->schema([
                     Forms\Components\Select::make('serviceperson_number')
                         ->relationship('serviceperson', 'number',
-                            fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            fn(Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
+                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
                         ->searchable(['number', 'first_name', 'last_name'])
                         ->required(),
                     Forms\Components\DatePicker::make('appraisal_start_at')
+                        ->displayFormat('d M Y')
                         ->required()
                         ->before('appraisal_end_at'),
                     Forms\Components\DatePicker::make('appraisal_end_at')
+                        ->displayFormat('d M Y')
                         ->required()
                         ->after('appraisal_start_at')
                         ->beforeOrEqual('today'),
                 ]),
+
                 // Verification
                 Forms\Components\Fieldset::make('Appointment & Assessment Verification')->schema([
                     Forms\Components\Toggle::make('is_appointment_correct')
@@ -52,6 +56,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Is the assessment rubric complete?')
                         ->required(),
                 ])->columns(1),
+
                 //Company Command
                 Forms\Components\Fieldset::make('Company Commander')->schema([
                     Forms\Components\Toggle::make('has_company_commander')
@@ -63,6 +68,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Is it signed by the company commander?')
                         ->rule(new RequireIfFieldIsTrue('has_company_commander', 'company commander')),
                 ])->columns(3),
+
                 // Unit Command
                 Forms\Components\Fieldset::make('Unit Commander')->schema([
                     Forms\Components\Toggle::make('has_unit_commander')
@@ -74,6 +80,21 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Is it signed by the unit commander?')
                         ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
                 ])->columns(3),
+
+                // Grading and Discipline
+                Forms\Components\Fieldset::make('Grading and Discipline')->schema([
+                    Forms\Components\Select::make('officer_appraisal_grade_id')
+                        ->label('Substantive rank grading')
+                        ->relationship('grade', 'name')
+                        ->required()
+                        ->preload(),
+                    Forms\Components\Toggle::make('has_disciplinary_action')
+                        ->label('Was any disciplinary action taken against this officer for the period under review?'),
+                    Forms\Components\Textarea::make('disciplinary_action_particulars')
+                        ->label('Particulars of disciplinary action, if any was taken in the period under review')
+                        ->requiredIf('has_disciplinary_action', 'true',),
+                ])->columns(3),
+
                 // Formation Command
                 Forms\Components\Fieldset::make('Formation Commander')->schema([
                     Forms\Components\Toggle::make('has_formation_commander_comments')
@@ -81,10 +102,12 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Toggle::make('has_formation_commander_signature')
                         ->label('Is it signed by the formation commander?'),
                 ])->columns(3),
-                // Officer
+
+                // Officer Signature
                 Forms\Components\Fieldset::make('Serviceperson')->schema([
                     Forms\Components\Toggle::make('has_serviceperson_signature')
-                        ->label('Is it signed by the Officer?'),
+                        ->label('Is it signed by the Officer?')
+                        ->requiredIf('has_formation_commander_signature', 'true',),
                 ]),
             ]);
     }
@@ -113,24 +136,39 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Columns\IconColumn::make('is_assessment_rubric_complete')
                     ->label('Rubric Complete')
                     ->boolean(),
+
+                // Company Commander
                 Tables\Columns\IconColumn::make('has_company_commander_comments')
                     ->label('OC Comments')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('has_company_commander_signature')
                     ->label('OC Signature')
                     ->boolean(),
+
+                // Unit Commanding Officer
                 Tables\Columns\IconColumn::make('has_unit_commander_comments')
                     ->label('CO Comments')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('has_unit_commander_signature')
                     ->label('CO Signature')
                     ->boolean(),
+
+                // Grading and Discipline
+                Tables\Columns\TextColumn::make('grade.name')
+                    ->label('Overall Grade'),
+                Tables\Columns\IconColumn::make('has_disciplinary_action')
+                    ->label('Disciplinary Action')
+                    ->boolean(),
+
+                // Formation Commander
                 Tables\Columns\IconColumn::make('has_formation_commander_comments')
                     ->label('COTTR Comments')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('has_formation_commander_signature')
                     ->label('COTTR Signature')
                     ->boolean(),
+
+                // Officer Signature
                 Tables\Columns\IconColumn::make('has_serviceperson_signature')
                     ->label('Soldier Signature')
                     ->boolean(),
@@ -145,21 +183,25 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         return $query
                             ->when(
                                 $data['appraisal_start_at'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
                             )
                             ->when(
                                 $data['appraisal_end_at'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
                             );
                     }),
-                Tables\Filters\Filter::make('appraisal_end_at')
-                    ->query(fn (Builder $query): Builder => $query->completedByCompanyCommander()),
+                Tables\Filters\SelectFilter::make('grade')
+                    ->relationship('grade', 'name'),
+                Tables\Filters\Filter::make('Completed_by_company_commander')
+                    ->query(fn(Builder $query): Builder => $query->completedByCompanyCommander()),
                 Tables\Filters\Filter::make('completed_by_unit_commander')
-                    ->query(fn (Builder $query): Builder => $query->completedByUnitCommander()),
+                    ->query(fn(Builder $query): Builder => $query->completedByUnitCommander()),
+                Tables\Filters\Filter::make('has_disciplinary_action')
+                    ->query(fn(Builder $query): Builder => $query->hasDisciplinaryAction()),
                 Tables\Filters\Filter::make('completed_by_formation_commander')
-                    ->query(fn (Builder $query): Builder => $query->completedByFormationCommander()),
+                    ->query(fn(Builder $query): Builder => $query->completedByFormationCommander()),
                 Tables\Filters\Filter::make('completed')
-                    ->query(fn (Builder $query): Builder => $query->completed()),
+                    ->query(fn(Builder $query): Builder => $query->completed()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

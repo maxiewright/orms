@@ -31,7 +31,7 @@ class FormationSeeder extends Seeder
         ];
 
         foreach ($formations as $formation) {
-            Formation::create([
+            Formation::query()->create([
                 'name' => $formation['name'],
                 'short_name' => $formation['short_name'],
                 'abbreviation' => $formation['abbreviation'],

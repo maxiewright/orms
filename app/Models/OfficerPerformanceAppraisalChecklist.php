@@ -26,12 +26,19 @@ class OfficerPerformanceAppraisalChecklist extends Model
         // Unit Commander
         'has_unit_commander_comments' => 'boolean',
         'has_unit_commander_signature' => 'boolean',
+        // Grading and Discipline
+        'has_disciplinary_action' => 'boolean',
         // Formation Commander
         'has_formation_commander_comments' => 'boolean',
         'has_formation_commander_signature' => 'boolean',
         // Serviceperson
         'has_serviceperson_signature' => 'boolean',
     ];
+
+    public function grade(): BelongsTo
+    {
+        return $this->belongsTo(OfficerAppraisalGrade::class, 'officer_appraisal_grade_id');
+    }
 
     public function scopeCompletedByCompanyCommander(Builder $query): void
     {
@@ -54,6 +61,11 @@ class OfficerPerformanceAppraisalChecklist extends Model
         $query
             ->where('has_unit_commander_comments', true)
             ->where('has_unit_commander_signature', true);
+    }
+
+    public function scopeHasDisciplinaryAction(Builder $query): void
+    {
+        $query->where('has_disciplinary_action', true);
     }
 
     public function completedByUnitCommander(): bool
@@ -91,6 +103,12 @@ class OfficerPerformanceAppraisalChecklist extends Model
 
     public function completed(): bool
     {
+        if ($this->has_company_commander && !$this->has_unit_commander) {
+            return $this->completedByCompanyCommander()
+                && $this->completedByFormationCommander()
+                && $this->signedByServiceperson();
+        }
+
         return $this->completedByCompanyCommander()
             && $this->completedByUnitCommander()
             && $this->completedByFormationCommander()
@@ -100,7 +118,7 @@ class OfficerPerformanceAppraisalChecklist extends Model
     public function year(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->appraisal_end_at?->format('Y')
+            get: fn() => $this->appraisal_end_at?->format('Y')
         );
     }
 

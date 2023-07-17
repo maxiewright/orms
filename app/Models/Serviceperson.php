@@ -54,6 +54,11 @@ class Serviceperson extends Model
         return $this->belongsTo(EnlistmentType::class);
     }
 
+    public function grading(): BelongsTo
+    {
+        return $this->belongsTo(OfficerAppraisalGrade::class);
+    }
+
     public function officerPerformanceAppraisalChecklists(): HasMany
     {
         return $this->hasMany(OfficerPerformanceAppraisalChecklist::class);

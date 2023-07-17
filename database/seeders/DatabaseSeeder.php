@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             EnlistmentTypeSeeder::class,
             SpreadsheetSeeder::class,
             AdminSeeder::class,
+            OfficerAppraisalGradeSeeder::class,
         ]);
     }
 }

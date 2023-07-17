@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Models\Serviceperson;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -10,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
@@ -27,12 +29,26 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
                     ->searchable(['number', 'first_name', 'last_name'])
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->reactive()
+                    ->afterStateUpdated(function (\Closure $set, $state) {
+                        $serviceperson = Serviceperson::query()->find($state);
+                        $userName = $serviceperson->number .
+                            Str::lower($serviceperson->last_name) .
+                            Str::lower(Str::substr($serviceperson->first_name, 0, 1));
+                        $set('name', $userName);
+                    }),
+                Forms\Components\TextInput::make('name')
+                    ->label('Username')
+                    ->unique(ignoreRecord: true)
+                    ->extraInputAttributes(['readonly' => true]),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->confirmed()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email_confirmation'),

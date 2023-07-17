@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class EnlistmentType extends Model
+class OfficerAppraisalGrade extends Model
 {
-    use HasFactory, HasSlug;
-
-    protected $guarded = [];
+    use HasSlug;
+    public $guarded = [];
 
     public function getSlugOptions(): SlugOptions
     {
@@ -20,7 +20,6 @@ class EnlistmentType extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
-
     public function servicepeople(): HasMany
     {
         return $this->hasMany(Serviceperson::class);

@@ -29,7 +29,7 @@ class EnlistmentTypeSeeder extends Seeder
         ];
 
         foreach ($enlistmentTypes as $enlistmentType) {
-            EnlistmentType::create([
+            EnlistmentType::query()->create([
                 'name' => $enlistmentType['name'],
                 'abbreviation' => $enlistmentType['abbreviation'],
             ]);

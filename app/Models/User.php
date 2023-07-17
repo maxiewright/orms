@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,27 +14,21 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasName
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected static function booted()
     {
         static::creating(fn (User $user) => [
-            $user->name = $user->serviceperson_number,
             $user->password = bcrypt('Password1'),
         ]);
 
-        static::created(function (User $user) {
-            $serviceperson = $user->serviceperson;
-            $userName = $serviceperson->number.
-                Str::lower($serviceperson->last_name).
-                Str::lower(Str::substr($serviceperson->first_name, 0, 1));
+    }
 
-            $user->update([
-                'name' => $userName,
-            ]);
-        });
+    public function getFilamentName(): string
+    {
+        return "{$this->serviceperson->first_name} {$this->serviceperson->last_name}";
     }
 
     /**
@@ -43,6 +38,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $fillable = [
         'serviceperson_number',
+        'name',
         'email',
         'password',
     ];
