@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Enums\RankEnum;
+use App\Models\Metadata\Gender;
+use App\Models\Unit\Formation;
+use App\Traits\HasInterview;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
-    use HasFactory;
+    use HasFactory, HasInterview;
 
     protected $primaryKey = 'number';
 

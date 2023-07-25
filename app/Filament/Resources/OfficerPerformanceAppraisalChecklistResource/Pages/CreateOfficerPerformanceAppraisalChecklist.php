@@ -8,10 +8,7 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateOfficerPerformanceAppraisalChecklist extends CreateRecord
 {
-
     use RedirectToIndex;
 
     protected static string $resource = OfficerPerformanceAppraisalChecklistResource::class;
-
-
 }

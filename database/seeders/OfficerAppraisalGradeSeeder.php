@@ -14,10 +14,10 @@ class OfficerAppraisalGradeSeeder extends Seeder
             'very good',
             'good',
             'adequate',
-            'weak'
+            'weak',
         ];
 
-        foreach ($grades as $grade){
+        foreach ($grades as $grade) {
             OfficerAppraisalGrade::query()->create([
                 'name' => $grade,
             ]);

@@ -25,7 +25,6 @@ abstract class TestCase extends BaseTestCase
 
         $serviceperson->user->assignRole('super_admin');
 
-
         $this->actingAs($serviceperson->user);
     }
 }

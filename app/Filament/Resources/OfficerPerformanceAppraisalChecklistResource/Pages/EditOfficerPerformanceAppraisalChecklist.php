@@ -19,5 +19,4 @@ class EditOfficerPerformanceAppraisalChecklist extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
-
 }

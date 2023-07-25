@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Metadata;
 
+use App\Models\HasMany;
+use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Formation extends Model
+class Gender extends Model
 {
-    use HasSlug;
+    use HasSlug, SoftDeletes;
 
-    protected $guarded = [];
+    public $guarded = [];
 
-    /**
-     * Get the options for generating the slug.
-     */
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -23,7 +22,7 @@ class Formation extends Model
             ->saveSlugsTo('slug');
     }
 
-    public function servicepersons(): HasMany
+    public function serviceperson(): HasMany
     {
         return $this->hasMany(Serviceperson::class);
     }

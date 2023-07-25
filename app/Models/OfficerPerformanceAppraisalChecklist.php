@@ -95,21 +95,21 @@ class OfficerPerformanceAppraisalChecklist extends Model
 
     public function scopeCompleted(Builder $query): void
     {
-        (!$this->has_unit_commander)
+        (! $this->has_unit_commander)
             ? $query->completedByCompanyCommander()
-            ->completedByFormationCommander()
-            ->where('has_serviceperson_signature', true)
-            
+                ->completedByFormationCommander()
+                ->where('has_serviceperson_signature', true)
+
             : $query->completedByCompanyCommander()
-            ->completedByUnitCommander()
-            ->completedByFormationCommander()
-            ->where('has_serviceperson_signature', true);
+                ->completedByUnitCommander()
+                ->completedByFormationCommander()
+                ->where('has_serviceperson_signature', true);
 
     }
 
     public function completed(): bool
     {
-        return (!$this->has_unit_commander)
+        return (! $this->has_unit_commander)
             ? $this->completedByCompanyCommander()
             && $this->completedByFormationCommander()
             && $this->signedByServiceperson()
@@ -123,7 +123,7 @@ class OfficerPerformanceAppraisalChecklist extends Model
     public function year(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->appraisal_end_at?->format('Y')
+            get: fn () => $this->appraisal_end_at?->format('Y')
         );
     }
 

@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\OfficerAppraisalGrade;
-use App\Models\Serviceperson;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -31,7 +30,6 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
         ($hasDisciplinaryAction)
             ? $disciplinaryActionParticulars = fake()->paragraph()
             : $disciplinaryActionParticulars = null;
-
 
         return [
             'serviceperson_number' => 198,

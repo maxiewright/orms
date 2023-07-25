@@ -29,15 +29,15 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                     ->searchable(['number', 'first_name', 'last_name'])
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->reactive()
                     ->afterStateUpdated(function (\Closure $set, $state) {
                         $serviceperson = Serviceperson::query()->find($state);
-                        $userName = $serviceperson->number .
-                            Str::lower($serviceperson->last_name) .
+                        $userName = $serviceperson->number.
+                            Str::lower($serviceperson->last_name).
                             Str::lower(Str::substr($serviceperson->first_name, 0, 1));
                         $set('name', $userName);
                     }),

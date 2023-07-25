@@ -9,7 +9,6 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditServiceperson extends EditRecord
 {
-
     use RedirectToIndex;
 
     protected static string $resource = ServicepersonResource::class;

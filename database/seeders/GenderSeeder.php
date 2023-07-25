@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Gender;
+use App\Models\Metadata\Gender;
 use Illuminate\Database\Seeder;
 
 class GenderSeeder extends Seeder

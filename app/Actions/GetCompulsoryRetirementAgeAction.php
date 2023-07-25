@@ -3,9 +3,7 @@
 namespace App\Actions;
 
 use App\Enums\RankEnum;
-use App\Models\Rank;
 use Carbon\Carbon;
-use DateTime;
 
 class GetCompulsoryRetirementAgeAction
 {

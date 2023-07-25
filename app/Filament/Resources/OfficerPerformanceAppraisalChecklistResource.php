@@ -33,8 +33,8 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Basic Info')->schema([
                     Forms\Components\Select::make('serviceperson_number')
                         ->relationship('serviceperson', 'number',
-                            fn(Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                            fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                         ->searchable(['number', 'first_name', 'last_name'])
                         ->required(),
                     Forms\Components\DatePicker::make('appraisal_start_at')
@@ -92,7 +92,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Was any disciplinary action taken against this officer for the period under review?'),
                     Forms\Components\Textarea::make('disciplinary_action_particulars')
                         ->label('Particulars of disciplinary action, if any was taken in the period under review')
-                        ->requiredIf('has_disciplinary_action', 'true',),
+                        ->requiredIf('has_disciplinary_action', 'true'),
                 ])->columns(3),
 
                 // Formation Command
@@ -107,7 +107,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Serviceperson')->schema([
                     Forms\Components\Toggle::make('has_serviceperson_signature')
                         ->label('Is it signed by the Officer?')
-                        ->requiredIf('has_formation_commander_signature', 'true',),
+                        ->requiredIf('has_formation_commander_signature', 'true'),
                 ]),
             ]);
     }
@@ -183,25 +183,25 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         return $query
                             ->when(
                                 $data['appraisal_start_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
                             )
                             ->when(
                                 $data['appraisal_end_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
                             );
                     }),
                 Tables\Filters\SelectFilter::make('grade')
                     ->relationship('grade', 'name'),
                 Tables\Filters\Filter::make('Completed_by_company_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByCompanyCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByCompanyCommander()),
                 Tables\Filters\Filter::make('completed_by_unit_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByUnitCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByUnitCommander()),
                 Tables\Filters\Filter::make('has_disciplinary_action')
-                    ->query(fn(Builder $query): Builder => $query->hasDisciplinaryAction()),
+                    ->query(fn (Builder $query): Builder => $query->hasDisciplinaryAction()),
                 Tables\Filters\Filter::make('completed_by_formation_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByFormationCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByFormationCommander()),
                 Tables\Filters\Filter::make('completed')
-                    ->query(fn(Builder $query): Builder => $query->completed()),
+                    ->query(fn (Builder $query): Builder => $query->completed()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

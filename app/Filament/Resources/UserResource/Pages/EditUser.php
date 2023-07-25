@@ -9,7 +9,6 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditUser extends EditRecord
 {
-
     use RedirectToIndex;
 
     protected static string $resource = UserResource::class;
