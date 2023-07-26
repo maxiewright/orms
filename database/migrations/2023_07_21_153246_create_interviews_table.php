@@ -55,6 +55,8 @@ return new class extends Migration
             $table->foreignId('serviceperson_number')
                 ->constrained('servicepeople', 'number');
             $table->foreignId('interview_id')->constrained();
+            $table->dateTime('read_at')->nullable();
+            $table->boolean('agreed')->nullable();
         });
 
     }
