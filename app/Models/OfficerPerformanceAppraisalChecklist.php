@@ -120,6 +120,13 @@ class OfficerPerformanceAppraisalChecklist extends Model
             && $this->signedByServiceperson();
     }
 
+    public function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->completed() ? 'Completed': 'Incomplete'
+        );
+    }
+
     public function year(): Attribute
     {
         return Attribute::make(

@@ -25,6 +25,33 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
 
     protected static ?string $modelLabel = 'Appraisal Checklist';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'serviceperson.number',
+            'serviceperson.first_name',
+            'serviceperson.last_name',
+        ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->serviceperson->military_name;
+    }
+
+    protected static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['serviceperson']);
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Year' => $record->appraisal_end_at->format('Y'),
+            'Status' => $record->status
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
