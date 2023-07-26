@@ -42,7 +42,7 @@ class CompanySeeder extends Seeder
                 'battalion_id' => 3,
             ],
             [
-                'name' => 'Headquarter Company',
+                'name' => 'Headquarter Company First Infantry Battalion',
                 'short_name' => 'HQ 1TTR',
                 'battalion_id' => 2,
             ],
@@ -64,7 +64,7 @@ class CompanySeeder extends Seeder
 
             //2TTR
             [
-                'name' => 'Headquarter Company',
+                'name' => 'Headquarter Company Second Infantry Battalion',
                 'short_name' => 'HQ 2TTR',
                 'battalion_id' => 3,
             ],
@@ -91,7 +91,7 @@ class CompanySeeder extends Seeder
 
             //SSB
             [
-                'name' => 'Headquarter Company',
+                'name' => 'Headquarter Company Support and Service Battalion',
                 'short_name' => 'HQ SSB',
                 'battalion_id' => 4,
             ],
