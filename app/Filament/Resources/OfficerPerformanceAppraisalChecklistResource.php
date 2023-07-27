@@ -89,11 +89,9 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Toggle::make('has_company_commander')
                         ->label('Does this officer have a company commander?'),
                     Forms\Components\Toggle::make('has_company_commander_comments')
-                        ->label('Does it have company commander comments?')
-                        ->rule(new RequireIfFieldIsTrue('has_company_commander', 'company commander')),
+                        ->label('Does it have company commander comments?'),
                     Forms\Components\Toggle::make('has_company_commander_signature')
-                        ->label('Is it signed by the company commander?')
-                        ->rule(new RequireIfFieldIsTrue('has_company_commander', 'company commander')),
+                        ->label('Is it signed by the company commander?'),
                 ])->columns(3),
 
                 // Grading and Discipline
@@ -115,11 +113,9 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Toggle::make('has_unit_commander')
                         ->label('Does this officer have a unit commander?'),
                     Forms\Components\Toggle::make('has_unit_commander_comments')
-                        ->label('Does it have unit commander comments?')
-                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
+                        ->label('Does it have unit commander comments?'),
                     Forms\Components\Toggle::make('has_unit_commander_signature')
-                        ->label('Is it signed by the unit commander?')
-                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
+                        ->label('Is it signed by the unit commander?'),
                 ])->columns(3),
 
                 // Formation Command
