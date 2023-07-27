@@ -96,18 +96,6 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->rule(new RequireIfFieldIsTrue('has_company_commander', 'company commander')),
                 ])->columns(3),
 
-                // Unit Command
-                Forms\Components\Fieldset::make('Unit Commander')->schema([
-                    Forms\Components\Toggle::make('has_unit_commander')
-                        ->label('Does this officer have a unit commander?'),
-                    Forms\Components\Toggle::make('has_unit_commander_comments')
-                        ->label('Does it have unit commander comments?')
-                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
-                    Forms\Components\Toggle::make('has_unit_commander_signature')
-                        ->label('Is it signed by the unit commander?')
-                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
-                ])->columns(3),
-
                 // Grading and Discipline
                 Forms\Components\Fieldset::make('Grading and Discipline')->schema([
                     Forms\Components\Select::make('officer_appraisal_grade_id')
@@ -120,6 +108,18 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Textarea::make('disciplinary_action_particulars')
                         ->label('Particulars of disciplinary action, if any was taken in the period under review')
                         ->requiredIf('has_disciplinary_action', 'true'),
+                ])->columns(3),
+
+                // Unit Command
+                Forms\Components\Fieldset::make('Unit Commander')->schema([
+                    Forms\Components\Toggle::make('has_unit_commander')
+                        ->label('Does this officer have a unit commander?'),
+                    Forms\Components\Toggle::make('has_unit_commander_comments')
+                        ->label('Does it have unit commander comments?')
+                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
+                    Forms\Components\Toggle::make('has_unit_commander_signature')
+                        ->label('Is it signed by the unit commander?')
+                        ->rule(new RequireIfFieldIsTrue('has_unit_commander', 'unit commander')),
                 ])->columns(3),
 
                 // Formation Command
@@ -234,7 +234,6 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
                 ExportBulkAction::make(),
             ]);
     }
