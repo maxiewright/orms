@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 use JeffGreco13\FilamentBreezy\FilamentBreezy;
 
 class FilamentServiceProvider extends ServiceProvider
@@ -35,5 +38,12 @@ class FilamentServiceProvider extends ServiceProvider
             'officers',
             'access control',
         ]);
+
+        Page::$reportValidationErrorUsing = function (ValidationException $exception) {
+            Notification::make()
+                ->title($exception->getMessage())
+                ->danger()
+                ->send();
+        };
     }
 }
