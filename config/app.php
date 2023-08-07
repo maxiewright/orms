@@ -172,6 +172,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\GoogleDriveServiceProvider::class,
         \App\Providers\FilamentServiceProvider::class,
+        \App\Providers\OnboardingServiceProvider::class,
     ])->toArray(),
 
     /*

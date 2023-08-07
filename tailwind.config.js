@@ -12,6 +12,7 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './vendor/ralphjsmit/laravel-filament-onboard/resources/**/*.blade.php'
     ],
 
     darkMode: 'class',

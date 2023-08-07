@@ -22,7 +22,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         static::creating(fn (User $user) => [
             $user->password = bcrypt('Password1'),
         ]);
-
     }
 
     public function getFilamentName(): string
@@ -40,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         'name',
         'email',
         'password',
+        'password_changed_at'
     ];
 
     /**

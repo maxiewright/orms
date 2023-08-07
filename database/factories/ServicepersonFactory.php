@@ -41,7 +41,7 @@ class ServicepersonFactory extends Factory
         $enlistmentDate = $this->getEnlistmentDate($rank);
 
         return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(100, 300),
+            'number' => fake()->unique()->numberBetween(300, 500),
             'rank_id' => $rank,
             'enlistment_date' => $enlistmentDate,
             'assumption_date' => fake()->dateTimeBetween(
