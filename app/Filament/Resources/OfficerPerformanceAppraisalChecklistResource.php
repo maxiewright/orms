@@ -200,17 +200,23 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     ->boolean(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('created_at')
+                Tables\Filters\Filter::make('appraisal_start_at')
                     ->form([
                         Forms\Components\DatePicker::make('appraisal_start_at'),
-                        Forms\Components\DatePicker::make('appraisal_end_at'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['appraisal_start_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '>=', $date),
-                            )
+                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '<=', $date),
+                            );
+                    }),
+                Tables\Filters\Filter::make('appraisal_end_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('appraisal_end_at'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
                             ->when(
                                 $data['appraisal_end_at'],
                                 fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
