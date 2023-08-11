@@ -2,11 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OfficerAppraisalGradeEnum;
 use App\Enums\RankEnum;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\Pages;
+use App\Models\OfficerAppraisalGrade;
 use App\Models\OfficerPerformanceAppraisalChecklist;
+use App\Models\Unit\Battalion;
+use App\Models\Unit\Company;
 use App\Rules\UniqueAppraisalPeriodRule;
+use Closure;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -75,7 +81,18 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->required()
                         ->after('appraisal_start_at')
                         ->beforeOrEqual('today'),
-                ]),
+                    Select::make('battalion at ')
+                        ->label('Unit location at appraisal period')
+                        ->relationship('battalion', 'short_name')
+                        ->searchable()
+                        ->preload(),
+                    Select::make('rank')
+                        ->label('Substantive rank at appraisal period')
+                        ->relationship('substantiveRank', 'regiment_abbreviation')
+                        ->searchable()
+                        ->preload(),
+
+                ])->columns(3),
 
                 // Verification
                 Forms\Components\Fieldset::make('Appointment & Assessment Verification')->schema([
@@ -89,20 +106,36 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 //Company Command
                 Forms\Components\Fieldset::make('Company Commander')->schema([
                     Forms\Components\Toggle::make('has_company_commander')
-                        ->label('Does this officer have a company commander?'),
+                        ->label('Does this officer have a company commander?')
+                        ->reactive(),
                     Forms\Components\Toggle::make('has_company_commander_comments')
-                        ->label('Does it have company commander comments?'),
+                        ->label('Does it have company commander comments?')
+                        ->hidden(fn(Closure $get) => $get('has_company_commander') === false)
+                        ->reactive(),
                     Forms\Components\Toggle::make('has_company_commander_signature')
-                        ->label('Is it signed by the company commander?'),
+                        ->label('Is it signed by the company commander?')
+                        ->hidden(fn(Closure $get) => $get('has_company_commander_comments') === false),
                 ])->columns(3),
 
                 // Grading and Discipline
                 Forms\Components\Fieldset::make('Grading and Discipline')->schema([
                     Forms\Components\Select::make('officer_appraisal_grade_id')
                         ->label('Substantive rank grading')
-                        ->relationship('grade', 'name')
+                        ->options(
+                            OfficerAppraisalGrade::all()->pluck('name', 'id')
+                                ->sortByDesc('id')
+                        )
+                        ->searchable()
+                        ->reactive()
                         ->required()
                         ->preload(),
+
+                    Forms\Components\Textarea::make('non_grading_reason')
+                        ->label('Reason for not grading')
+                        ->requiredIf('officer_appraisal_grade_id', OfficerAppraisalGradeEnum::not_graded->value)
+                        ->hidden(
+                            fn(Closure $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value
+                        ),
                     Forms\Components\Toggle::make('has_disciplinary_action')
                         ->label('Was any disciplinary action taken against this officer for the period under review?'),
                     Forms\Components\Textarea::make('disciplinary_action_particulars')
@@ -113,19 +146,25 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 // Unit Command
                 Forms\Components\Fieldset::make('Unit Commander')->schema([
                     Forms\Components\Toggle::make('has_unit_commander')
-                        ->label('Does this officer have a unit commander?'),
+                        ->label('Does this officer have a unit commander?')
+                        ->reactive(),
                     Forms\Components\Toggle::make('has_unit_commander_comments')
-                        ->label('Does it have unit commander comments?'),
+                        ->label('Does it have unit commander comments?')
+                        ->hidden(fn(Closure $get) => $get('has_unit_commander') === false)
+                        ->reactive(),
                     Forms\Components\Toggle::make('has_unit_commander_signature')
-                        ->label('Is it signed by the unit commander?'),
+                        ->label('Is it signed by the unit commander?')
+                        ->hidden(fn(Closure $get) => $get('has_unit_commander_comments') === false),
                 ])->columns(3),
 
                 // Formation Command
                 Forms\Components\Fieldset::make('Formation Commander')->schema([
                     Forms\Components\Toggle::make('has_formation_commander_comments')
-                        ->label('Does it have formation commander comments?'),
+                        ->label('Does it have formation commander comments?')
+                        ->reactive(),
                     Forms\Components\Toggle::make('has_formation_commander_signature')
-                        ->label('Is it signed by the formation commander?'),
+                        ->label('Is it signed by the formation commander?')
+                        ->hidden(fn(Closure $get) => $get('has_formation_commander_comments') === false),
                 ])->columns(3),
 
                 // Officer Signature

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OfficerAppraisalGradeEnum;
+use App\Models\Unit\Battalion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,6 +41,16 @@ class OfficerPerformanceAppraisalChecklist extends Model
     public function grade(): BelongsTo
     {
         return $this->belongsTo(OfficerAppraisalGrade::class, 'officer_appraisal_grade_id');
+    }
+
+    public function battalion(): BelongsTo
+    {
+        return $this->belongsTo(Battalion::class, 'battalion_id');
+    }
+
+    public function substantiveRank(): BelongsTo
+    {
+        return $this->belongsTo(Rank::class, 'rank_id');
     }
 
     public function scopeCompletedByCompanyCommander(Builder $query): void

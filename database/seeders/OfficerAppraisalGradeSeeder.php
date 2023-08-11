@@ -15,6 +15,7 @@ class OfficerAppraisalGradeSeeder extends Seeder
             'good',
             'adequate',
             'weak',
+            'not graded'
         ];
 
         foreach ($grades as $grade) {
