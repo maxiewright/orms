@@ -168,7 +168,8 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                                 $set('has_unit_commander_comments', false);
                                 $set('has_unit_commander_signature', false);
                             }
-                        }),
+                        })->rule(new RequireIfFieldIsTrue(
+                            'has_company_commander', 'company commander')),
                     Forms\Components\Toggle::make('has_unit_commander_comments')
                         ->label('Does it have unit commander or SSO comments?')
                         ->hidden(fn(Closure $get) => $get('has_unit_commander') === false)

@@ -12,28 +12,23 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
     protected array $data = [];
 
     public function __construct(
-        protected string $dependencyField,
-        protected ?string $dependencyFieldName = null
+        protected string $field,
+        protected ?string $fieldName = null
     ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-
-        $dependencyValue = $this->data[$this->dependencyField];
-
-        if ($dependencyValue !== $value) {
-            $fail("this field is required if {$this->dependencyFieldName()} field is true");
+        if ($this->data[$this->field] && !$value) {
+            $fail("this field is required if {$this->fieldName()} field is true");
         }
-
     }
 
-    private function dependencyFieldName(): string
+    private function fieldName(): string
     {
-        return (! $this->dependencyFieldName)
-            ? Str::lower(Str::replace('_', ' ', $this->dependencyField))
-            : $this->dependencyFieldName;
-
+        return (! $this->fieldName)
+            ? Str::lower(Str::replace('_', ' ', $this->field))
+            : $this->fieldName;
     }
 
     public function setData(array $data): RequireIfFieldIsTrue|static
