@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 class InterviewSeeder extends Seeder
 {
-    protected $toTruncate = ['attendee_roles', 'interview_reasons', 'interview_statuses'];
+    protected $toTruncate = [
+        'attendee_roles',
+        'interview_reasons',
+        'interview_statuses'
+    ];
     public function run()
     {
         Model::unguard();

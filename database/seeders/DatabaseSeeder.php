@@ -9,15 +9,31 @@ use Database\Seeders\Interview\InterviewReasonSeeder;
 use Database\Seeders\Interview\InterviewStatusSeeder;
 use Database\Seeders\Unit\BattalionSeeder;
 use Database\Seeders\Unit\CompanySeeder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
+    protected array $toTruncate = [
+        'officer_appraisal_grades'
+    ];
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
+
+        Model::unguard();
+
+        Schema::disableForeignKeyConstraints();
+
+        foreach ($this->toTruncate as $table){
+            DB::table($table)->truncate();
+        }
+
+        Schema::enableForeignKeyConstraints();
 
         $this->call([
             FormationSeeder::class,

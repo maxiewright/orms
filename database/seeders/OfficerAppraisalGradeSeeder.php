@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 
 class OfficerAppraisalGradeSeeder extends Seeder
 {
+
     public function run(): void
     {
         $grades = [
