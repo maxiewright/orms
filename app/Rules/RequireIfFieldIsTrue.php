@@ -23,7 +23,7 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
         $dependencyValue = $this->data[$this->dependencyField];
 
         if ($dependencyValue !== $value) {
-            $fail("this field is required if {$this->dependencyFieldName()} field is set");
+            $fail("this field is required if {$this->dependencyFieldName()} field is true");
         }
 
     }

@@ -9,6 +9,8 @@ use App\Models\OfficerAppraisalGrade;
 use App\Models\OfficerPerformanceAppraisalChecklist;
 use App\Models\Unit\Battalion;
 use App\Models\Unit\Company;
+use App\Rules\MustBeTrueIf;
+use App\Rules\RequireIfFieldIsTrue;
 use App\Rules\UniqueAppraisalPeriodRule;
 use Closure;
 use Filament\Forms;
@@ -19,6 +21,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
@@ -81,17 +84,16 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->required()
                         ->after('appraisal_start_at')
                         ->beforeOrEqual('today'),
-                    Select::make('battalion at ')
+                    Select::make('battalion_id')
                         ->label('Unit location at appraisal period')
                         ->relationship('battalion', 'short_name')
                         ->searchable()
                         ->preload(),
-                    Select::make('rank')
+                    Select::make('rank_id')
                         ->label('Substantive rank at appraisal period')
                         ->relationship('substantiveRank', 'regiment_abbreviation')
                         ->searchable()
                         ->preload(),
-
                 ])->columns(3),
 
                 // Verification
@@ -107,11 +109,22 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Company Commander')->schema([
                     Forms\Components\Toggle::make('has_company_commander')
                         ->label('Does this officer have a company commander?')
-                        ->reactive(),
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            if (!$state) {
+                                $set('has_company_commander_comments', false);
+                                $set('has_company_commander_signature', false);
+                            }
+                        }),
                     Forms\Components\Toggle::make('has_company_commander_comments')
                         ->label('Does it have company commander comments?')
                         ->hidden(fn(Closure $get) => $get('has_company_commander') === false)
-                        ->reactive(),
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            if (!$state) {
+                                $set('has_company_commander_signature', false);
+                            }
+                        }),
                     Forms\Components\Toggle::make('has_company_commander_signature')
                         ->label('Is it signed by the company commander?')
                         ->hidden(fn(Closure $get) => $get('has_company_commander_comments') === false),
@@ -132,28 +145,41 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
 
                     Forms\Components\Textarea::make('non_grading_reason')
                         ->label('Reason for not grading')
+                        ->rows(1)
                         ->requiredIf('officer_appraisal_grade_id', OfficerAppraisalGradeEnum::not_graded->value)
-                        ->hidden(
-                            fn(Closure $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value
-                        ),
+                        ->hidden(fn(Closure $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value),
                     Forms\Components\Toggle::make('has_disciplinary_action')
-                        ->label('Was any disciplinary action taken against this officer for the period under review?'),
+                        ->label('Was any disciplinary action taken against this officer for the period under review?')
+                        ->reactive(),
                     Forms\Components\Textarea::make('disciplinary_action_particulars')
                         ->label('Particulars of disciplinary action, if any was taken in the period under review')
-                        ->requiredIf('has_disciplinary_action', 'true'),
+                        ->rows(1)
+                        ->requiredIf('has_disciplinary_action', 'true')
+                        ->hidden(fn(Closure $get) => $get('has_disciplinary_action') === false),
                 ])->columns(3),
 
                 // Unit Command
-                Forms\Components\Fieldset::make('Unit Commander')->schema([
+                Forms\Components\Fieldset::make('Unit Commander or Senior Staff Officer')->schema([
                     Forms\Components\Toggle::make('has_unit_commander')
-                        ->label('Does this officer have a unit commander?')
-                        ->reactive(),
+                        ->label('Does this officer have a unit commander or SSO?')
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            if (!$state) {
+                                $set('has_unit_commander_comments', false);
+                                $set('has_unit_commander_signature', false);
+                            }
+                        }),
                     Forms\Components\Toggle::make('has_unit_commander_comments')
-                        ->label('Does it have unit commander comments?')
+                        ->label('Does it have unit commander or SSO comments?')
                         ->hidden(fn(Closure $get) => $get('has_unit_commander') === false)
-                        ->reactive(),
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            if (!$state) {
+                                $set('has_unit_commander_signature', false);
+                            }
+                        }),
                     Forms\Components\Toggle::make('has_unit_commander_signature')
-                        ->label('Is it signed by the unit commander?')
+                        ->label('Is it signed by the unit commander or SSO?')
                         ->hidden(fn(Closure $get) => $get('has_unit_commander_comments') === false),
                 ])->columns(3),
 
@@ -170,8 +196,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 // Officer Signature
                 Forms\Components\Fieldset::make('Serviceperson')->schema([
                     Forms\Components\Toggle::make('has_serviceperson_signature')
-                        ->label('Is it signed by the Officer?')
-                        ->requiredIf('has_formation_commander_signature', 'true'),
+                        ->label('Is it signed by the Officer?'),
                 ]),
             ]);
     }
@@ -183,7 +208,11 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Columns\TextColumn::make('serviceperson.military_name')
                     ->label('Name')
                     ->searchable(['number', 'first_name', 'last_name'])
-                    ->sortable(['number']),
+                    ->sortable(['number'])
+                    ->description(function (OfficerPerformanceAppraisalChecklist $record): ?string {
+                        return ($record->battalion)
+                            ? "Unit: {$record->battalion?->short_name}" : '';
+                    }),
                 Tables\Columns\TextColumn::make('appraisal_start_at')
                     ->label('Form')
                     ->date('d M Y')
@@ -201,7 +230,6 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Columns\IconColumn::make('is_assessment_rubric_complete')
                     ->label('Rubric Complete')
                     ->boolean(),
-
                 // Company Commander
                 Tables\Columns\IconColumn::make('has_company_commander_comments')
                     ->label('OC Comments')
@@ -220,7 +248,11 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
 
                 // Grading and Discipline
                 Tables\Columns\TextColumn::make('grade.name')
-                    ->label('Overall Grade'),
+                    ->label('Rank Grade')
+                    ->description(function (OfficerPerformanceAppraisalChecklist $record): ?string {
+                        return ($record->substantiveRank)
+                            ? "Rank at grading: {$record->substantiveRank?->regiment_abbreviation}" : '';
+                    }),
                 Tables\Columns\IconColumn::make('has_disciplinary_action')
                     ->label('Disciplinary Action')
                     ->boolean(),

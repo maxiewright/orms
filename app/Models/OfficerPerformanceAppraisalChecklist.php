@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\OfficerAppraisalGradeEnum;
 use App\Models\Unit\Battalion;
-use Illuminate\Database\Eloquent\Builder;
+use App\Traits\HasCompletionElements;
+use App\Traits\HasCompletionScopes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfficerPerformanceAppraisalChecklist extends Model
 {
-    use HasFactory;
+    use HasFactory, HasCompletionScopes, HasCompletionElements;
 
     protected $guarded = [];
 
@@ -38,9 +38,9 @@ class OfficerPerformanceAppraisalChecklist extends Model
         'has_serviceperson_signature' => 'boolean',
     ];
 
-    public function grade(): BelongsTo
+    public function serviceperson(): BelongsTo
     {
-        return $this->belongsTo(OfficerAppraisalGrade::class, 'officer_appraisal_grade_id');
+        return $this->belongsTo(Serviceperson::class);
     }
 
     public function battalion(): BelongsTo
@@ -52,102 +52,24 @@ class OfficerPerformanceAppraisalChecklist extends Model
     {
         return $this->belongsTo(Rank::class, 'rank_id');
     }
-
-    public function scopeCompletedByCompanyCommander(Builder $query): void
+    public function grade(): BelongsTo
     {
-        $query->where('is_appointment_correct', true)
-            ->where('is_assessment_rubric_complete', true)
-            ->where('has_company_commander_comments', true)
-            ->where('has_company_commander_signature', true);
-    }
-
-    public function completedByCompanyCommander(): bool
-    {
-        return $this->is_appointment_correct
-            && $this->is_assessment_rubric_complete
-            && $this->has_company_commander_comments
-            && $this->has_company_commander_signature;
-    }
-
-    public function scopeCompletedByUnitCommander(Builder $query): void
-    {
-        $query
-            ->where('has_unit_commander_comments', true)
-            ->where('has_unit_commander_signature', true);
-    }
-
-    public function scopeHasDisciplinaryAction(Builder $query): void
-    {
-        $query->where('has_disciplinary_action', true);
-    }
-
-    public function completedByUnitCommander(): bool
-    {
-        return $this->has_unit_commander_comments
-            && $this->has_unit_commander_signature;
-    }
-
-    public function scopeCompletedByFormationCommander(Builder $query): void
-    {
-        $query
-            ->where('has_formation_commander_comments', true)
-            ->where('has_formation_commander_signature', true);
-    }
-
-    public function completedByFormationCommander(): bool
-    {
-        return $this->has_formation_commander_comments
-            && $this->has_formation_commander_signature;
-    }
-
-    public function signedByServiceperson()
-    {
-        return $this->has_serviceperson_signature;
-    }
-
-    public function scopeCompleted(Builder $query): void
-    {
-        (! $this->has_unit_commander)
-            ? $query->completedByCompanyCommander()
-                ->completedByFormationCommander()
-                ->where('has_serviceperson_signature', true)
-
-            : $query->completedByCompanyCommander()
-                ->completedByUnitCommander()
-                ->completedByFormationCommander()
-                ->where('has_serviceperson_signature', true);
-
-    }
-
-    public function completed(): bool
-    {
-        return (! $this->has_unit_commander)
-            ? $this->completedByCompanyCommander()
-            && $this->completedByFormationCommander()
-            && $this->signedByServiceperson()
-
-            : $this->completedByCompanyCommander()
-            && $this->completedByUnitCommander()
-            && $this->completedByFormationCommander()
-            && $this->signedByServiceperson();
+        return $this->belongsTo(OfficerAppraisalGrade::class, 'officer_appraisal_grade_id');
     }
 
     public function status(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->completed() ? 'Completed': 'Incomplete'
+            get: fn() => $this->completed() ? 'Completed' : 'Incomplete'
         );
     }
 
     public function year(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->appraisal_end_at?->format('Y')
+            get: fn() => $this->appraisal_end_at?->format('Y')
         );
     }
 
-    public function serviceperson(): BelongsTo
-    {
-        return $this->belongsTo(Serviceperson::class);
-    }
+
 }
