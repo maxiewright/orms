@@ -132,7 +132,7 @@
                         @endauth
                     </div>
                 </div>
-                <img src="https://scontent.fpos1-2.fna.fbcdn.net/v/t39.30808-6/354227316_573047161611387_1925659153250125785_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=730e14&_nc_ohc=zfxTL7vLMRsAX8uLzRX&_nc_ht=scontent.fpos1-2.fna&oh=00_AfCpEHclCFOQfwadj2vC3N7sGhpaLVgTqVl5KW1qF29GRw&oe=64AB1D7E"
+                <img src="{{asset('images/our_people.jpeg')}}"
                      alt=""
                      class="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36">
             </div>
