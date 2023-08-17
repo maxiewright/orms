@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Metadata;
 
+use App\Models\Serviceperson;
 use App\Traits\SluggableByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

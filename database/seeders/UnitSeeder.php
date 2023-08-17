@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Schema;
 class UnitSeeder extends Seeder
 {
     protected $toTruncate = ['battalions', 'companies'];
+
     public function run()
     {
         Model::unguard();
 
         Schema::disableForeignKeyConstraints();
 
-        foreach ($this->toTruncate as $table){
+        foreach ($this->toTruncate as $table) {
             DB::table($table)->truncate();
         }
 

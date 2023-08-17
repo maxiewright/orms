@@ -5,11 +5,8 @@ namespace App\Filament\Resources;
 use App\Enums\OfficerAppraisalGradeEnum;
 use App\Enums\RankEnum;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\Pages;
-use App\Models\OfficerAppraisalGrade;
+use App\Models\Metadata\OfficerAppraisalGrade;
 use App\Models\OfficerPerformanceAppraisalChecklist;
-use App\Models\Unit\Battalion;
-use App\Models\Unit\Company;
-use App\Rules\MustBeTrueIf;
 use App\Rules\RequireIfFieldIsTrue;
 use App\Rules\UniqueAppraisalPeriodRule;
 use Closure;
@@ -21,8 +18,6 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Unique;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class OfficerPerformanceAppraisalChecklistResource extends Resource
@@ -58,7 +53,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
     {
         return [
             'Year' => $record->appraisal_end_at->format('Y'),
-            'Status' => $record->status
+            'Status' => $record->status,
         ];
     }
 
@@ -70,8 +65,8 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Forms\Components\Fieldset::make('Basic Info')->schema([
                     Forms\Components\Select::make('serviceperson_number')
                         ->relationship('serviceperson', 'number',
-                            fn(Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->military_name}")
+                            fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
                         ->searchable(['number', 'first_name', 'last_name'])
                         ->required(),
                     Forms\Components\DatePicker::make('appraisal_start_at')
@@ -111,23 +106,23 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Does this officer have a company commander?')
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state) {
-                            if (!$state) {
+                            if (! $state) {
                                 $set('has_company_commander_comments', false);
                                 $set('has_company_commander_signature', false);
                             }
                         }),
                     Forms\Components\Toggle::make('has_company_commander_comments')
                         ->label('Does it have company commander comments?')
-                        ->hidden(fn(Closure $get) => $get('has_company_commander') === false)
+                        ->hidden(fn (Closure $get) => $get('has_company_commander') === false)
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state) {
-                            if (!$state) {
+                            if (! $state) {
                                 $set('has_company_commander_signature', false);
                             }
                         }),
                     Forms\Components\Toggle::make('has_company_commander_signature')
                         ->label('Is it signed by the company commander?')
-                        ->hidden(fn(Closure $get) => $get('has_company_commander_comments') === false),
+                        ->hidden(fn (Closure $get) => $get('has_company_commander_comments') === false),
                 ])->columns(3),
 
                 // Grading and Discipline
@@ -147,7 +142,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Reason for not grading')
                         ->rows(1)
                         ->requiredIf('officer_appraisal_grade_id', OfficerAppraisalGradeEnum::not_graded->value)
-                        ->hidden(fn(Closure $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value),
+                        ->hidden(fn (Closure $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value),
                     Forms\Components\Toggle::make('has_disciplinary_action')
                         ->label('Was any disciplinary action taken against this officer for the period under review?')
                         ->reactive(),
@@ -155,7 +150,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Particulars of disciplinary action, if any was taken in the period under review')
                         ->rows(1)
                         ->requiredIf('has_disciplinary_action', 'true')
-                        ->hidden(fn(Closure $get) => $get('has_disciplinary_action') === false),
+                        ->hidden(fn (Closure $get) => $get('has_disciplinary_action') === false),
                 ])->columns(3),
 
                 // Unit Command
@@ -164,7 +159,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Does this officer have a unit commander or SSO?')
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state) {
-                            if (!$state) {
+                            if (! $state) {
                                 $set('has_unit_commander_comments', false);
                                 $set('has_unit_commander_signature', false);
                             }
@@ -172,16 +167,16 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                             'has_company_commander', 'company commander')),
                     Forms\Components\Toggle::make('has_unit_commander_comments')
                         ->label('Does it have unit commander or SSO comments?')
-                        ->hidden(fn(Closure $get) => $get('has_unit_commander') === false)
+                        ->hidden(fn (Closure $get) => $get('has_unit_commander') === false)
                         ->reactive()
                         ->afterStateUpdated(function (Closure $set, $state) {
-                            if (!$state) {
+                            if (! $state) {
                                 $set('has_unit_commander_signature', false);
                             }
                         }),
                     Forms\Components\Toggle::make('has_unit_commander_signature')
                         ->label('Is it signed by the unit commander or SSO?')
-                        ->hidden(fn(Closure $get) => $get('has_unit_commander_comments') === false),
+                        ->hidden(fn (Closure $get) => $get('has_unit_commander_comments') === false),
                 ])->columns(3),
 
                 // Formation Command
@@ -191,7 +186,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->reactive(),
                     Forms\Components\Toggle::make('has_formation_commander_signature')
                         ->label('Is it signed by the formation commander?')
-                        ->hidden(fn(Closure $get) => $get('has_formation_commander_comments') === false),
+                        ->hidden(fn (Closure $get) => $get('has_formation_commander_comments') === false),
                 ])->columns(3),
 
                 // Officer Signature
@@ -280,7 +275,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         return $query
                             ->when(
                                 $data['appraisal_start_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_start_at', '<=', $date),
                             );
                     }),
                 Tables\Filters\Filter::make('appraisal_end_at')
@@ -291,21 +286,21 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         return $query
                             ->when(
                                 $data['appraisal_end_at'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('appraisal_end_at', '<=', $date),
                             );
                     }),
                 Tables\Filters\SelectFilter::make('grade')
                     ->relationship('grade', 'name'),
                 Tables\Filters\Filter::make('Completed_by_company_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByCompanyCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByCompanyCommander()),
                 Tables\Filters\Filter::make('completed_by_unit_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByUnitCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByUnitCommander()),
                 Tables\Filters\Filter::make('has_disciplinary_action')
-                    ->query(fn(Builder $query): Builder => $query->hasDisciplinaryAction()),
+                    ->query(fn (Builder $query): Builder => $query->hasDisciplinaryAction()),
                 Tables\Filters\Filter::make('completed_by_formation_commander')
-                    ->query(fn(Builder $query): Builder => $query->completedByFormationCommander()),
+                    ->query(fn (Builder $query): Builder => $query->completedByFormationCommander()),
                 Tables\Filters\Filter::make('completed')
-                    ->query(fn(Builder $query): Builder => $query->completed()),
+                    ->query(fn (Builder $query): Builder => $query->completed()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

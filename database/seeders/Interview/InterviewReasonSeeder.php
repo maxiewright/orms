@@ -16,7 +16,7 @@ class InterviewReasonSeeder extends Seeder
             'promotion',
             'seniority',
             'personal matter',
-            'redress'
+            'redress',
         ];
 
         foreach ($reasons as $reason) {

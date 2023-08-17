@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Enums\RankEnum;
+use App\Models\Metadata\EnlistmentType;
 use App\Models\Metadata\Gender;
+use App\Models\Metadata\OfficerAppraisalGrade;
+use App\Models\Metadata\Rank;
 use App\Models\Unit\Formation;
 use App\Traits\HasInterview;
 use Illuminate\Database\Eloquent\Builder;

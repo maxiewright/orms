@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use App\Enums\OfficerAppraisalGradeEnum;
-use Illuminate\Database\Eloquent\Builder;
 
 trait HasCompletionElements
 {
@@ -44,14 +43,14 @@ trait HasCompletionElements
 
     public function hasUnitAndFormationCommand(): bool
     {
-        return !$this->has_company_commander
+        return ! $this->has_company_commander
             && $this->has_unit_commander;
     }
 
     public function hasFormationCommandOnly(): bool
     {
-        return !$this->has_company_commander
-            && !$this->has_unit_commander;
+        return ! $this->has_company_commander
+            && ! $this->has_unit_commander;
     }
 
     public function isCompletedOnlyHavingFormationCommander(): bool

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\EnlistmentType;
+use App\Models\Metadata\EnlistmentType;
 use Illuminate\Database\Seeder;
 
 class EnlistmentTypeSeeder extends Seeder

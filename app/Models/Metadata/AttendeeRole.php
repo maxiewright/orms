@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Metadata;
 
 use App\Traits\SluggableByName;
 use Illuminate\Database\Eloquent\Model;

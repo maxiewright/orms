@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Schema;
 class DatabaseSeeder extends Seeder
 {
     protected array $toTruncate = [
-        'officer_appraisal_grades'
+        'officer_appraisal_grades',
     ];
+
     /**
      * Seed the application's database.
      */
@@ -29,7 +30,7 @@ class DatabaseSeeder extends Seeder
 
         Schema::disableForeignKeyConstraints();
 
-        foreach ($this->toTruncate as $table){
+        foreach ($this->toTruncate as $table) {
             DB::table($table)->truncate();
         }
 

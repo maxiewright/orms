@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Metadata\OfficerAppraisalGrade;
+use App\Models\Metadata\Rank;
 use App\Models\Unit\Battalion;
 use App\Traits\HasCompletionElements;
 use App\Traits\HasCompletionScopes;
@@ -52,6 +54,7 @@ class OfficerPerformanceAppraisalChecklist extends Model
     {
         return $this->belongsTo(Rank::class, 'rank_id');
     }
+
     public function grade(): BelongsTo
     {
         return $this->belongsTo(OfficerAppraisalGrade::class, 'officer_appraisal_grade_id');
@@ -60,16 +63,14 @@ class OfficerPerformanceAppraisalChecklist extends Model
     public function status(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->completed() ? 'Completed' : 'Incomplete'
+            get: fn () => $this->completed() ? 'Completed' : 'Incomplete'
         );
     }
 
     public function year(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->appraisal_end_at?->format('Y')
+            get: fn () => $this->appraisal_end_at?->format('Y')
         );
     }
-
-
 }

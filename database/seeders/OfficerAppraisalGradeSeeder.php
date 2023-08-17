@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\OfficerAppraisalGrade;
+use App\Models\Metadata\OfficerAppraisalGrade;
 use Illuminate\Database\Seeder;
 
 class OfficerAppraisalGradeSeeder extends Seeder
 {
-
     public function run(): void
     {
         $grades = [
@@ -16,7 +15,7 @@ class OfficerAppraisalGradeSeeder extends Seeder
             'good',
             'adequate',
             'weak',
-            'not graded'
+            'not graded',
         ];
 
         foreach ($grades as $grade) {

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Interview;
 
-use App\Models\AttendeeRole;
+use App\Models\Metadata\AttendeeRole;
 use Illuminate\Database\Seeder;
 
 class AttendeeRoleSeeder extends Seeder

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Rank;
+use App\Models\Metadata\Rank;
 use Illuminate\Database\Seeder;
 
 class RankSeeder extends Seeder

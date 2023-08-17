@@ -82,7 +82,6 @@ trait HasCompletionScopes
             ->signedByServiceperson();
     }
 
-
     public function scopeCompletedHavingAllLevelsOfCommand(Builder $query): void
     {
         $query->haveAllLevelsOfCommand()
@@ -102,7 +101,4 @@ trait HasCompletionScopes
             ->orWhere
             ->CompletedHavingAllLevelsOfCommand();
     }
-
-
 }
-

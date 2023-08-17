@@ -19,7 +19,7 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->data[$this->field] && !$value) {
+        if ($this->data[$this->field] && ! $value) {
             $fail("this field is required if {$this->fieldName()} field is true");
         }
     }
