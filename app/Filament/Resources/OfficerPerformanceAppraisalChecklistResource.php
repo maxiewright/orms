@@ -24,7 +24,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
 {
     protected static ?string $model = OfficerPerformanceAppraisalChecklist::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-check';
 
     protected static ?string $navigationGroup = 'officers';
 

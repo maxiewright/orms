@@ -14,7 +14,7 @@ class InterviewReasonResource extends Resource
 {
     protected static ?string $model = InterviewReason::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationGroup = 'metadata';
 

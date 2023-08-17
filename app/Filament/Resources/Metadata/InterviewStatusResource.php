@@ -14,7 +14,7 @@ class InterviewStatusResource extends Resource
 {
     protected static ?string $model = InterviewStatus::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationGroup = 'metadata';
 

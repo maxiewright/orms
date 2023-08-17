@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
+use Filament\Navigation\NavigationGroup;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\ServiceProvider;
@@ -36,7 +37,10 @@ class FilamentServiceProvider extends ServiceProvider
         Filament::registerNavigationGroups([
             'servicepeople',
             'officers',
-            'access control',
+            'administration',
+            NavigationGroup::make('metadata')->collapsed(),
+            NavigationGroup::make('access control')->collapsed(),
+
         ]);
 
         Page::$reportValidationErrorUsing = function (ValidationException $exception) {

@@ -22,7 +22,6 @@ class Gender extends Model
             ->saveSlugsTo('slug');
     }
 
-    
     public function serviceperson(): HasMany
     {
         return $this->hasMany(Serviceperson::class,);

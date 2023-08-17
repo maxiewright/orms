@@ -14,7 +14,7 @@ class OfficerAppraisalGradeResource extends Resource
 {
     protected static ?string $model = OfficerAppraisalGrade::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
 
     protected static ?string $navigationGroup = 'metadata';
 

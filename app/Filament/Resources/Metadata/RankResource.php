@@ -14,7 +14,7 @@ class RankResource extends Resource
 {
     protected static ?string $model = Rank::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-chevron-double-down';
 
     protected static ?string $navigationGroup = 'metadata';
 
