@@ -6,9 +6,9 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Models\Serviceperson;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -34,7 +34,7 @@ class UserResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->reactive()
-                    ->afterStateUpdated(function (\Closure $set, $state) {
+                    ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
                         $serviceperson = Serviceperson::query()->find($state);
                         $userName = $serviceperson->number.
                             Str::lower($serviceperson->last_name).

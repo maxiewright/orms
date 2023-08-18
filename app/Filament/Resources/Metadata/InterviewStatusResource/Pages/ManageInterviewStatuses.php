@@ -10,7 +10,7 @@ class ManageInterviewStatuses extends ManageRecords
 {
     protected static string $resource = InterviewStatusResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

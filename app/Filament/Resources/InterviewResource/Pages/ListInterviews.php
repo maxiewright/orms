@@ -15,7 +15,7 @@ class ListInterviews extends ListRecords
         return 4;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

@@ -15,9 +15,9 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -49,7 +49,7 @@ class InterviewResource extends Resource
         return $record->servicepeople()->first()->military_name;
     }
 
-    protected static function getGlobalSearchEloquentQuery(): Builder
+    public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()
             ->with(['servicepeople', 'reason', 'status']);

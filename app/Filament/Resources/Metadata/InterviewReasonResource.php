@@ -5,9 +5,9 @@ namespace App\Filament\Resources\Metadata;
 use App\Filament\Resources\Metadata\InterviewReasonResource\Pages;
 use App\Models\Metadata\InterviewReason;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class InterviewReasonResource extends Resource
@@ -16,7 +16,7 @@ class InterviewReasonResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
-    protected static ?string $navigationGroup = 'metadata';
+    protected static ?string $navigationGroup = 'Metadata';
 
     protected static ?int $navigationSort = 5;
 

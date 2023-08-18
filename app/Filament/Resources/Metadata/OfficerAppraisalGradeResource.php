@@ -5,18 +5,18 @@ namespace App\Filament\Resources\Metadata;
 use App\Filament\Resources\Metadata\OfficerAppraisalGradeResource\Pages;
 use App\Models\Metadata\OfficerAppraisalGrade;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class OfficerAppraisalGradeResource extends Resource
 {
     protected static ?string $model = OfficerAppraisalGrade::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = 'metadata';
+    protected static ?string $navigationGroup = 'Metadata';
 
     protected static ?int $navigationSort = 3;
 

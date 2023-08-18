@@ -5,9 +5,9 @@ namespace App\Filament\Resources\Metadata;
 use App\Filament\Resources\Metadata\AttendeeRoleResource\Pages;
 use App\Models\Metadata\AttendeeRole;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class AttendeeRoleResource extends Resource
@@ -16,7 +16,7 @@ class AttendeeRoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'metadata';
+    protected static ?string $navigationGroup = 'Metadata';
 
     protected static ?int $navigationSort = 4;
 

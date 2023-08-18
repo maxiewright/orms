@@ -120,12 +120,12 @@
 {{--                            Get started--}}
 {{--                        </a>--}}
                         @auth
-                            <a href="{{ route('filament.auth.login') }}" class="text-sm font-semibold leading-6 text-gray-900">
+                            <a href="{{ route('filament.admin.auth.login') }}" class="text-sm font-semibold leading-6 text-gray-900">
                                 Let's get to it
                                 <span aria-hidden="true">→</span>
                             </a>
                         @else
-                            <a href="{{ route('filament.auth.login') }}" class="text-sm font-semibold leading-6 text-gray-900">
+                            <a href="{{ route('filament.admin.auth.login') }}" class="text-sm font-semibold leading-6 text-gray-900">
                                 Log In
                                 <span aria-hidden="true">→</span>
                             </a>

@@ -10,7 +10,7 @@ class ManageEnlistmentTypes extends ManageRecords
 {
     protected static string $resource = EnlistmentTypeResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

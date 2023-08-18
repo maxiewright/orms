@@ -22,7 +22,7 @@ class EditInterview extends EditRecord
         return $data;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\ViewAction::make(),

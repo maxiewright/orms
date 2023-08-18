@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ServicepersonResource\Pages;
 use App\Models\Serviceperson;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
@@ -17,7 +17,7 @@ class ServicepersonResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'servicepeople';
+    protected static ?string $navigationGroup = 'Servicepeople';
 
     public static function form(Form $form): Form
     {

@@ -5,9 +5,9 @@ namespace App\Filament\Resources\Metadata;
 use App\Filament\Resources\Metadata\RankResource\Pages;
 use App\Models\Metadata\Rank;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class RankResource extends Resource
@@ -16,7 +16,7 @@ class RankResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chevron-double-down';
 
-    protected static ?string $navigationGroup = 'metadata';
+    protected static ?string $navigationGroup = 'Metadata';
 
     protected static ?int $navigationSort = 1;
 

@@ -13,7 +13,7 @@ class EditServiceperson extends EditRecord
 
     protected static string $resource = ServicepersonResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),
