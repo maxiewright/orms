@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34c9972c85b4808f53612eb38a182b4b",
+    "content-hash": "a6b686d6ebfdbcb9230a2566715145bd",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5972,6 +5972,85 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "ralphjsmit/laravel-filament-onboard",
+            "version": "2.0.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://filament-onboarding-manager-pro.composer.sh/download/99dfa994-0449-4946-bd7b-690187d1e33d/filament-onboarding-manager-pro-2.0.1.zip",
+                "reference": "c957d9cabe6029ac0944a5793aa810addd5c77c8",
+                "shasum": "19299beb2331e9356ac4769ad0a495a5741e7fab"
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "illuminate/contracts": "^8.83|^9.0|^10.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "nesbot/carbon": "^2.66",
+                "nunomaduro/collision": "^5.0|^6.0|^7.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Onboard": "RalphJSmit\\Filament\\Onboard\\Facades\\Onboard"
+                    },
+                    "providers": [
+                        "RalphJSmit\\Filament\\Onboard\\OnboardServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RalphJSmit\\Filament\\Onboard\\": "src",
+                    "RalphJSmit\\Filament\\Onboard\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RalphJSmit\\Filament\\Onboard\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph J. Smit",
+                    "role": "Developer",
+                    "email": "rjs@ralphjsmit.com"
+                }
+            ],
+            "description": "A package to handle onboarding in Filament Admin.",
+            "homepage": "https://github.com/ralphjsmit/laravel-filament-onboard",
+            "keywords": [
+                "laravel",
+                "laravel-filament-onboard",
+                "ralphjsmit"
+            ],
+            "time": "2023-08-12T16:50:19+00:00"
         },
         {
             "name": "ramsey/collection",
