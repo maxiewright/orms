@@ -15,6 +15,7 @@ class CreateUser extends CreateRecord
 
     protected function afterCreate(): void
     {
-        UserCreated::dispatch($this->record);
+        /** TODO - Fix what happens when a user is created */
+        // UserCreated::dispatch($this->record);
     }
 }
