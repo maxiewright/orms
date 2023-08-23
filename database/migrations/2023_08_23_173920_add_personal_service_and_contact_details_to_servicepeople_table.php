@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->foreignId('battalion_id')->nullable()->constrained();
             $table->foreignId('company_id')->nullable()->constrained();
             $table->foreignId('department_id')->nullable()->constrained();
-            $table->foreignId('job_id')->constrained();
+            $table->foreignId('job_id')->nullable()->constrained();
 
             // Contact Information
             $table->string('phone')->nullable()->unique();
