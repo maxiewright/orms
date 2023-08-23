@@ -2103,8 +2103,8 @@ class CitySeeder extends Seeder
 
         foreach ($cities as $city) {
             City::query()->create([
-                'division_id' => $city['division_id'],
                 'name' => $city['name'],
+                'division_id' => $city['division_id'],
             ]);
         }
     }
