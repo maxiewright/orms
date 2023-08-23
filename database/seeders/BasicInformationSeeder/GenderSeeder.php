@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\BasicInformationSeeder;
 
 use App\Models\Metadata\Gender;
 use Illuminate\Database\Seeder;

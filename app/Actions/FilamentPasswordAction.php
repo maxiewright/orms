@@ -10,7 +10,6 @@ use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 
 class FilamentPasswordAction
 {
-
     public function update(array $state, Wizard $livewire): void
     {
         $user = tap(Filament::auth()->user(), function ($user) use ($state) {
@@ -19,7 +18,7 @@ class FilamentPasswordAction
             $user->save();
         });
 
-        session()->forget('password_hash_' . Filament::getCurrentPanel()->getAuthGuard());
+        session()->forget('password_hash_'.Filament::getCurrentPanel()->getAuthGuard());
 
         Filament::auth()->login($user);
 
@@ -30,8 +29,4 @@ class FilamentPasswordAction
             ->title('Password Changed!')
             ->send();
     }
-
-
-
-
 }

@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use App\Enums\RankEnum;
-use App\Models\Metadata\EnlistmentType;
-use App\Models\Metadata\Gender;
 use App\Models\Metadata\OfficerAppraisalGrade;
-use App\Models\Metadata\Rank;
-use App\Models\Unit\Formation;
 use App\Traits\HasInterview;
+use App\Traits\Serviceperson\HasBasicInformation;
+use App\Traits\Serviceperson\HasServiceData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
-    use HasFactory, HasInterview;
+    use HasFactory, HasInterview, HasBasicInformation, HasServiceData;
 
     protected $primaryKey = 'number';
 
@@ -38,26 +36,6 @@ class Serviceperson extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class);
-    }
-
-    public function gender(): BelongsTo
-    {
-        return $this->belongsTo(Gender::class);
-    }
-
-    public function rank(): BelongsTo
-    {
-        return $this->belongsTo(Rank::class);
-    }
-
-    public function formation(): BelongsTo
-    {
-        return $this->belongsTo(Formation::class);
-    }
-
-    public function enlistmentType(): BelongsTo
-    {
-        return $this->belongsTo(EnlistmentType::class);
     }
 
     public function grading(): BelongsTo

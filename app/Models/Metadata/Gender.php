@@ -24,6 +24,6 @@ class Gender extends Model
 
     public function serviceperson(): HasMany
     {
-        return $this->hasMany(Serviceperson::class,);
+        return $this->hasMany(Serviceperson::class);
     }
 }

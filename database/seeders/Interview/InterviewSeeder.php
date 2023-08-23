@@ -1,10 +1,7 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Interview;
 
-use Database\Seeders\Interview\AttendeeRoleSeeder;
-use Database\Seeders\Interview\InterviewReasonSeeder;
-use Database\Seeders\Interview\InterviewStatusSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

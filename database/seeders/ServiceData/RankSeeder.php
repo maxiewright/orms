@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\ServiceData;
 
 use App\Models\Metadata\Rank;
 use Illuminate\Database\Seeder;

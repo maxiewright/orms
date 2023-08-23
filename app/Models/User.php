@@ -39,7 +39,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         'name',
         'email',
         'password',
-        'password_changed_at'
+        'password_changed_at',
     ];
 
     /**
@@ -77,5 +77,4 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     {
         return (bool) $this->password_changed_at;
     }
-
 }

@@ -4,11 +4,8 @@ namespace App\Providers;
 
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentColor;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
-
 
 class FilamentServiceProvider extends ServiceProvider
 {

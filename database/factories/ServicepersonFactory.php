@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Actions\GetCompulsoryRetirementAgeAction;
-use App\Enums\EnlistmentTypeEnum;
 use App\Enums\RankEnum;
+use App\Enums\ServiceData\EnlistmentTypeEnum;
 use App\Models\Metadata\Gender;
 use App\Models\Unit\Formation;
 use Carbon\Carbon;

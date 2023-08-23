@@ -4,13 +4,12 @@ namespace App\Providers\Filament;
 
 use App\Actions\FilamentPasswordAction;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Notifications\Notification;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -22,21 +21,16 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use Jeffgreco13\FilamentBreezy\FilamentBreezy;
-use Jeffgreco13\FilamentBreezy\Livewire\UpdatePassword;
 use RalphJSmit\Filament\Onboard\FilamentOnboard;
 use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
 use RalphJSmit\Filament\Onboard\Step;
-use Filament\Forms\Components\Wizard\Step as WizardStep;
 use RalphJSmit\Filament\Onboard\Track;
 
 class AdminPanelProvider extends PanelProvider
 {
-
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -85,43 +79,40 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
                 BreezyCore::make()
-                    ->myProfile()
-                ,
+                    ->myProfile(),
                 FilamentOnboard::make()
-                    ->addTrack(fn() => Track::make([
+                    ->addTrack(fn () => Track::make([
                         Step::make(name: 'Change Password', identifier: 'widget::change-password')
                             ->description('Change your password before continuing to your workspace')
-                            ->completeIf(fn() => auth()->user()->passwordChanged())
+                            ->completeIf(fn () => auth()->user()->passwordChanged())
                             ->wizard([
-                                WizardStep::make("Current Password")
+                                WizardStep::make('Current Password')
                                     ->schema([
-                                        TextInput::make("current_password")
+                                        TextInput::make('current_password')
                                             ->label(__('Current Password'))
-                                            ->helperText(__("Enter the password provided to you"))
+                                            ->helperText(__('Enter the password provided to you'))
                                             ->password()
                                             ->currentPassword()
                                             ->required(),
                                     ]),
-                                WizardStep::make("Change Password")->schema([
-                                    TextInput::make("new_password")
+                                WizardStep::make('Change Password')->schema([
+                                    TextInput::make('new_password')
                                         ->label(__('filament-breezy::default.fields.new_password'))
-                                        ->helperText(__("The password must be at least 8 characters"))
+                                        ->helperText(__('The password must be at least 8 characters'))
                                         ->password()
                                         ->rules(filament('filament-breezy')->getPasswordUpdateRules())
                                         ->required(),
-                                    TextInput::make("new_password_confirmation")
+                                    TextInput::make('new_password_confirmation')
                                         ->label(__('filament-breezy::default.fields.new_password_confirmation'))
                                         ->password()
-                                        ->same("new_password")
+                                        ->same('new_password')
                                         ->required(),
-                                ])
+                                ]),
                             ])->wizardSubmitFormUsing(function (array $state, Wizard $livewire) {
                                 (new FilamentPasswordAction())->update($state, $livewire);
-                            })
+                            }),
                     ])->completeBeforeAccess()),
             ]);
 
     }
-
 }
-

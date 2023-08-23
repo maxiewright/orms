@@ -4,11 +4,15 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use bfinlay\SpreadsheetSeeder\SpreadsheetSeeder;
+use Database\Seeders\BasicInformationSeeder\GenderSeeder;
 use Database\Seeders\Interview\AttendeeRoleSeeder;
 use Database\Seeders\Interview\InterviewReasonSeeder;
 use Database\Seeders\Interview\InterviewStatusSeeder;
+use Database\Seeders\ServiceData\EnlistmentTypeSeeder;
+use Database\Seeders\ServiceData\RankSeeder;
 use Database\Seeders\Unit\BattalionSeeder;
 use Database\Seeders\Unit\CompanySeeder;
+use Database\Seeders\Unit\FormationSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

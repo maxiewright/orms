@@ -12,9 +12,7 @@ beforeEach(function () {
 
     $this->user = $serviceperson->user->assignRole('super_admin');
 
-
 });
-
 
 it('does not allow user to view dashboard if not changed', function () {
     $this->actingAs($this->user);
@@ -27,10 +25,6 @@ it('allows user to access the dashboard if password is changed', function () {
 
     $this->get(route('filament.onboard.onboard'))->assertSuccessful();
 
-
     // submit the password change form
     // assert that the user see the dashboard
 })->todo();
-
-
-
