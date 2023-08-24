@@ -11,7 +11,7 @@ class BasicInformationSeeder extends Seeder
         $this->call([
             EthnicitySeeder::class,
             MaritalStatusSeeder::class,
-            NextOfKinRelationshipSeeder::class,
+            RelationshipSeeder::class,
             ReligionSeeder::class,
         ]);
 

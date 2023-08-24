@@ -2101,7 +2101,6 @@ class CitySeeder extends Seeder
             ],
         ];
 
-
         foreach ($cities as $city) {
             if (isset($city['division_id']) && isset($city['name'])) {
                 City::query()->create([

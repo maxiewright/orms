@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\BasicInformationSeeder;
 
-use App\Models\Metadata\PersonalInformation\NextOfKinRelationship;
+use App\Models\Metadata\PersonalInformation\Relationship;
 use Illuminate\Database\Seeder;
 
-class NextOfKinRelationshipSeeder extends Seeder
+class RelationshipSeeder extends Seeder
 {
     public function run()
     {
@@ -19,7 +19,7 @@ class NextOfKinRelationshipSeeder extends Seeder
         ];
 
         foreach ($relationships as $relationship) {
-            NextOfKinRelationship::query()->create([
+            Relationship::query()->create([
                 'name' => $relationship,
             ]);
         }

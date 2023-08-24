@@ -24,5 +24,4 @@ trait HasContactInformation
     {
         return $this->belongsTo(City::class);
     }
-
 }

@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\PhoneNumber;
+use App\Models\EmergencyContact;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PhoneNumberFactory extends Factory
+class EmergencyContactFactory extends Factory
 {
-    protected $model = PhoneNumber::class;
+    protected $model = EmergencyContact::class;
 
     public function definition()
     {

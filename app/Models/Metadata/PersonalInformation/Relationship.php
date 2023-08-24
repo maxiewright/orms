@@ -7,7 +7,7 @@ use App\Traits\SluggableByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class NextOfKinRelationship extends Model
+class Relationship extends Model
 {
     use SoftDeletes, HasServicepeople, SluggableByName;
 

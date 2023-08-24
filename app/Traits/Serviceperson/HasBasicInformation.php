@@ -2,12 +2,13 @@
 
 namespace App\Traits\Serviceperson;
 
+use App\Models\EmergencyContact;
 use App\Models\Metadata\Gender;
 use App\Models\Metadata\PersonalInformation\Ethnicity;
 use App\Models\Metadata\PersonalInformation\MaritalStatus;
-use App\Models\Metadata\PersonalInformation\NextOfKinRelationship;
 use App\Models\Metadata\PersonalInformation\Religion;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasBasicInformation
 {
@@ -31,8 +32,8 @@ trait HasBasicInformation
         return $this->belongsTo(Ethnicity::class);
     }
 
-    public function nextOfKinRelationship(): BelongsTo
+    public function emergencyContacts(): HasMany
     {
-        return $this->belongsTo(NextOfKinRelationship::class);
+        return $this->hasMany(EmergencyContact::class);
     }
 }

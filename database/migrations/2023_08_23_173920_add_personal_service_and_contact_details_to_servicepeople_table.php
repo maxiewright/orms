@@ -1,11 +1,12 @@
 <?php
 
+use App\Enums\ServiceData\EmploymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-
+return new class extends Migration
+{
     public function up()
     {
 
@@ -22,7 +23,10 @@ return new class extends Migration {
             });
 
             // Service Data
-            $table->foreignId('employment_status_id')->nullable()->constrained();
+            $table->foreignId('employment_status_id')
+                ->nullable()
+                ->default(EmploymentStatusEnum::Available->value)
+                ->constrained();
             $table->foreignId('battalion_id')->nullable()->constrained();
             $table->foreignId('company_id')->nullable()->constrained();
             $table->foreignId('department_id')->nullable()->constrained();
