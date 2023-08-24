@@ -2101,11 +2101,15 @@ class CitySeeder extends Seeder
             ],
         ];
 
+
         foreach ($cities as $city) {
-            City::query()->create([
-                'name' => $city['name'],
-                'division_id' => $city['division_id'],
-            ]);
+            if (isset($city['division_id']) && isset($city['name'])) {
+                City::query()->create([
+                    'division_id' => $city['division_id'],
+                    'name' => $city['name'],
+                ]);
+            }
         }
+
     }
 }

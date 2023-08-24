@@ -53,9 +53,9 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('job_category_id')->constrained();
                 $table->string('name');
-                $table->string('short_name');
+                $table->string('short_name')->nullable();
                 $table->string('slug');
-                $table->unique('job_category_id', 'name');
+                $table->unique(['job_category_id', 'name'], 'job_category_name');
                 $table->timestamps();
                 $table->softDeletes();
             });

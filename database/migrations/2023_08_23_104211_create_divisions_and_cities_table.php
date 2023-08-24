@@ -37,7 +37,7 @@ return new class extends Migration
                 $table->string('slug');
                 $table->timestamps();
                 $table->softDeletes();
-                $table->unique(['name', 'division_id']);
+//                $table->unique(['name', 'division_id']);
             });
 
         }

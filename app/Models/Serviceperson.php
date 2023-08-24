@@ -6,6 +6,7 @@ use App\Enums\RankEnum;
 use App\Models\Metadata\OfficerAppraisalGrade;
 use App\Traits\HasInterview;
 use App\Traits\Serviceperson\HasBasicInformation;
+use App\Traits\Serviceperson\HasContactInformation;
 use App\Traits\Serviceperson\HasServiceData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
-    use HasFactory, HasInterview, HasBasicInformation, HasServiceData;
+    use HasFactory, HasInterview, HasBasicInformation, HasServiceData, HasContactInformation;
 
     protected $primaryKey = 'number';
 

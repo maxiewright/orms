@@ -10,6 +10,8 @@ return new class extends Migration {
     {
 
         Schema::table('servicepeople', function (Blueprint $table) {
+            $table->string('image')->first()->nullable();
+
             // Personal Information
             $table->string('middle_name')->after('first_name')->nullable();
             $table->string('other_names')->after('last_name')->nullable();
@@ -27,19 +29,10 @@ return new class extends Migration {
             $table->foreignId('job_id')->nullable()->constrained();
 
             // Contact Information
-            $table->string('phone')->nullable()->unique();
-            $table->string('alternate_phone')->nullable();
-            $table->string('email')->nullable()->unique();
-            $table->string('alternate_email')->nullable();
             $table->string('address_line_1')->nullable();
             $table->string('address_line_2')->nullable();
             $table->foreignId('city_id')->nullable()->constrained();
 
-            //  Next of kin
-            $table->string('next_of_kin')->nullable();
-            $table->foreignId('next_of_kin_relationship_id')->nullable()->constrained('relationships');
-            $table->string('next_of_kin_phone')->nullable();
-            $table->string('next_of_kin_alternate_phone')->nullable();
         });
     }
 };
