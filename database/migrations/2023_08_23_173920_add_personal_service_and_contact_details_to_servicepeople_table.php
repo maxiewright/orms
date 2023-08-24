@@ -23,10 +23,7 @@ return new class extends Migration
             });
 
             // Service Data
-            $table->foreignId('employment_status_id')
-                ->nullable()
-                ->default(EmploymentStatusEnum::Available->value)
-                ->constrained();
+            $table->foreignId('employment_status_id')->nullable()->constrained();
             $table->foreignId('battalion_id')->nullable()->constrained();
             $table->foreignId('company_id')->nullable()->constrained();
             $table->foreignId('department_id')->nullable()->constrained();
