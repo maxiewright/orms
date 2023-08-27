@@ -23,17 +23,21 @@ return new class extends Migration
             });
 
             // Service Data
-            $table->foreignId('employment_status_id')->nullable()->constrained();
-            $table->foreignId('battalion_id')->nullable()->constrained();
-            $table->foreignId('company_id')->nullable()->constrained();
-            $table->foreignId('department_id')->nullable()->constrained();
-            $table->foreignId('job_id')->nullable()->constrained();
+            $table->after('ethnicity_id', function (Blueprint $table){
+                $table->foreignId('employment_status_id')->nullable()->constrained();
+                $table->foreignId('battalion_id')->nullable()->constrained();
+                $table->foreignId('company_id')->nullable()->constrained();
+                $table->foreignId('department_id')->nullable()->constrained();
+                $table->foreignId('job_id')->nullable()->constrained();
+            });
 
             // Contact Information
-            $table->string('address_line_1')->nullable();
-            $table->string('address_line_2')->nullable();
-            $table->foreignId('city_id')->nullable()->constrained();
-
+            $table->after('assumption_date', function (Blueprint $table){
+                $table->string('address_line_1')->nullable();
+                $table->string('address_line_2')->nullable();
+                $table->foreignId('city_id')->nullable()->constrained();
+            });
+            
         });
     }
 };
