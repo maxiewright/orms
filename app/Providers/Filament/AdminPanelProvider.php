@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Actions\FilamentPasswordAction;
+use App\Filament\Resources\ServicepersonResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step as WizardStep;
@@ -10,6 +11,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -81,10 +83,10 @@ class AdminPanelProvider extends PanelProvider
                 BreezyCore::make()
                     ->myProfile(),
                 FilamentOnboard::make()
-                    ->addTrack(fn () => Track::make([
+                    ->addTrack(fn() => Track::make([
                         Step::make(name: 'Change Password', identifier: 'widget::change-password')
                             ->description('Change your password before continuing to your workspace')
-                            ->completeIf(fn () => auth()->user()->passwordChanged())
+                            ->completeIf(fn() => auth()->user()->passwordChanged())
                             ->wizard([
                                 WizardStep::make('Current Password')
                                     ->schema([

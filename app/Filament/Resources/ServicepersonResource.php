@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServicepersonResource\Pages;
+use App\Filament\Resources\ServicepersonResource\Widgets\OfficersUnitOverview;
+use App\Filament\Resources\ServicepersonResource\Widgets\OfficerUnitChart;
 use App\Models\Serviceperson;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -78,7 +80,6 @@ class ServicepersonResource extends Resource
                     ->multiple(),
                 Tables\Filters\SelectFilter::make('gender')
                     ->relationship('gender', 'name'),
-
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -105,4 +106,5 @@ class ServicepersonResource extends Resource
             'edit' => Pages\EditServiceperson::route('/{record}/edit'),
         ];
     }
+
 }

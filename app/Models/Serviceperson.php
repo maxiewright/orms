@@ -34,6 +34,9 @@ class Serviceperson extends Model
         'assumption_date' => 'date',
     ];
 
+    protected $with = [
+        'rank'
+    ];
     public function user(): HasOne
     {
         return $this->hasOne(User::class);
