@@ -37,12 +37,14 @@ class ListOfficers extends ListRecords
                 ->where('employment_status_id', EmploymentStatusEnum::PRIVILEGE_LEAVE)),
             'Sick Leave' => Tab::make()->query(fn($query) => $query
                 ->where('employment_status_id', EmploymentStatusEnum::SICK_LEAVE)),
-            'Local Course' => Tab::make()->query(fn($query) => $query
-                ->where('employment_status_id', EmploymentStatusEnum::INTERNAL_TRAINING)),
-            'In Service' => Tab::make()->query(fn($query) => $query
-                ->where('employment_status_id', EmploymentStatusEnum::IN_SERVICE_TRAINING)),
             'Resettlement' => Tab::make()->query(fn($query) => $query
                 ->where('employment_status_id', EmploymentStatusEnum::RESETTLEMENT_TRAINING)),
+            'Foreign Course' => Tab::make()->query(fn($query) => $query
+                ->where('employment_status_id', EmploymentStatusEnum::FOREIGN_MILITARY_TRAINING)),
+            'In Service' => Tab::make()->query(fn($query) => $query
+                ->where('employment_status_id', EmploymentStatusEnum::IN_SERVICE_TRAINING)),
+            'Local Course' => Tab::make()->query(fn($query) => $query
+                ->where('employment_status_id', EmploymentStatusEnum::INTERNAL_TRAINING)),
             'Absent' => Tab::make()->query(fn($query) => $query
                 ->where('employment_status_id', EmploymentStatusEnum::ABSENT_WITHOUT_LEAVE)),
         ];

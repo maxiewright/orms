@@ -23,6 +23,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class OfficerResource extends Resource
@@ -35,38 +36,7 @@ class OfficerResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Fieldset::make('Employment')->schema([
-                    Select::make('employment_status_id')
-                        ->label('Employment Status')
-                        ->relationship('employmentStatus', 'name')
-                        ->default(1)
-                        ->selectablePlaceholder(false),
-                ]),
-                Fieldset::make('Unit')->schema([
-                    Select::make('battalion_id')
-                        ->label('Battalion')
-                        ->relationship('battalion', 'short_name')
-                        ->live(),
-                    Select::make('company_id')
-                        ->label('Company')
-                        ->options(fn(Get $get) => Company::query()
-                            ->where('battalion_id', $get('battalion_id'))
-                            ->pluck('short_name', 'id')),
-                ]),
-                Fieldset::make('Job')->schema([
-                    Select::make('category')
-                        ->options(fn() => JobCategory::query()
-                            ->pluck('name', 'id'))
-                        ->live(),
-                    Select::make('job_id')
-                        ->label('Job')
-                        ->options(fn(Get $get) => Job::query()
-                            ->where('job_category_id', $get('category'))
-                            ->pluck('name', 'id'))
-                ]),
-            ]);
+        return $form->schema(self::administrationForm());
     }
 
     public static function table(Table $table): Table
@@ -118,12 +88,13 @@ class OfficerResource extends Resource
             ->persistFiltersInSession()
             ->actions([
                 EditAction::make()
+                    ->icon('heroicon-o-clipboard-document-check')
                     ->label('Administrate')
                     ->modalHeading(fn(Serviceperson $record): string => "Administrate {$record->military_name}")
                     ->fillForm(fn(Serviceperson $record) => [
-                        'company' => $record->company_id,
+                        'company_id' => $record->company_id,
                         'category' => ($record->job) ? $record->job->category->id : '',
-                        'job' => $record->job_id,
+                        'job_id' => $record->job_id,
                     ])
                     ->using(function (Serviceperson $record, array $data) {
                         $record->update([
@@ -137,19 +108,24 @@ class OfficerResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     ExportBulkAction::make(),
+                    Tables\Actions\BulkAction::make('Administrate Selected')
+                        ->icon('heroicon-o-clipboard-document-check')
+                        ->form(self::administrationForm())
+                        ->action(function (Collection $records, array $data) {
+                            foreach ($records as $record) {
+                                $record->update([
+                                    'employment_status_id' => $data['employment_status_id'],
+                                    'battalion_id' => $data['battalion_id'],
+                                    'company_id' => $data['company_id'],
+                                    'job_id' => $data['job_id'],
+                                ]);
+                            }
+                        })
                 ]),
             ])
             ->emptyStateActions([
 
             ]);
-    }
-
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
@@ -163,6 +139,41 @@ class OfficerResource extends Resource
     {
         return [
             OfficersUnitOverview::class,
+        ];
+    }
+
+    public static function administrationForm(): array
+    {
+        return [
+            Fieldset::make('Employment')->schema([
+                Select::make('employment_status_id')
+                    ->label('Employment Status')
+                    ->relationship('employmentStatus', 'name')
+                    ->default(1)
+                    ->selectablePlaceholder(false),
+            ]),
+            Fieldset::make('Unit')->schema([
+                Select::make('battalion_id')
+                    ->label('Battalion')
+                    ->relationship('battalion', 'short_name')
+                    ->live(),
+                Select::make('company_id')
+                    ->label('Company')
+                    ->options(fn(Get $get) => Company::query()
+                        ->where('battalion_id', $get('battalion_id'))
+                        ->pluck('short_name', 'id')),
+            ]),
+            Fieldset::make('Job')->schema([
+                Select::make('category')
+                    ->options(fn() => JobCategory::query()
+                        ->pluck('name', 'id'))
+                    ->live(),
+                Select::make('job_id')
+                    ->label('Job')
+                    ->options(fn(Get $get) => Job::query()
+                        ->where('job_category_id', $get('category'))
+                        ->pluck('name', 'id'))
+            ]),
         ];
     }
 }
