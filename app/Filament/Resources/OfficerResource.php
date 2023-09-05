@@ -121,6 +121,7 @@ class OfficerResource extends Resource
                                 ]);
                             }
                         })
+                    ->deselectRecordsAfterCompletion()
                 ]),
             ])
             ->emptyStateActions([
