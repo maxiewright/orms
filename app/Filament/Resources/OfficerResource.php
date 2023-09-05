@@ -34,6 +34,8 @@ class OfficerResource extends Resource
 
     protected static ?string $navigationGroup = 'Officers';
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Form $form): Form
     {
         return $form->schema(self::administrationForm());
