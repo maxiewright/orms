@@ -48,8 +48,8 @@ class OfficersDispositionChart extends ApexChartWidget
         return [
             'chart' => [
                 'type' => 'bar',
-                'height' => 500,
-                'stacked' => true
+                'height' => 300,
+//                'stacked' => true
             ],
             'series' => [
                 [
