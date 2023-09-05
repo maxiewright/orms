@@ -21,8 +21,8 @@ class OfficerDashboard extends Dashboard
     protected function getHeaderWidgets(): array
     {
         return [
-            OfficersDispositionChart::make(),
             OfficersDistributionChart::make(),
+            OfficersDispositionChart::make(),
         ];
     }
 
