@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -14,7 +15,6 @@ abstract class TestCase extends BaseTestCase
 
         $this->seed();
         $this->artisan('shield:generate');
-        $this->artisan('shield:super-admin', ['--user' => '1']);
-
+        $this->artisan('shield:super-admin', ['--user' => 1]);
     }
 }

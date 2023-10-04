@@ -5,7 +5,16 @@ namespace Database\Factories;
 use App\Actions\GetCompulsoryRetirementAgeAction;
 use App\Enums\RankEnum;
 use App\Enums\ServiceData\EnlistmentTypeEnum;
+use App\Enums\ServiceData\FormationEnum;
+use App\Models\Metadata\Contact\City;
 use App\Models\Metadata\Gender;
+use App\Models\Metadata\PersonalInformation\Ethnicity;
+use App\Models\Metadata\PersonalInformation\MaritalStatus;
+use App\Models\Metadata\PersonalInformation\Religion;
+use App\Models\Metadata\Rank;
+use App\Models\Metadata\ServiceData\EmploymentStatus;
+use App\Models\Metadata\ServiceData\Job;
+use App\Models\Unit\Battalion;
 use App\Models\Unit\Formation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,11 +31,33 @@ class ServicepersonFactory extends Factory
      */
     public function definition(): array
     {
+        $battalion = Battalion::all()->random();
         return [
-            'formation_id' => Formation::all()->random()->id,
+            // Service Data
+            'formation_id' => FormationEnum::TTR,
+
+            // Basic Information
+            'image' => fake()->imageUrl(),
             'first_name' => fake()->firstName(),
+            'middle_name' => null,
             'last_name' => fake()->lastName(),
+            'other_names' => null,
             'gender_id' => Gender::all()->random()->id,
+            'marital_status_id' => MaritalStatus::all()->random()->id,
+            'religion_id' => Religion::all()->random()->id,
+            'ethnicity_id' => Ethnicity::all()->random()->id,
+
+            //Employment Information
+            'employment_status_id' => EmploymentStatus::all()->random()->id,
+            'battalion_id' => $battalion->id,
+            'company_id' => $battalion->companies->random()->id,
+            'job_id' => Job::all()->random()->id,
+
+            // Contact
+            'address_line_1' => fake()->streetAddress(),
+            'address_line_2' => null,
+            'city_id' => City::all()->random()->id,
+
         ];
     }
 
@@ -40,7 +71,7 @@ class ServicepersonFactory extends Factory
         ]);
         $enlistmentDate = $this->getEnlistmentDate($rank);
 
-        return $this->state(fn () => [
+        return $this->state(fn() => [
             'number' => fake()->unique()->numberBetween(300, 500),
             'rank_id' => $rank,
             'enlistment_date' => $enlistmentDate,
@@ -59,7 +90,7 @@ class ServicepersonFactory extends Factory
         $retirementAge = new GetCompulsoryRetirementAgeAction;
         $rank = fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
 
-        return $this->state(fn () => [
+        return $this->state(fn() => [
             'number' => fake()->unique()->numberBetween(10000, 14000),
             'rank_id' => $rank,
             'enlistment_date' => $this->getEnlistmentDate($rank),
@@ -77,8 +108,4 @@ class ServicepersonFactory extends Factory
         return fake()->dateTimeBetween($retirementAge->getRetirementAge($rank));
     }
 
-    public function ma()
-    {
-
-    }
 }

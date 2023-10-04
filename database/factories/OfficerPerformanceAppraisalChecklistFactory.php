@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\OfficerAppraisalGradeEnum;
 use App\Models\Metadata\OfficerAppraisalGrade;
+use App\Models\Metadata\Rank;
+use App\Models\Unit\Battalion;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OfficerPerformanceAppraisalChecklistFactory extends Factory
 {
+
     /**
      * Define the model's default state.
      *
@@ -30,6 +34,11 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
         ($hasDisciplinaryAction)
             ? $disciplinaryActionParticulars = fake()->paragraph()
             : $disciplinaryActionParticulars = null;
+        $grade = OfficerAppraisalGrade::all()->random()->id;
+        $nonGradingReason = null;
+        if ($grade === OfficerAppraisalGradeEnum::NOT_GRADED){
+            $nonGradingReason = fake()->sentence();
+        }
 
         return [
             'serviceperson_number' => 198,
@@ -43,12 +52,16 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
             'has_unit_commander' => $hasUnitCommander,
             'has_unit_commander_comments' => $hasUnitCommanderComments,
             'has_unit_commander_signature' => $hasUnitCommanderSignature,
-            'officer_appraisal_grade_id' => OfficerAppraisalGrade::all()->random()->id,
+            'officer_appraisal_grade_id' => $grade,
             'has_disciplinary_action' => $hasDisciplinaryAction,
             'disciplinary_action_particulars' => $disciplinaryActionParticulars,
             'has_formation_commander_comments' => fake()->boolean(),
             'has_formation_commander_signature' => fake()->boolean(),
             'has_serviceperson_signature' => fake()->boolean(),
+            'battalion_id' => Battalion::all()->random()->id,
+            'rank_id' => Rank::all()->random()->id,
+            'non_grading_reason' => $nonGradingReason
+
         ];
     }
 }

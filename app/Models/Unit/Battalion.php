@@ -16,6 +16,10 @@ class Battalion extends Model
 
     public $guarded = [];
 
+    protected $with = [
+       'companies'
+    ];
+
     public function companies(): HasMany
     {
         return $this->hasMany(Company::class);

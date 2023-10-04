@@ -57,6 +57,9 @@ class DatabaseSeeder extends Seeder
             InterviewReasonSeeder::class,
             InterviewStatusSeeder::class,
             AttendeeRoleSeeder::class,
+
+            //Employment
+            ReleaseServicepersonEmploymentStatusSeeder::class
         ]);
     }
 }

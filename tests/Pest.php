@@ -11,7 +11,10 @@
 |
 */
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestCase;
+use function Pest\Laravel\actingAs;
 
 uses(
     Tests\TestCase::class,
@@ -44,7 +47,11 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function logInAsUserWithRole(User $user = null, $role = 'super_admin'): TestCase
 {
-    // ..
+    $user = $user ?? User::factory()->create();
+
+    $user->assignRole($role);
+
+    return actingAs($user);
 }

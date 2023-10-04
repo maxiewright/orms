@@ -141,8 +141,8 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Textarea::make('non_grading_reason')
                         ->label('Reason for not grading')
                         ->rows(1)
-                        ->requiredIf('officer_appraisal_grade_id', OfficerAppraisalGradeEnum::not_graded->value)
-                        ->hidden(fn (\Filament\Forms\Get $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::not_graded->value),
+                        ->requiredIf('officer_appraisal_grade_id', OfficerAppraisalGradeEnum::NOT_GRADED)
+                        ->hidden(fn (\Filament\Forms\Get $get) => $get('officer_appraisal_grade_id') != OfficerAppraisalGradeEnum::NOT_GRADED),
                     Forms\Components\Toggle::make('has_disciplinary_action')
                         ->label('Was any disciplinary action taken against this officer for the period under review?')
                         ->reactive(),
@@ -206,8 +206,9 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     ->searchable(['number', 'first_name', 'last_name'])
                     ->sortable(['number'])
                     ->description(function (OfficerPerformanceAppraisalChecklist $record): ?string {
-                        return ($record->battalion)
-                            ? "Unit: {$record->battalion?->short_name}" : '';
+                        return ($record->load('battalion')->battalion)
+                            ? "Unit: {$record->battalion?->short_name}"
+                            : '';
                     }),
                 Tables\Columns\TextColumn::make('appraisal_start_at')
                     ->label('Form')
@@ -246,7 +247,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                 Tables\Columns\TextColumn::make('grade.name')
                     ->label('Rank Grade')
                     ->description(function (OfficerPerformanceAppraisalChecklist $record): ?string {
-                        return ($record->substantiveRank)
+                        return ($record->load('substantiveRank')->substantiveRank)
                             ? "Rank at grading: {$record->substantiveRank?->regiment_abbreviation}" : '';
                     }),
                 Tables\Columns\IconColumn::make('has_disciplinary_action')
