@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DivisionType extends Model
 {
-    use SoftDeletes, SluggableByName;
+    use SluggableByName, SoftDeletes;
 
     public $guarded = [];
 

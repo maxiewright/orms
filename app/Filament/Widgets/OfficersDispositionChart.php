@@ -22,23 +22,17 @@ class OfficersDispositionChart extends ApexChartWidget
 
     /**
      * Chart Id
-     *
-     * @var string
      */
     protected static string $chartId = 'officersDispositionChart';
 
     /**
      * Widget Title
-     *
-     * @var string|null
      */
     protected static ?string $heading = 'Officers Disposition';
 
     /**
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -49,7 +43,7 @@ class OfficersDispositionChart extends ApexChartWidget
             'chart' => [
                 'type' => 'bar',
                 'height' => 300,
-                'stacked' => true
+                'stacked' => true,
             ],
             'series' => [
                 [
@@ -161,18 +155,17 @@ class OfficersDispositionChart extends ApexChartWidget
                 '#86198f',
                 '#1e3a8a',
                 '#ea580c',
-                '#fbbf24'
+                '#fbbf24',
             ],
         ];
     }
-
 
     protected function countOfficersByStatusAndUnit($status, $unit, $operator = null, $company = null): int
     {
         return Officer::query()
             ->where('employment_status_id', $status)
             ->where('battalion_id', $unit)
-            ->when($company, fn(Builder $query) => $query
+            ->when($company, fn (Builder $query) => $query
                 ->where('company_id', $operator, $company))
             ->count();
     }

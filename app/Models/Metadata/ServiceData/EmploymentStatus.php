@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmploymentStatus extends Model
 {
-    use SoftDeletes, SluggableByName, HasServicepeople;
+    use HasServicepeople, SluggableByName, SoftDeletes;
 
     public $guarded = [];
 }

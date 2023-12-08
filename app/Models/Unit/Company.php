@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
-    use SluggableByName, SoftDeletes, HasServicepeople;
+    use HasServicepeople, SluggableByName, SoftDeletes;
 
     public $guarded = [];
 

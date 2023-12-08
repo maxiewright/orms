@@ -3,8 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Actions\FilamentPasswordAction;
-
-use App\Filament\Pages\OfficerDashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step as WizardStep;
@@ -57,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-//                Pages\Dashboard::class,
+                //                Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -83,10 +81,10 @@ class AdminPanelProvider extends PanelProvider
                 BreezyCore::make()
                     ->myProfile(),
                 FilamentOnboard::make()
-                    ->addTrack(fn() => Track::make([
+                    ->addTrack(fn () => Track::make([
                         Step::make(name: 'Change Password', identifier: 'widget::change-password')
                             ->description('Change your password before continuing to your workspace')
-                            ->completeIf(fn() => auth()->user()->passwordChanged())
+                            ->completeIf(fn () => auth()->user()->passwordChanged())
                             ->wizard([
                                 WizardStep::make('Current Password')
                                     ->schema([

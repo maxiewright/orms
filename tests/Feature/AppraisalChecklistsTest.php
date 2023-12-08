@@ -1,12 +1,12 @@
 <?php
 
-
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource as AppraisalChecklistResource;
 use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\{
     Pages\ListOfficerPerformanceAppraisalChecklists,
 };
 use App\Models\OfficerPerformanceAppraisalChecklist;
 use Illuminate\Support\Collection;
+
 use function Pest\Livewire\livewire;
 
 function createAppraisalChecklists($count): OfficerPerformanceAppraisalChecklist|Collection
@@ -32,5 +32,3 @@ it('it shows appraisal checklist list', function () {
     livewire(ListOfficerPerformanceAppraisalChecklists::class)
         ->assertCanSeeTableRecords($appraisals);
 });
-
-

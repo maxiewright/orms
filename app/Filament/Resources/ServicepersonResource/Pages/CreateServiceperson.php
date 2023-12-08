@@ -7,11 +7,10 @@ use App\Enums\Serviceperson\EmergencyContactTypeEnum;
 use App\Enums\Serviceperson\PhoneTypeEnum;
 use App\Filament\Resources\ServicepersonResource;
 use App\Filament\Traits\RedirectToIndex;
-use App\Models\Department;
 use App\Models\Metadata\Contact\City;
 use App\Models\Metadata\Contact\Division;
-use App\Models\Metadata\PersonalInformation\Relationship;
 use App\Models\Unit\Company;
+use App\Models\Unit\Formation;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
@@ -21,15 +20,22 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Collection;
 
-
 class CreateServiceperson extends CreateRecord
 {
-    use RedirectToIndex, CreateRecord\Concerns\HasWizard;
+    use CreateRecord\Concerns\HasWizard, RedirectToIndex;
 
     protected static string $resource = ServicepersonResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        unset($data['division']);
+
+        return $data;
+    }
 
     public function hasSkippableSteps(): bool
     {
@@ -43,7 +49,7 @@ class CreateServiceperson extends CreateRecord
             Step::make('Personal Data')
                 ->schema([
                     Grid::make(4)->schema([
-                        FileUpload::make('attachment')
+                        FileUpload::make('image')
                             ->imagePreviewHeight('1600')
                             ->loadingIndicatorPosition('left')
                             ->panelAspectRatio('4:3')
@@ -51,7 +57,12 @@ class CreateServiceperson extends CreateRecord
                             ->removeUploadedFileButtonPosition('right')
                             ->uploadButtonPosition('left')
                             ->uploadProgressIndicatorPosition('left'),
-                        Grid::make(4)->schema([
+                        Grid::make(3)->schema([
+                            Select::make('formation_id')
+                                ->label('Formation')
+                                ->options(Formation::query()->pluck('name', 'id'))
+                                ->live()
+                                ->required(),
                             TextInput::make('number')
                                 ->label('Service Number')
                                 ->unique()
@@ -59,7 +70,21 @@ class CreateServiceperson extends CreateRecord
                                 ->required(),
                             Select::make('rank_id')
                                 ->label('Rank')
-                                ->relationship('rank', 'name')
+                                ->placeholder(fn (Get $get): string => $get('formation_id')
+                                    ? 'Select Rank'
+                                    : 'Select a formation first')
+                                ->relationship(name: 'rank', titleAttribute: function (Get $get) {
+                                    $formationId = $get('formation_id');
+                                    $formations = [
+                                        1 => 'regiment',
+                                        2 => 'coast_guard',
+                                        3 => 'air_guard',
+                                    ];
+
+                                    return $formations[$formationId] ?? 'name';
+                                })
+                                ->searchable()
+                                ->preload()
                                 ->required(),
                             TextInput::make('first_name')->required(),
                             TextInput::make('middle_name'),
@@ -80,7 +105,7 @@ class CreateServiceperson extends CreateRecord
                             Select::make('ethnicity_id')
                                 ->relationship('ethnicity', 'name')
                                 ->required(),
-                        ])->columnSpan(3)
+                        ])->columnSpan(3),
                     ]),
                 ])->columns(1),
             Step::make('Contact Information')
@@ -90,15 +115,16 @@ class CreateServiceperson extends CreateRecord
                     Grid::make(2)->schema([
                         Select::make('division')
                             ->options(Division::query()->pluck('name', 'id'))
-                            ->live(),
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set) => $set('city_id', null)),
                         Select::make('city_id')
                             ->label('City')
-                            ->placeholder(fn(Get $get): string => $get('division')
+                            ->placeholder(fn (Get $get): string => $get('division')
                                 ? 'Select City'
                                 : 'Select a division first'
                             )
-                            ->searchable(fn(Get $get) => $get('division'))
-                            ->options(fn(Get $get): Collection => City::query()
+                            ->searchable(fn (Get $get) => $get('division'))
+                            ->options(fn (Get $get): Collection => City::query()
                                 ->where('division_id', $get('division'))
                                 ->pluck('name', 'id'))
                             ->required(),
@@ -113,7 +139,7 @@ class CreateServiceperson extends CreateRecord
                                         ->options(PhoneTypeEnum::class)
                                         ->default(PhoneTypeEnum::Mobile)
                                         ->selectablePlaceholder(false),
-                                    TextInput::make('phone_number')->required()
+                                    TextInput::make('phone_number')->required(),
                                 ]),
                             ])->relationship('phoneNumbers'),
                         /** Email */
@@ -124,10 +150,10 @@ class CreateServiceperson extends CreateRecord
                                         ->options(EmailTypeEnum::class)
                                         ->default(EmailTypeEnum::Personal)
                                         ->selectablePlaceholder(false),
-                                    TextInput::make('email')->email()->required()
+                                    TextInput::make('email')->email()->required(),
                                 ]),
-                            ])->relationship('emails')
-                    ])
+                            ])->relationship('emails'),
+                    ]),
 
                 ]),
             Step::make('Service Data')
@@ -154,16 +180,16 @@ class CreateServiceperson extends CreateRecord
                             ->required()
                             ->live(),
                         Select::make('company_id')
-                            ->placeholder(fn(Get $get): string => $get('battalion_id')
+                            ->placeholder(fn (Get $get): string => $get('battalion_id')
                                 ? 'Select Company'
                                 : 'Select Battalion First'
                             )
-                            ->options(fn(Get $get): Collection => Company::query()
+                            ->options(fn (Get $get): Collection => Company::query()
                                 ->where('battalion_id', $get('battalion_id'))
                                 ->pluck('short_name', 'id'))
                             ->live(),
                         Select::make('department_id')
-                            ->placeholder(fn(Get $get): string => $get('company_id')
+                            ->placeholder(fn (Get $get): string => $get('company_id')
                                 ? 'Select Department'
                                 : 'Select Company First'
                             )
@@ -177,7 +203,7 @@ class CreateServiceperson extends CreateRecord
                             }),
                     ])->columns(4),
                 ]),
-
+            // Emergency Contact
             Step::make('Emergency Contact')
                 ->schema([
                     Repeater::make('emergency_contacts')
@@ -193,7 +219,7 @@ class CreateServiceperson extends CreateRecord
                                 TextInput::make('last_name')->required(),
                                 Select::make('relationship_id')
                                     ->label('Relationship')
-                                    ->relationship('relationship', 'name')
+                                    ->relationship('relationship', 'name'),
                             ]),
                             Grid::make()->schema([
                                 /** Phone Number */
@@ -203,7 +229,7 @@ class CreateServiceperson extends CreateRecord
                                         Grid::make()->schema([
                                             Select::make('type')->required()
                                                 ->options(PhoneTypeEnum::class),
-                                            TextInput::make('phone_number')->required()
+                                            TextInput::make('phone_number')->required(),
                                         ]),
                                     ]),
                                 /** Email */
@@ -214,11 +240,11 @@ class CreateServiceperson extends CreateRecord
                                             Select::make('type')
                                                 ->options(EmailTypeEnum::class)
                                                 ->required(),
-                                            TextInput::make('email')->email()->required()
+                                            TextInput::make('email')->email()->required(),
                                         ]),
-                                    ])
+                                    ]),
                             ]),
-                        ])
+                        ]),
                 ])->columns(1),
         ];
     }

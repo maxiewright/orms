@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfficerPerformanceAppraisalChecklist extends Model
 {
-    use HasFactory, HasCompletionScopes, HasCompletionElements;
+    use HasCompletionElements, HasCompletionScopes, HasFactory;
 
     protected $guarded = [];
 

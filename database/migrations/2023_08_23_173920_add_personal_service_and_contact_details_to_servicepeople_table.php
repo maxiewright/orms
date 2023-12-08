@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\ServiceData\EmploymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +22,7 @@ return new class extends Migration
             });
 
             // Service Data
-            $table->after('ethnicity_id', function (Blueprint $table){
+            $table->after('ethnicity_id', function (Blueprint $table) {
                 $table->foreignId('employment_status_id')->nullable()->constrained();
                 $table->foreignId('battalion_id')->nullable()->constrained();
                 $table->foreignId('company_id')->nullable()->constrained();
@@ -32,12 +31,12 @@ return new class extends Migration
             });
 
             // Contact Information
-            $table->after('assumption_date', function (Blueprint $table){
+            $table->after('assumption_date', function (Blueprint $table) {
                 $table->string('address_line_1')->nullable();
                 $table->string('address_line_2')->nullable();
                 $table->foreignId('city_id')->nullable()->constrained();
             });
-            
+
         });
     }
 };

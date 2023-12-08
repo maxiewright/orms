@@ -9,8 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BattalionResource extends Resource
 {
@@ -44,7 +42,7 @@ class BattalionResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Battalion'),
                 Tables\Columns\TextColumn::make('short_name')
-                    ->label('Abbreviation')
+                    ->label('Abbreviation'),
 
             ])
             ->filters([

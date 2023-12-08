@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Serviceperson;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -42,10 +41,8 @@ class UserFactory extends Factory
 
     public function passwordUnchanged(): self
     {
-        return $this->state(fn(array $attributes) => [
-           'password_changed_at' => null
+        return $this->state(fn (array $attributes) => [
+            'password_changed_at' => null,
         ]);
     }
-
-
 }

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
-    use HasFactory, HasInterview, HasBasicInformation, HasServiceData, HasContactInformation;
+    use HasBasicInformation, HasContactInformation, HasFactory, HasInterview, HasServiceData;
 
     protected $primaryKey = 'number';
 
@@ -35,8 +35,9 @@ class Serviceperson extends Model
     ];
 
     protected $with = [
-        'rank'
+        'rank',
     ];
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class);

@@ -14,6 +14,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
+
 use function Pest\Laravel\actingAs;
 
 uses(
@@ -47,7 +48,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function logInAsUserWithRole(User $user = null, $role = 'super_admin'): TestCase
+function logInAsUserWithRole(?User $user = null, $role = 'super_admin'): TestCase
 {
     $user = $user ?? User::factory()->create();
 

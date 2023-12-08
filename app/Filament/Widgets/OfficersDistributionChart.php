@@ -12,23 +12,17 @@ class OfficersDistributionChart extends ApexChartWidget
 {
     /**
      * Chart Id
-     *
-     * @var string
      */
     protected static string $chartId = 'officersDistributionChart';
 
     /**
      * Widget Title
-     *
-     * @var string|null
      */
     protected static ?string $heading = 'Officers Distribution';
 
     /**
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -57,7 +51,7 @@ class OfficersDistributionChart extends ApexChartWidget
                 '#86198f',
                 '#1e3a8a',
                 '#ea580c',
-                '#fbbf24'
+                '#fbbf24',
             ],
         ];
     }
@@ -66,7 +60,7 @@ class OfficersDistributionChart extends ApexChartWidget
     {
         return Officer::query()
             ->where('battalion_id', $unit)
-            ->when($company, fn(Builder $query) => $query
+            ->when($company, fn (Builder $query) => $query
                 ->where('company_id', $operator, $company))
             ->count();
     }

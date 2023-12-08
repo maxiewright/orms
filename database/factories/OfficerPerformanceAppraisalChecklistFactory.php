@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class OfficerPerformanceAppraisalChecklistFactory extends Factory
 {
-
     /**
      * Define the model's default state.
      *
@@ -36,7 +35,7 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
             : $disciplinaryActionParticulars = null;
         $grade = OfficerAppraisalGrade::all()->random()->id;
         $nonGradingReason = null;
-        if ($grade === OfficerAppraisalGradeEnum::NOT_GRADED){
+        if ($grade === OfficerAppraisalGradeEnum::NOT_GRADED) {
             $nonGradingReason = fake()->sentence();
         }
 
@@ -60,7 +59,7 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
             'has_serviceperson_signature' => fake()->boolean(),
             'battalion_id' => Battalion::all()->random()->id,
             'rank_id' => Rank::all()->random()->id,
-            'non_grading_reason' => $nonGradingReason
+            'non_grading_reason' => $nonGradingReason,
 
         ];
     }

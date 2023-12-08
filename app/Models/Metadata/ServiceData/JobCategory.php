@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobCategory extends Model
 {
-    use SoftDeletes, SluggableByName, HasServicepeople;
+    use HasServicepeople, SluggableByName, SoftDeletes;
 
     public $guarded = [];
 

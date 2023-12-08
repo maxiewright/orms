@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             AttendeeRoleSeeder::class,
 
             //Employment
-            ReleaseServicepersonEmploymentStatusSeeder::class
+            ReleaseServicepersonEmploymentStatusSeeder::class,
         ]);
     }
 }

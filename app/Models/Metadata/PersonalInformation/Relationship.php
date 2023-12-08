@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Relationship extends Model
 {
-    use SoftDeletes, HasServicepeople, SluggableByName;
+    use HasServicepeople, SluggableByName, SoftDeletes;
 
     public $guarded = [];
 }

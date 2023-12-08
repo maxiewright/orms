@@ -30,6 +30,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
     protected static ?string $modelLabel = 'Appraisal Checklist';
 
     protected static ?int $navigationSort = 3;
+
     public static function getGloballySearchableAttributes(): array
     {
         return [

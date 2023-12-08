@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Metadata;
 
 use App\Filament\Resources\Metadata\CompanyResource\Pages;
-use App\Filament\Resources\Metadata\CompanyResource\RelationManagers;
 use App\Models\Unit\Company;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,14 +10,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
 class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = "Metadata";
+    protected static ?string $navigationGroup = 'Metadata';
 
     protected static ?int $navigationSort = 8;
 
@@ -57,7 +55,7 @@ class CompanyResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('short_name')
                     ->label('Abbreviation')
-                    ->searchable()
+                    ->searchable(),
             ])
             ->filters([
                 //

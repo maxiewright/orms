@@ -6,8 +6,6 @@ use App\Filament\Widgets\OfficersDispositionChart;
 use App\Filament\Widgets\OfficersDistributionChart;
 use Filament\Pages\Dashboard;
 
-use Filament\Pages\Page;
-
 class OfficerDashboard extends Dashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -25,6 +23,4 @@ class OfficerDashboard extends Dashboard
             OfficersDispositionChart::make(),
         ];
     }
-
-
 }

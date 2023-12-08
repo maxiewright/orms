@@ -9,8 +9,6 @@ use App\Models\Metadata\ServiceData\JobCategory;
 use App\Models\Officer;
 use App\Models\Serviceperson;
 use App\Models\Unit\Company;
-use Filament\Actions\CreateAction;
-use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -92,8 +90,8 @@ class OfficerResource extends Resource
                 EditAction::make()
                     ->icon('heroicon-o-clipboard-document-check')
                     ->label('Administrate')
-                    ->modalHeading(fn(Serviceperson $record): string => "Administrate {$record->military_name}")
-                    ->fillForm(fn(Serviceperson $record) => [
+                    ->modalHeading(fn (Serviceperson $record): string => "Administrate {$record->military_name}")
+                    ->fillForm(fn (Serviceperson $record) => [
                         'company_id' => $record->company_id,
                         'category' => ($record->job) ? $record->job->category->id : '',
                         'job_id' => $record->job_id,
@@ -105,7 +103,7 @@ class OfficerResource extends Resource
                             'company_id' => $data['company_id'],
                             'job_id' => $data['job_id'],
                         ]);
-                    })
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -123,7 +121,7 @@ class OfficerResource extends Resource
                                 ]);
                             }
                         })
-                    ->deselectRecordsAfterCompletion()
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ])
             ->emptyStateActions([
@@ -162,20 +160,20 @@ class OfficerResource extends Resource
                     ->live(),
                 Select::make('company_id')
                     ->label('Company')
-                    ->options(fn(Get $get) => Company::query()
+                    ->options(fn (Get $get) => Company::query()
                         ->where('battalion_id', $get('battalion_id'))
                         ->pluck('short_name', 'id')),
             ]),
             Fieldset::make('Job')->schema([
                 Select::make('category')
-                    ->options(fn() => JobCategory::query()
+                    ->options(fn () => JobCategory::query()
                         ->pluck('name', 'id'))
                     ->live(),
                 Select::make('job_id')
                     ->label('Job')
-                    ->options(fn(Get $get) => Job::query()
+                    ->options(fn (Get $get) => Job::query()
                         ->where('job_category_id', $get('category'))
-                        ->pluck('name', 'id'))
+                        ->pluck('name', 'id')),
             ]),
         ];
     }

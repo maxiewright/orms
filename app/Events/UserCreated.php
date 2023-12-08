@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 class UserCreated
 {
-    use Dispatchable, SerializesModels, InteractsWithQueue;
+    use Dispatchable, InteractsWithQueue, SerializesModels;
 
     public function __construct(
         public User $user

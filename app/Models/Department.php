@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use SoftDeletes, HasServicepeople;
+    use HasServicepeople, SoftDeletes;
 
     public $guarded = [];
 
