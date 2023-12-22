@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Interview\InterviewStatus;
+use App\Enums\Interview\InterviewStatusEnum;
 use App\Enums\RankEnum;
 use App\Filament\Resources\InterviewResource\Pages;
 use App\Models\Interview;
@@ -22,6 +22,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +36,8 @@ class InterviewResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationGroup = 'Administration';
+
+    protected static ?int $navigationSort = 2;
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -160,7 +163,7 @@ class InterviewResource extends Resource
                         Select::make('interview_status_id')
                             ->label('Status')
                             ->relationship('status', 'name')
-                            ->default(InterviewStatus::pending->value)
+                            ->default(InterviewStatusEnum::PENDING->value)
                             ->required(),
                     ]),
                 ]),
@@ -173,9 +176,8 @@ class InterviewResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('servicepeople.military_name')
+                    ->listWithLineBreaks()
                     ->label('Serviceperson(s)')
-                    ->description(fn (Interview $record) => "{$record->company->battalion->short_name}, {$record->company->short_name} "
-                    )
                     ->searchable(['number', 'first_name', 'last_name']),
                 TextColumn::make('requestedBy.military_name')
                     ->description(fn (Interview $record): string => "On: {$record->requested_at->format('d M Y')}"),
@@ -184,7 +186,8 @@ class InterviewResource extends Resource
                     ->description(function (Interview $record) {
                         return str()->excerpt($record->subject);
                     }),
-                BadgeColumn::make('status.name')
+                TextColumn::make('status.name')
+                    ->badge()
                     ->colors([
                         'primary',
                         'secondary' => static fn ($state): bool => $state === 'pending',
@@ -199,10 +202,11 @@ class InterviewResource extends Resource
                             : '';
                     })->placeholder('Not yet Seen'),
             ])
+            ->defaultSort('requested_at', 'desc')
             ->filters([
                 SelectFilter::make('status')
                     ->relationship('status', 'name')
-                    ->default(InterviewStatus::pending->value),
+                    ->default(InterviewStatusEnum::PENDING->value),
                 SelectFilter::make('reason')
                     ->relationship('reason', 'name'),
                 Filter::make('requested_at')
