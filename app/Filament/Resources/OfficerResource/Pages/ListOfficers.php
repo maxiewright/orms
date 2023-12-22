@@ -5,8 +5,9 @@ namespace App\Filament\Resources\OfficerResource\Pages;
 use App\Enums\ServiceData\EmploymentStatusEnum;
 use App\Filament\Resources\OfficerResource;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Pages\ListRecords\Tab;
+
 
 class ListOfficers extends ListRecords
 {
@@ -25,6 +26,7 @@ class ListOfficers extends ListRecords
     {
         return 4;
     }
+
 
     public function getTabs(): array
     {

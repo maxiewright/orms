@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OfficerResource\Pages;
-use App\Filament\Resources\OfficerResource\Pages\OfficersUnitOverview;
+use App\Filament\Resources\OfficerResource\Widgets\OfficersUnitOverview;
 use App\Models\Metadata\ServiceData\Job;
 use App\Models\Metadata\ServiceData\JobCategory;
 use App\Models\Officer;
