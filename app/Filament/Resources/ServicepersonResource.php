@@ -69,6 +69,10 @@ class ServicepersonResource extends Resource
                 Tables\Columns\TextColumn::make('assumption_date')
                     ->date('d M Y'),
             ])
+            ->defaultSort(fn($query) => $query
+                ->orderBy('rank_id', 'desc')
+                ->orderBy('number', 'asc')
+            )
             ->filters([
                 Tables\Filters\SelectFilter::make('rank')
                     ->relationship('rank', 'regiment_abbreviation')
