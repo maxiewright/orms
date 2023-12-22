@@ -28,6 +28,11 @@ class Serviceperson extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'military_name',
+        'full_military_name',
+    ];
+
     protected $casts = [
         'date_of_birth' => 'date',
         'enlistment_date' => 'date',
