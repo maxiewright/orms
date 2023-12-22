@@ -8,6 +8,10 @@ use Filament\Pages\Dashboard;
 
 class OfficerDashboard extends Dashboard
 {
+    protected static string $routePath = 'officers/dashboard';
+
+    protected static ?string $title = 'Officers Dashboard';
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationGroup = 'Officers';
@@ -15,6 +19,8 @@ class OfficerDashboard extends Dashboard
     protected static ?int $navigationSort = 1;
 
     protected static string $view = 'filament.pages.officer-dashboard';
+
+
 
     protected function getHeaderWidgets(): array
     {
