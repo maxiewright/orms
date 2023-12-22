@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OfficerResource\Pages;
-use App\Filament\Resources\OfficerResource\Widgets\OfficersUnitOverview;
+use App\Filament\Resources\OfficerResource\Pages\OfficersUnitOverview;
 use App\Models\Metadata\ServiceData\Job;
 use App\Models\Metadata\ServiceData\JobCategory;
 use App\Models\Officer;
@@ -60,6 +60,10 @@ class OfficerResource extends Resource
                 TextColumn::make('company.short_name'),
                 TextColumn::make('job.short_name'),
             ])
+            ->defaultSort(fn($query) => $query
+                ->orderBy('rank_id', 'desc')
+                ->orderBy('number', 'asc')
+            )
             ->filters([
                 SelectFilter::make('employment status')
                     ->relationship('employmentStatus', 'short_name')
