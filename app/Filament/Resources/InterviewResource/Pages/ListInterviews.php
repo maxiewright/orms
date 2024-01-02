@@ -12,7 +12,6 @@ use Filament\Resources\Pages\ListRecords;
 
 class ListInterviews extends ListRecords
 {
-
     use ExposesTableToWidgets;
 
     protected static string $resource = InterviewResource::class;
@@ -36,25 +35,24 @@ class ListInterviews extends ListRecords
         ];
     }
 
-
     public function getTabs(): array
     {
         return [
             'All' => Tab::make(),
-            'performance' => Tab::make()->query(fn($query) => $query
+            'performance' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::PERFORMANCE)),
-            'welfare' => Tab::make()->query(fn($query) => $query
+            'welfare' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::WELFARE)),
-            'interdiction' => Tab::make()->query(fn($query) => $query
+            'interdiction' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::INTERDICTION)),
-            'promotion' => Tab::make()->query(fn($query) => $query
+            'promotion' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::PROMOTION)),
-            'seniority' => Tab::make()->query(fn($query) => $query
+            'seniority' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::SENIORITY)),
-            'personal matter' => Tab::make()->query(fn($query) => $query
+            'personal matter' => Tab::make()->query(fn ($query) => $query
                 ->where('interview_reason_id', InterviewReasonEnum::PERSONAL_MATTER)),
-            'redress' => Tab::make()->query(fn($query) => $query
-                ->where('interview_reason_id', InterviewReasonEnum::REDRESS))
+            'redress' => Tab::make()->query(fn ($query) => $query
+                ->where('interview_reason_id', InterviewReasonEnum::REDRESS)),
         ];
     }
 }

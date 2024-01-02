@@ -16,6 +16,7 @@ use App\Models\Metadata\ServiceData\Job;
 use App\Models\Unit\Battalion;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Serviceperson>
@@ -29,6 +30,7 @@ class ServicepersonFactory extends Factory
      */
     public function definition(): array
     {
+
         $battalion = Battalion::all()->random();
 
         return [
@@ -71,7 +73,7 @@ class ServicepersonFactory extends Factory
         $enlistmentDate = $this->getEnlistmentDate($rank);
 
         return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(300, 500),
+            'number' => fake()->unique()->numberBetween(300, 700),
             'rank_id' => $rank,
             'enlistment_date' => $enlistmentDate,
             'assumption_date' => fake()->dateTimeBetween(
@@ -90,7 +92,7 @@ class ServicepersonFactory extends Factory
         $rank = fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
 
         return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(10000, 14000),
+            'number' => fake()->unique()->numberBetween(9000, 14000),
             'rank_id' => $rank,
             'enlistment_date' => $this->getEnlistmentDate($rank),
             'enlistment_type_id' => EnlistmentTypeEnum::enlisted->value,
