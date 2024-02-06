@@ -10,7 +10,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -29,7 +28,6 @@ use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
 use RalphJSmit\Filament\Onboard\Step;
 use RalphJSmit\Filament\Onboard\Track;
-use Stephenjude\FilamentDebugger\DebuggerPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {

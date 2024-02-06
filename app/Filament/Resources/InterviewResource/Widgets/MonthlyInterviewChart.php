@@ -15,7 +15,6 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class MonthlyInterviewChart extends ApexChartWidget
 {
-
     protected static ?string $chartId = 'monthlyInterviewChart';
 
     protected function getHeading(): ?string
