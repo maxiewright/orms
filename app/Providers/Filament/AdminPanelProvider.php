@@ -81,8 +81,7 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentApexChartsPlugin::make(),
                 FilamentShieldPlugin::make(),
-                BreezyCore::make()
-                    ->myProfile(),
+                BreezyCore::make()->myProfile(),
                 FilamentOnboard::make()
                     ->addTrack(fn () => Track::make([
                         Step::make(name: 'Change Password', identifier: 'widget::change-password')
