@@ -80,7 +80,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
-                DebuggerPlugin::make(),
                 FilamentShieldPlugin::make(),
                 BreezyCore::make()
                     ->myProfile(),
