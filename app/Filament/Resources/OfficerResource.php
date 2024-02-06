@@ -60,7 +60,7 @@ class OfficerResource extends Resource
                 TextColumn::make('company.short_name'),
                 TextColumn::make('job.short_name'),
             ])
-            ->defaultSort(fn($query) => $query
+            ->defaultSort(fn ($query) => $query
                 ->orderBy('rank_id', 'desc')
                 ->orderBy('number', 'asc')
             )

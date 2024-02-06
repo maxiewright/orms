@@ -29,5 +29,7 @@ class UnitSeeder extends Seeder
             BattalionSeeder::class,
             CompanySeeder::class,
         ]);
+
+        Model::reguard();
     }
 }

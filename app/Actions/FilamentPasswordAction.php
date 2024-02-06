@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
+use App\Filament\Resources\ServicepersonResource;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-use Filament\Pages\Dashboard;
 use Illuminate\Support\Facades\Hash;
 use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 
@@ -22,7 +22,7 @@ class FilamentPasswordAction
 
         Filament::auth()->login($user);
 
-        $livewire->redirect(Dashboard::getUrl());
+        $livewire->redirect(ServicepersonResource::getUrl());
 
         Notification::make()
             ->success()

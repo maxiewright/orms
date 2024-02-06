@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,9 +29,3 @@ Route::get('sos', function () {
 
     return $sos(\App\Enums\RankEnum::O4, $serviceperson->date_of_birth);
 });
-//Route::prefix('filament')->as('filament.')->group(function (){
-//    Route::prefix('pages')->as('pages.')->group(function (){
-//        Route::get('my-profile', \App\Filament\Pages\MyProfile::class)
-//        ->name('my-profile');
-//    });
-//});

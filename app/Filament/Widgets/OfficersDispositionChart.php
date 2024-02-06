@@ -23,7 +23,7 @@ class OfficersDispositionChart extends ApexChartWidget
     /**
      * Chart Id
      */
-    protected static string $chartId = 'officersDispositionChart';
+    protected static ?string $chartId = 'officersDispositionChart';
 
     /**
      * Widget Title

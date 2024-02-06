@@ -6,7 +6,6 @@ use App\Enums\Interview\InterviewStatusEnum;
 use App\Models\Metadata\InterviewReason;
 use App\Models\Unit\Company;
 use App\Traits\HasInterviewStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,7 +26,7 @@ class Interview extends Model
     ];
 
     protected $with = [
-        'company.battalion'
+        'company.battalion',
     ];
 
     public function servicepeople(): BelongsToMany
@@ -69,5 +68,4 @@ class Interview extends Model
     {
         return $this->belongsTo(Interview::class, 'parent_id');
     }
-
 }

@@ -8,7 +8,6 @@ use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 
-
 class ListOfficers extends ListRecords
 {
     use ExposesTableToWidgets;
@@ -26,7 +25,6 @@ class ListOfficers extends ListRecords
     {
         return 4;
     }
-
 
     public function getTabs(): array
     {

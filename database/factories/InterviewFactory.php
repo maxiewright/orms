@@ -30,7 +30,7 @@ class InterviewFactory extends Factory
     public function seen(): InterviewFactory
     {
 
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'interview_status_id' => Status::SEEN,
             'seen_at' => fake()->dateTimeBetween($this->dateRequested()),
             'seen_by' => Serviceperson::officers()->get()->random()->number,
@@ -39,7 +39,7 @@ class InterviewFactory extends Factory
 
     public function pending(): InterviewFactory
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'interview_status_id' => Status::PENDING,
             $this->notSeen(),
         ]);
@@ -47,16 +47,15 @@ class InterviewFactory extends Factory
 
     public function cancelled(): InterviewFactory
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'interview_status_id' => Status::CANCELED,
-             $this->notSeen(),
+            $this->notSeen(),
         ]);
     }
 
-
     public function hasPreviousInterview(): InterviewFactory
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'parent_id' => Interview::factory(),
         ]);
     }
@@ -73,5 +72,4 @@ class InterviewFactory extends Factory
             'seen_by' => null,
         ];
     }
-
 }

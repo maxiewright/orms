@@ -11,8 +11,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class YearlyInterviewChart extends ApexChartWidget
 {
-
-    protected static string $chartId = 'AnnualInterviews';
+    protected static ?string $chartId = 'AnnualInterviews';
 
     protected function getHeading(): ?string
     {
@@ -21,7 +20,7 @@ class YearlyInterviewChart extends ApexChartWidget
             ->first();
 
         return ($reason)
-            ? ucfirst($reason->name) . " interviews for {$this->filterFormData['year']}"
+            ? ucfirst($reason->name)." interviews for {$this->filterFormData['year']}"
             : "Interviews for {$this->filterFormData['year']}";
     }
 
@@ -48,11 +47,11 @@ class YearlyInterviewChart extends ApexChartWidget
                 ->options(function () {
                     $years = range(now()->year, now()->subYears(3)->year);
 
-                    return Arr::mapWithKeys($years, fn($value) => [
+                    return Arr::mapWithKeys($years, fn ($value) => [
                         $value => $value,
                     ]);
                 })
-                ->default(now()->year)
+                ->default(now()->year),
         ];
     }
 
@@ -133,15 +132,14 @@ class YearlyInterviewChart extends ApexChartWidget
         ];
     }
 
-
     private function getInterviewCount($status = null): int
     {
         return Interview::query()
             ->whereYear('requested_at', $this->filterFormData['year'])
-            ->when($status, fn($query, $status) => $query
+            ->when($status, fn ($query, $status) => $query
                 ->where('interview_status_id', $status)
             )
-            ->when($this->filterFormData['interview_reason_id'], fn($query, $reason) => $query
+            ->when($this->filterFormData['interview_reason_id'], fn ($query, $reason) => $query
                 ->where('interview_reason_id', $reason)
             )
             ->count();

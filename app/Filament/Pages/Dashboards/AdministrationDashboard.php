@@ -24,7 +24,7 @@ class AdministrationDashboard extends Dashboard
     protected function getHeaderWidgets(): array
     {
         return [
-//            AdministrationOverview::make(),
+            //            AdministrationOverview::make(),
             YearlyInterviewChart::make(),
             MonthlyInterviewChart::make(),
         ];

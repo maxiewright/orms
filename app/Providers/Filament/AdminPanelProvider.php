@@ -23,11 +23,13 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use RalphJSmit\Filament\Onboard\FilamentOnboard;
 use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
 use RalphJSmit\Filament\Onboard\Step;
 use RalphJSmit\Filament\Onboard\Track;
+use Stephenjude\FilamentDebugger\DebuggerPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -77,6 +79,8 @@ class AdminPanelProvider extends PanelProvider
                 OnboardMiddleware::class,
             ])
             ->plugins([
+                FilamentApexChartsPlugin::make(),
+                DebuggerPlugin::make(),
                 FilamentShieldPlugin::make(),
                 BreezyCore::make()
                     ->myProfile(),

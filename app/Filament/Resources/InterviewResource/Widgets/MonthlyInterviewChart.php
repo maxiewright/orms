@@ -16,19 +16,19 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 class MonthlyInterviewChart extends ApexChartWidget
 {
 
-    protected static string $chartId = 'monthlyInterviewChart';
+    protected static ?string $chartId = 'monthlyInterviewChart';
 
     protected function getHeading(): ?string
     {
-        $start = Carbon::make( $this->filterFormData['start_at'])->format('M y');
-        $end = Carbon::make( $this->filterFormData['end_at'])->format('M y');
+        $start = Carbon::make($this->filterFormData['start_at'])->format('M y');
+        $end = Carbon::make($this->filterFormData['end_at'])->format('M y');
 
         $reason = InterviewReason::query()
             ->where('id', $this->filterFormData['interview_reason_id'])
             ->first();
 
         return ($reason)
-            ? ucfirst($reason->name) . " interviews for the period $start to $end"
+            ? ucfirst($reason->name)." interviews for the period $start to $end"
             : "Interviews for the period $start to $end";
     }
 
@@ -45,6 +45,7 @@ class MonthlyInterviewChart extends ApexChartWidget
                 ->default(now()),
         ];
     }
+
     protected function getOptions(): array
     {
 
@@ -111,8 +112,8 @@ class MonthlyInterviewChart extends ApexChartWidget
                 ->where('interview_reason_id', $filter)))
             ->dateColumn('requested_at')
             ->between(
-                start: Carbon::parse( $this->filterFormData['start_at']),
-                end: Carbon::parse( $this->filterFormData['end_at']),
+                start: Carbon::parse($this->filterFormData['start_at']),
+                end: Carbon::parse($this->filterFormData['end_at']),
             )
             ->perMonth()
             ->count();
