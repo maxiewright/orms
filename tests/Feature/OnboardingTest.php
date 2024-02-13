@@ -2,6 +2,7 @@
 
 use App\Models\Serviceperson;
 use App\Models\User;
+use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
 
@@ -14,16 +15,20 @@ beforeEach(function () {
 
 });
 
-it('does not allow user to view dashboard if not changed', function () {
-    $this->actingAs($this->user);
+it('does not allow user to view dashboard if password is not changed', function () {
 
-    $this->get('/admin')->assertRedirect(route('filament.onboard.onboard'));
+    logInAsUserWithRole()->update([
+        'password_changed_at' => null,
+    ]);
+
+    $this->get('/admin')
+        ->assertRedirect(route('filament.admin.filament.onboard.onboard'));
 });
 
 it('allows user to access the dashboard if password is changed', function () {
     $this->actingAs($this->user);
 
-    $this->get(route('filament.onboard.onboard'))->assertSuccessful();
+    $this->get(route('filament.admin.filament.onboard.onboard'))->assertSuccessful();
 
     // submit the password change form
     // assert that the user see the dashboard

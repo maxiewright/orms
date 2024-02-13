@@ -1,10 +1,9 @@
 {
-  "name": "laravel/laravel",
+  "name": "maxiewright/orms",
   "type": "project",
-  "description": "The skeleton application for the Laravel framework.",
+  "description": "The management app of Military Orderly Rooms.",
   "keywords": [
-    "laravel",
-    "framework"
+    "HRMS"
   ],
   "license": "MIT",
   "require": {
@@ -12,6 +11,7 @@
     "bezhansalleh/filament-shield": "^3.0@beta",
     "bfinlay/laravel-excel-seeder": "^3.3",
     "filament/filament": "^3.0-stable",
+    "filament/minimal-theme": "^3.0",
     "flowframe/laravel-trend": "^0.1.5",
     "guzzlehttp/guzzle": "^7.2",
     "jeffgreco13/filament-breezy": "*",
@@ -24,7 +24,9 @@
     "pxlrbt/filament-excel": "^2.0",
     "ralphjsmit/laravel-filament-onboard": "^2.3",
     "spatie/laravel-backup": "^8.1",
-    "spatie/laravel-sluggable": "^3.5"
+    "spatie/laravel-sluggable": "^3.5",
+    "symfony/http-client": "^7.0",
+    "symfony/mailgun-mailer": "^7.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.8",
@@ -99,6 +101,10 @@
     {
       "type": "composer",
       "url": "https://satis.ralphjsmit.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://filament.privato.pub/composer"
     }
   ],
   "minimum-stability": "dev",

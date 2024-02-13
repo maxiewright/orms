@@ -19,7 +19,7 @@ class InterviewFactory extends Factory
 
         return [
             'company_id' => Company::all()->random()->id,
-            'requested_by' => Serviceperson::officers()->get()->random()->number,
+            'requested_by' => Serviceperson::factory()->officer(),
             'requested_at' => $this->dateRequested(),
             'interview_reason_id' => InterviewReason::all()->random()->id,
             'subject' => fake()->sentence(),
@@ -33,7 +33,7 @@ class InterviewFactory extends Factory
         return $this->state(fn () => [
             'interview_status_id' => Status::SEEN,
             'seen_at' => fake()->dateTimeBetween($this->dateRequested()),
-            'seen_by' => Serviceperson::officers()->get()->random()->number,
+            'seen_by' => Serviceperson::factory()->officer(),
         ]);
     }
 
@@ -41,16 +41,14 @@ class InterviewFactory extends Factory
     {
         return $this->state(fn () => [
             'interview_status_id' => Status::PENDING,
-            $this->notSeen(),
-        ]);
+        ]+ $this->notSeen());
     }
 
     public function cancelled(): InterviewFactory
     {
         return $this->state(fn () => [
             'interview_status_id' => Status::CANCELED,
-            $this->notSeen(),
-        ]);
+        ] + $this->notSeen());
     }
 
     public function hasPreviousInterview(): InterviewFactory

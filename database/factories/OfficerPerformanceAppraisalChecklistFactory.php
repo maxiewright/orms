@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\OfficerAppraisalGradeEnum;
 use App\Models\Metadata\OfficerAppraisalGrade;
 use App\Models\Metadata\Rank;
+use App\Models\Serviceperson;
 use App\Models\Unit\Battalion;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -40,7 +41,7 @@ class OfficerPerformanceAppraisalChecklistFactory extends Factory
         }
 
         return [
-            'serviceperson_number' => 198,
+            'serviceperson_number' => Serviceperson::factory()->officer(),
             'appraisal_start_at' => $appraisalStart,
             'appraisal_end_at' => $appraisalEnd,
             'is_appointment_correct' => fake()->boolean(),

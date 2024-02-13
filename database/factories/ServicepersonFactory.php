@@ -35,7 +35,7 @@ class ServicepersonFactory extends Factory
 
         return [
             // Service Data
-            'formation_id' => FormationEnum::TTR,
+            'formation_id' => FormationEnum::Regiment,
 
             // Basic Information
             'image' => fake()->imageUrl(),

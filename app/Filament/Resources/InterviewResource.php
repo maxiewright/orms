@@ -70,13 +70,17 @@ class InterviewResource extends Resource
             Tabs::make('Interview')->schema([
                 // Request
                 Tabs\Tab::make('Request')->schema([
-                    Grid::make(1)->schema([
+                    Grid::make(1)->schema(components: [
                         Select::make('servicepeople')
+                            ->helperText('To select a serviceperson, start typing their number, first name, middle name or last name')
                             ->label('Serviceperson(s)')
-                            ->relationship('servicepeople', 'number')
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
-                            ->searchable(['number', 'first_name', 'last_name'])
                             ->multiple()
+                            ->relationship(
+                                name: 'servicepeople',
+                                titleAttribute: 'number',
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            ->searchable(['number', 'first_name', 'middle_name', 'last_name'])
                             ->required(),
                     ]),
                     Grid::make(4)->schema(components: [
@@ -173,12 +177,19 @@ class InterviewResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('servicepeople.image_url')
+                    ->label('Photo')
+                    ->stacked()
+                    ->circular()
+                    ->wrap()
+                    ->size(40),
                 TextColumn::make('servicepeople.military_name')
                     ->listWithLineBreaks()
                     ->label('Serviceperson(s)')
                     ->searchable(['number', 'first_name', 'last_name']),
                 TextColumn::make('requestedBy.military_name')
-                    ->description(fn (Interview $record): string => "On: {$record->requested_at->format('d M Y')}"),
+                    ->description(fn (Interview $record): string => "On: {$record->requested_at->format('d M Y')}")
+                    ->searchable(['number', 'first_name', 'last_name']),
                 TextColumn::make('reason.name')
                     ->wrap()
                     ->description(function (Interview $record) {
@@ -204,6 +215,11 @@ class InterviewResource extends Resource
                     ->relationship('status', 'name'),
                 SelectFilter::make('reason')
                     ->relationship('reason', 'name'),
+                SelectFilter::make('rank')
+                    ->relationship('servicepeople.rank', 'regiment')
+                    ->searchable()
+                    ->multiple()
+                    ->preload(),
                 Filter::make('requested_at')
                     ->form([
                         DatePicker::make('request_start'),
@@ -236,8 +252,8 @@ class InterviewResource extends Resource
                                 fn (Builder $query, $date): Builder => $query->whereDate('seen_at', '<=', $date),
                             );
                     }),
-
             ])
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

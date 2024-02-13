@@ -7,6 +7,7 @@ use App\Filament\Resources\OfficerPerformanceAppraisalChecklistResource\{
 use App\Models\OfficerPerformanceAppraisalChecklist;
 use Illuminate\Support\Collection;
 
+use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 function createAppraisalChecklists($count): OfficerPerformanceAppraisalChecklist|Collection
@@ -17,18 +18,21 @@ function createAppraisalChecklists($count): OfficerPerformanceAppraisalChecklist
 }
 
 it('it can access the appraisal checklist resource', function () {
+    // Arrange
+    logInAsUserWithRole();
+
     // Act & Assert
-    logInAsUserWithRole()
-        ->get(AppraisalChecklistResource::getUrl())
+    get(AppraisalChecklistResource::getUrl())
         ->assertSuccessful();
+
 });
 
 it('it shows appraisal checklist list', function () {
     // Arrange
     $appraisals = createAppraisalChecklists(count: 10);
+    logInAsUserWithRole();
 
     // Act & Assert
-    logInAsUserWithRole();
     livewire(ListOfficerPerformanceAppraisalChecklists::class)
         ->assertCanSeeTableRecords($appraisals);
 });

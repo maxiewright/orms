@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
@@ -16,6 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use HasPageShield;
 
     protected static function booted()
     {

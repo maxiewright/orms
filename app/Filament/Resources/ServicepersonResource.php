@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class ServicepersonResource extends Resource
@@ -23,43 +24,34 @@ class ServicepersonResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('formation_id')
-                    ->relationship('formation', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('number')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('rank_id')
-                    ->relationship('rank', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('first_name')
-                    ->required(),
-                Forms\Components\TextInput::make('last_name')
-                    ->required(),
-                Forms\Components\Select::make('gender_id')
-                    ->relationship('gender', 'name')
-                    ->required(),
-                Forms\Components\DatePicker::make('date_of_birth')
-                    ->required()
-                    ->displayFormat('d M Y'),
-                Forms\Components\Select::make('enlistment_type_id')
-                    ->relationship('enlistmentType', 'name')
-                    ->required(),
-                Forms\Components\DatePicker::make('enlistment_date')
-                    ->required()
-                    ->displayFormat('d M Y'),
-                Forms\Components\DatePicker::make('assumption_date')
-                    ->required()
-                    ->displayFormat('d M Y'),
-            ])->columns(3);
+                Forms\Components\Tabs::make('Tabs')
+                    ->tabs([
+                        Forms\Components\Tabs\Tab::make('Personal Information')
+                            ->schema(Serviceperson::personalDataSchema())
+                            ->columns(1),
+                        Forms\Components\Tabs\Tab::make('Contact Information')
+                            ->schema(Serviceperson::contactInformationSchema()),
+                        Forms\Components\Tabs\Tab::make('Service Data')
+                            ->schema(Serviceperson::serviceDataSchema()),
+                        Forms\Components\Tabs\Tab::make('Emergency Contact')
+                            ->schema(Serviceperson::emergencyContactSchema()),
+                    ])->columnSpanFull(),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Serviceperson $record) => route('filament.admin.resources.servicepeople.view', $record))
             ->columns([
+                Tables\Columns\ImageColumn::make('image_url')
+                    ->label('Photo')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('military_name')
-                    ->searchable(['number', 'first_name', 'last_name'])
+                    ->sortable(['rank_id', 'number'], query: fn ($query) => $query
+                        ->orderBy('rank_id', 'desc')
+                        ->orderBy('number'))
+                    ->searchable(query: fn (Builder $query, $search) => Serviceperson::militaryNameSearch($query, $search))
                     ->label('Name'),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date('d M Y'),
@@ -71,7 +63,7 @@ class ServicepersonResource extends Resource
             ])
             ->defaultSort(fn ($query) => $query
                 ->orderBy('rank_id', 'desc')
-                ->orderBy('number', 'asc')
+                ->orderBy('number')
             )
             ->filters([
                 Tables\Filters\SelectFilter::make('rank')
@@ -84,7 +76,7 @@ class ServicepersonResource extends Resource
                     ->relationship('gender', 'name'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

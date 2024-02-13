@@ -5,10 +5,13 @@ namespace App\Filament\Pages\Dashboards;
 use App\Filament\Resources\InterviewResource\Widgets\MonthlyInterviewChart;
 use App\Filament\Resources\InterviewResource\Widgets\YearlyInterviewChart;
 use App\Filament\Widgets\AdministrationOverview;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Dashboard;
 
 class AdministrationDashboard extends Dashboard
 {
+    use HasPageShield;
+
     protected static string $routePath = 'administration/dashboard';
 
     protected static ?string $title = 'Administration Dashboard';

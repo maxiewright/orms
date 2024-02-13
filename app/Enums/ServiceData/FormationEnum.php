@@ -4,9 +4,10 @@ namespace App\Enums\ServiceData;
 
 enum FormationEnum: int
 {
-    case TTR = 1;
-    case TTCG = 2;
-    case TTAG = 3;
-    case DFHQ = 4;
-    case DFMA = 5;
+    case Regiment = 1;
+    case CoastGuard = 2;
+    case AirGuard = 3;
+    case DefenceForceReserves = 4;
+    case DefenceForceHeadquarters = 5;
+    case DefenceForceMilitaryAcademy = 6;
 }

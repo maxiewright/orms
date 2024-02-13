@@ -12,15 +12,10 @@
 */
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
 
-use function Pest\Laravel\actingAs;
-
 uses(
-    Tests\TestCase::class,
-    RefreshDatabase::class,
-)->in('Feature');
+    Tests\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -33,10 +28,6 @@ uses(
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -48,11 +39,13 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function logInAsUserWithRole(?User $user = null, $role = 'super_admin'): TestCase
+function logInAsUserWithRole(?User $user = null, $role = 'super_admin'): User
 {
     $user = $user ?? User::factory()->create();
 
     $user->assignRole($role);
 
-    return actingAs($user);
+    test()->actingAs($user);
+
+    return $user;
 }

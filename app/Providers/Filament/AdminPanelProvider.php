@@ -9,11 +9,13 @@ use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\MinimalTheme;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Widgets;
+use Hasnayeen\Themes\Http\Middleware\SetTheme;
+use Hasnayeen\Themes\ThemesPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -47,16 +49,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()->label('Metadata')->collapsed(),
                 NavigationGroup::make()->label('Access Control')->collapsed(),
             ])
-            ->colors([
-                'danger' => Color::hex('#dc2626'),
-                'primary' => Color::hex('#166534'),
-                'warning' => Color::hex('#facc15'),
-            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                //                Pages\Dashboard::class,
-            ])
+            ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
@@ -76,6 +71,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
                 OnboardMiddleware::class,
             ])
+
             ->plugins([
                 FilamentApexChartsPlugin::make(),
                 FilamentShieldPlugin::make(),
@@ -112,7 +108,11 @@ class AdminPanelProvider extends PanelProvider
                                 (new FilamentPasswordAction())->update($state, $livewire);
                             }),
                     ])->completeBeforeAccess()),
-            ]);
+            ])
+            ->plugin(new MinimalTheme())
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->colors(MinimalTheme::getColors())
+            ->icons(MinimalTheme::getIcons());
 
     }
 }
