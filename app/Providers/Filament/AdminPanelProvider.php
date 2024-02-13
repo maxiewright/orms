@@ -9,13 +9,10 @@ use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\MinimalTheme;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
-use Hasnayeen\Themes\Http\Middleware\SetTheme;
-use Hasnayeen\Themes\ThemesPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -71,7 +68,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
                 OnboardMiddleware::class,
             ])
-
             ->plugins([
                 FilamentApexChartsPlugin::make(),
                 FilamentShieldPlugin::make(),
@@ -108,11 +104,7 @@ class AdminPanelProvider extends PanelProvider
                                 (new FilamentPasswordAction())->update($state, $livewire);
                             }),
                     ])->completeBeforeAccess()),
-            ])
-            ->plugin(new MinimalTheme())
-            ->viteTheme('resources/css/filament/admin/theme.css')
-            ->colors(MinimalTheme::getColors())
-            ->icons(MinimalTheme::getIcons());
+            ]);
 
     }
 }

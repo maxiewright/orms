@@ -101,10 +101,6 @@
     {
       "type": "composer",
       "url": "https://satis.ralphjsmit.com"
-    },
-    {
-      "type": "composer",
-      "url": "https://filament.privato.pub/composer"
     }
   ],
   "minimum-stability": "dev",
