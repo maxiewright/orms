@@ -1,0 +1,11 @@
+{
+    "name": "ServiceFund",
+    "alias": "servicefund",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ServiceFund\\App\\Providers\\ServiceFundServiceProvider"
+    ],
+    "files": []
+}
