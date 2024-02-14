@@ -10,6 +10,7 @@
     "php": "^8.1",
     "bezhansalleh/filament-shield": "^3.0@beta",
     "bfinlay/laravel-excel-seeder": "^3.3",
+    "coolsam/modules": "^3.0@beta",
     "filament/filament": "^3.0-stable",
     "flowframe/laravel-trend": "^0.1.5",
     "guzzlehttp/guzzle": "^7.2",
@@ -20,6 +21,7 @@
     "laravel/tinker": "^2.8",
     "leandrocfe/filament-apex-charts": "^3.0",
     "masbug/flysystem-google-drive-ext": "^2.2",
+    "nwidart/laravel-modules": "^10.0",
     "pxlrbt/filament-excel": "^2.0",
     "ralphjsmit/laravel-filament-onboard": "^2.3",
     "spatie/laravel-backup": "^8.1",
@@ -46,6 +48,7 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Modules\\": "Modules",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
     }
