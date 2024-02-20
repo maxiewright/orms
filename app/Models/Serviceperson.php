@@ -16,11 +16,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\ServiceFund\Traits\HasTransactions;
+use Modules\ServiceFund\Traits\IsSignatory;
 
 class Serviceperson extends Model
 {
-    use HasBasicInformation, HasContactInformation, HasFactory, HasInterview, HasServiceData;
+    use HasBasicInformation;
+    use HasContactInformation;
+    use HasFactory;
     use HasForms;
+    use HasInterview;
+    use HasServiceData;
+
+    // Service Fund Module
+    use HasTransactions;
+    use IsSignatory;
 
     protected $primaryKey = 'number';
 

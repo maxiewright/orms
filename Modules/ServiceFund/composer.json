@@ -1,10 +1,10 @@
 {
-    "name": "nwidart/servicefund",
-    "description": "",
+    "name": "maxiewirght/servicefund",
+    "description": "A simple ledger app to manage service accounts",
     "authors": [
         {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
+            "name": "Maxie Wright",
+            "email": "maxiewright@gmail.com"
         }
     ],
     "extra": {

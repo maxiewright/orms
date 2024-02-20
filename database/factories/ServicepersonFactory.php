@@ -30,10 +30,15 @@ class ServicepersonFactory extends Factory
      */
     public function definition(): array
     {
-
         $battalion = Battalion::all()->random();
 
-        return [
+        $soldier = fake()->randomElement([
+            $this->officerData(),
+            $this->enlistedData(),
+        ]);
+
+        return $soldier + [
+
             // Service Data
             'formation_id' => FormationEnum::Regiment,
 
@@ -64,42 +69,13 @@ class ServicepersonFactory extends Factory
 
     public function officer(): Factory
     {
-        $retirementAge = new GetCompulsoryRetirementAgeAction;
-        $rank = fake()->numberBetween(RankEnum::O1->value, RankEnum::O5->value);
-        $officerType = collect([
-            EnlistmentTypeEnum::regularOfficer->value,
-            EnlistmentTypeEnum::specialServiceOfficer->value,
-        ]);
-        $enlistmentDate = $this->getEnlistmentDate($rank);
-
-        return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(300, 700),
-            'rank_id' => $rank,
-            'enlistment_date' => $enlistmentDate,
-            'assumption_date' => fake()->dateTimeBetween(
-                $enlistmentDate,
-                Carbon::make($enlistmentDate)->addMonths(3)),
-            'enlistment_type_id' => $officerType->random(),
-            'date_of_birth' => fake()->dateTimeBetween(
-                $retirementAge->getRetirementAge($rank), '-18 years'
-            ),
-        ]);
+        return $this->state(fn () => $this->officerData());
     }
 
     public function enlisted(): Factory
     {
-        $retirementAge = new GetCompulsoryRetirementAgeAction;
-        $rank = fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
 
-        return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(9000, 14000),
-            'rank_id' => $rank,
-            'enlistment_date' => $this->getEnlistmentDate($rank),
-            'enlistment_type_id' => EnlistmentTypeEnum::enlisted->value,
-            'date_of_birth' => fake()->dateTimeBetween(
-                $retirementAge->getRetirementAge($rank), '-18 years'
-            ),
-        ]);
+        return $this->state(fn () => $this->enlistedData());
     }
 
     public function getEnlistmentDate($rank): \DateTime
@@ -107,5 +83,45 @@ class ServicepersonFactory extends Factory
         $retirementAge = new GetCompulsoryRetirementAgeAction;
 
         return fake()->dateTimeBetween($retirementAge->getRetirementAge($rank));
+    }
+
+    public function officerData(): array
+    {
+        $retirementAge = new GetCompulsoryRetirementAgeAction;
+        $rank = fake()->numberBetween(RankEnum::O1->value, RankEnum::O5->value);
+        $officerType = fake()->randomElement([
+            EnlistmentTypeEnum::regularOfficer->value,
+            EnlistmentTypeEnum::specialServiceOfficer->value,
+        ]);
+        $enlistmentDate = $this->getEnlistmentDate($rank);
+
+        return [
+            'number' => fake()->unique()->numberBetween(300, 1000),
+            'rank_id' => $rank,
+            'enlistment_date' => $enlistmentDate,
+            'assumption_date' => fake()->dateTimeBetween(
+                $enlistmentDate,
+                Carbon::make($enlistmentDate)->addMonths(3)),
+            'enlistment_type_id' => $officerType,
+            'date_of_birth' => fake()->dateTimeBetween(
+                $retirementAge->getRetirementAge($rank), '-18 years'
+            ),
+        ];
+    }
+
+    public function enlistedData(): array
+    {
+        $retirementAge = new GetCompulsoryRetirementAgeAction;
+        $rank = fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
+
+        return [
+            'number' => fake()->unique()->numberBetween(15000, 20000),
+            'rank_id' => $rank,
+            'enlistment_date' => $this->getEnlistmentDate($rank),
+            'enlistment_type_id' => EnlistmentTypeEnum::enlisted->value,
+            'date_of_birth' => fake()->dateTimeBetween(
+                $retirementAge->getRetirementAge($rank), '-18 years'
+            ),
+        ];
     }
 }

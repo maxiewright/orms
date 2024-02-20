@@ -12,6 +12,7 @@
     "bfinlay/laravel-excel-seeder": "^3.3",
     "coolsam/modules": "^3.0@beta",
     "filament/filament": "^3.0-stable",
+    "filament/spatie-laravel-media-library-plugin": "^3.2",
     "flowframe/laravel-trend": "^0.1.5",
     "guzzlehttp/guzzle": "^7.2",
     "jeffgreco13/filament-breezy": "*",

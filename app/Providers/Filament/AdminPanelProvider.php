@@ -9,7 +9,10 @@ use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
@@ -22,6 +25,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use Modules\ServiceFund\Filament\App\Pages\ServiceFundDashboard;
 use RalphJSmit\Filament\Onboard\FilamentOnboard;
 use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
@@ -45,6 +49,19 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()->label('Administration'),
                 NavigationGroup::make()->label('Metadata')->collapsed(),
                 NavigationGroup::make()->label('Access Control')->collapsed(),
+                NavigationGroup::make()->label('Service Funds')->collapsed(),
+            ])
+            ->navigationItems([
+                NavigationItem::make('Service Funds')
+                    ->icon('heroicon-o-banknotes')
+                    ->group('Service Funds')
+                    ->url(fn (): string => ServiceFundDashboard::getUrl(panel: 'service-fund')),
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Report an issue')
+                    ->url('https://github.com/maxiewright/orms/issues')
+                    ->icon('heroicon-o-exclamation-circle'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

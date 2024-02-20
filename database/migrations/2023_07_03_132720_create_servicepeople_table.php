@@ -28,7 +28,7 @@ return new class extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('serviceperson_number')
-                ->first()
+                ->after('id')
                 ->constrained('servicepeople', 'number');
         });
     }

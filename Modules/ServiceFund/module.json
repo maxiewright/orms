@@ -5,7 +5,8 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "Modules\\ServiceFund\\App\\Providers\\ServiceFundServiceProvider"
+        "Modules\\ServiceFund\\App\\Providers\\ServiceFundServiceProvider",
+        "Modules\\ServiceFund\\Providers\\Filament\\AppPanelProvider"
     ],
     "files": []
 }
