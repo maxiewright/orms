@@ -2,12 +2,12 @@
 
 namespace Modules\ServiceFund\App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Matrix\Builder;
 use Modules\ServiceFund\Database\factories\TransactionFactory;
 use Modules\ServiceFund\Enums\PaymentMethodEnum;
 use Modules\ServiceFund\Enums\TransactionTypeEnum;
@@ -51,6 +51,10 @@ class Transaction extends Model implements HasMedia
         'payment_method' => PaymentMethodEnum::class,
     ];
 
+    protected $with = [
+        'transactional',
+    ];
+
     protected static function newFactory(): TransactionFactory
     {
         return TransactionFactory::new();
@@ -73,17 +77,17 @@ class Transaction extends Model implements HasMedia
 
     public function scopeIncome(Builder $query): void
     {
-        $query->whereType(TransactionTypeEnum::Income);
+        $query->where('type', TransactionTypeEnum::Income);
     }
 
     public function scopeExpense(Builder $query): void
     {
-        $query->whereType(TransactionTypeEnum::Expense);
+        $query->where('type', TransactionTypeEnum::Expense);
     }
 
     public function scopeTransfer(Builder $query): void
     {
-        $query->whereType(TransactionTypeEnum::Transfer);
+        $query->where('type', TransactionTypeEnum::Transfer);
 
     }
 

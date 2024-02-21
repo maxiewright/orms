@@ -47,6 +47,10 @@ class Account extends Model implements TransactionLookupInterface
         'active_since',
     ];
 
+    protected $with = [
+        'transactions'
+    ];
+
     public function getRouteKeyName(): string
     {
         return 'slug';

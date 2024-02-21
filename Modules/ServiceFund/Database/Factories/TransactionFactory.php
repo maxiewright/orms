@@ -42,6 +42,27 @@ class TransactionFactory extends Factory
         ];
     }
 
+    public function expense(): self
+    {
+        return $this->state(fn () => [
+            'type' => TransactionTypeEnum::Expense,
+        ]);
+    }
+
+    public function income(): self
+    {
+        return $this->state(fn () => [
+            'type' => TransactionTypeEnum::Income,
+        ]);
+    }
+
+    public function transfer(): self
+    {
+        return $this->state(fn () => [
+            'type' => TransactionTypeEnum::Transfer,
+        ]);
+    }
+
     private function transactional()
     {
         return fake()->randomElement([

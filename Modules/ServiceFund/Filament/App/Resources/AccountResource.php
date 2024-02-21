@@ -173,6 +173,10 @@ class AccountResource extends Resource
             'index' => Pages\ListAccounts::route('/'),
             'create' => Pages\CreateAccount::route('/create'),
             'edit' => Pages\EditAccount::route('/{record}/edit'),
+            'dashboard' => Pages\AccountDashboard::route('/{record}/dashboard'),
+            'expenses' => Pages\AccountExpense::route('/{record}/expenses'),
+            'income' => Pages\AccountIncome::route('/{record}/income'),
+            'transfers' => Pages\AccountTransfer::route('/{record}/transfers'),
         ];
     }
 }
