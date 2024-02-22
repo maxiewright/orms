@@ -75,14 +75,14 @@ class Transaction extends Model implements HasMedia
         return $this->morphTo();
     }
 
-    public function scopeIncome(Builder $query): void
+    public function scopeDebit(Builder $query): void
     {
-        $query->where('type', TransactionTypeEnum::Income);
+        $query->where('type', TransactionTypeEnum::Debit);
     }
 
-    public function scopeExpense(Builder $query): void
+    public function scopeCredit(Builder $query): void
     {
-        $query->where('type', TransactionTypeEnum::Expense);
+        $query->where('type', TransactionTypeEnum::Credit);
     }
 
     public function scopeTransfer(Builder $query): void
@@ -93,6 +93,6 @@ class Transaction extends Model implements HasMedia
 
     public function approvedBy(): BelongsTo
     {
-        return $this->belongsTo(app(config('servicefund.user.model'))::class, 'approved_by');
+        return $this->belongsTo(app(config('servicefund.user.model'))::class, 'approved_by', 'number');
     }
 }

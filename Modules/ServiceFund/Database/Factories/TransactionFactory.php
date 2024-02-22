@@ -42,17 +42,17 @@ class TransactionFactory extends Factory
         ];
     }
 
-    public function expense(): self
+    public function credit(): self
     {
         return $this->state(fn () => [
-            'type' => TransactionTypeEnum::Expense,
+            'type' => TransactionTypeEnum::Credit,
         ]);
     }
 
-    public function income(): self
+    public function debit(): self
     {
         return $this->state(fn () => [
-            'type' => TransactionTypeEnum::Income,
+            'type' => TransactionTypeEnum::Debit,
         ]);
     }
 

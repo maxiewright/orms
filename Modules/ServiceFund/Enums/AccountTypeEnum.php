@@ -3,9 +3,10 @@
 namespace Modules\ServiceFund\Enums;
 
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum AccountTypeEnum: string implements HasColor, HasLabel
+enum AccountTypeEnum: string implements HasColor, HasLabel, HasIcon
 {
     case Savings = 'savings';
     case Checking = 'checking';
@@ -33,4 +34,13 @@ enum AccountTypeEnum: string implements HasColor, HasLabel
     }
 
 
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::Savings => 'heroicon-o-building-library',
+            self::Checking => 'heroicon-o-pencil-square',
+            self::Cash => 'heroicon-0-banknotes',
+            self::Credit => 'heroicon-o-credit-card',
+        };
+    }
 }

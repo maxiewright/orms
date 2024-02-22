@@ -8,15 +8,15 @@ use Filament\Support\Contracts\HasLabel;
 
 enum TransactionTypeEnum: string implements HasColor, HasIcon, HasLabel
 {
-    case Income = 'income';
-    case Expense = 'expense';
+    case Debit = 'debit';
+    case Credit = 'credit';
     case Transfer = 'transfer';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Income => 'Income',
-            self::Expense => 'Expense',
+            self::Debit => 'Debit',
+            self::Credit => 'Credit',
             self::Transfer => 'Transfer',
         };
     }
@@ -24,8 +24,8 @@ enum TransactionTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Income => 'success',
-            self::Expense => 'danger',
+            self::Debit => 'success',
+            self::Credit => 'danger',
             self::Transfer => 'warning',
         };
     }
@@ -33,8 +33,8 @@ enum TransactionTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::Income => 'heroicon-o-currency-dollar',
-            self::Expense => 'heroicon-o-arrow-up-tray',
+            self::Debit => 'heroicon-o-currency-dollar',
+            self::Credit => 'heroicon-o-arrow-up-tray',
             self::Transfer => 'heroicon-o-arrows-right-left',
         };
     }
@@ -42,8 +42,8 @@ enum TransactionTypeEnum: string implements HasColor, HasIcon, HasLabel
     public function getTransactionalId(): string
     {
         return match ($this) {
-            self::Income => 'Paid By',
-            self::Expense => 'Paid To',
+            self::Debit => 'Paid By',
+            self::Credit => 'Paid To',
             self::Transfer => 'Transferred By',
         };
     }

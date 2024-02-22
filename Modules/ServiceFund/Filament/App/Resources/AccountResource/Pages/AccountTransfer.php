@@ -21,7 +21,7 @@ class AccountTransfer extends Page implements HasForms, HasTable
 
     protected static string $resource = AccountResource::class;
 
-    protected static string $view = 'modules.service-fund.filament.resources.account-resource.pages.account-transfer';
+    protected static string $view = 'servicefund::filament.resources.account-resource.pages.account-transfer';
 
     protected static ?string $title = 'Transfers';
 

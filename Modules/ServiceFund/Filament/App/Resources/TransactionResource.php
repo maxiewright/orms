@@ -35,7 +35,6 @@ class TransactionResource extends Resource
     {
         return $form
             ->schema([
-
                 Section::make('Transaction')
                     ->columns(4)
                     ->schema([
@@ -107,16 +106,15 @@ class TransactionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('account.name'),
-                Tables\Columns\TextColumn::make('transaction_type_id')
-                    ->label('Type')
-                    ->badge(),
+                Tables\Columns\TextColumn::make('type')->badge(),
                 Tables\Columns\TextColumn::make('executed_at')
                     ->label('Transaction Date')
                     ->date(config('servicefund.timestamp.date')),
                 Tables\Columns\TextColumn::make('amount')
                     ->money(config('servicefund.currency')),
-                Tables\Columns\TextColumn::make('paymentMethod.name'),
-                Tables\Columns\TextColumn::make('category.name'),
+                Tables\Columns\TextColumn::make('payment_method')->badge(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->badge()->color('info'),
                 Tables\Columns\TextColumn::make('transactional.name')
                     ->label('Payee / Vendor'),
                 Tables\Columns\TextColumn::make('approvedBy.military_name'),

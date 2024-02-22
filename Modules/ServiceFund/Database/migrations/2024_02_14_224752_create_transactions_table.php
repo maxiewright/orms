@@ -24,6 +24,7 @@ return new class extends Migration
             $table->dateTime('executed_at');
             $table->decimal('amount', 13);
             $table->string('payment_method');
+            $table->integer('cheque_number')->nullable();
             $table->foreignId('transaction_category_id')->constrained();
             $table->text('description')->nullable();
             $table->foreignId('parent_id')

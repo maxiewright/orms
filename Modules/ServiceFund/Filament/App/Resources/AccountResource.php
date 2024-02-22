@@ -42,27 +42,27 @@ class AccountResource extends Resource
                         return request()->routeIs('filament.service-fund.resources.accounts.dashboard', $record);
                     })
                     ->icon('heroicon-o-home'),
-                PageNavigationItem::make('Income')
+                PageNavigationItem::make('Debits')
                     ->url(function () use ($record) {
-                        return static::getUrl('income', ['record' => $record]);
+                        return static::getUrl('debits', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.income', $record);
+                        return request()->routeIs('filament.service-fund.resources.accounts.debits', $record);
                     })
                     ->icon('heroicon-o-user-group')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->income()->count();
+                        return $record->transactions()->debit()->count();
                     }),
-                PageNavigationItem::make('Expenses')
+                PageNavigationItem::make('Credits')
                     ->url(function () use ($record) {
-                        return static::getUrl('expenses', ['record' => $record]);
+                        return static::getUrl('credits', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.expenses', $record);
+                        return request()->routeIs('filament.service-fund.resources.accounts.credits', $record);
                     })
                     ->icon('heroicon-o-shopping-cart')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->income()->count();
+                        return $record->transactions()->debit()->count();
                     }),
                 PageNavigationItem::make('Transfers')
                     ->url(function () use ($record) {
@@ -227,8 +227,8 @@ class AccountResource extends Resource
             'create' => Pages\CreateAccount::route('/create'),
             'edit' => Pages\EditAccount::route('/{record}/edit'),
             'dashboard' => Pages\AccountDashboard::route('/{record}/dashboard'),
-            'income' => Pages\AccountIncome::route('/{record}/income'),
-            'expenses' => Pages\AccountExpense::route('/{record}/expenses'),
+            'debits' => Pages\AccountDebit::route('/{record}/debits'),
+            'credits' => Pages\AccountCredit::route('/{record}/credits'),
             'transfers' => Pages\AccountTransfer::route('/{record}/transfers'),
         ];
     }
