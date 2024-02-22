@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Modules\ServiceFund\App\Models\Transaction;
+use Modules\ServiceFund\Enums\TransactionTypeEnum;
 
 trait InteractsWithTransactions
 {
@@ -23,7 +24,7 @@ trait InteractsWithTransactions
         );
     }
 
-    public static function getTransactionTableColumns(): array
+    public static function getTransactionTableColumns($transactions): array
     {
         return [
             TextColumn::make('executed_at'),
@@ -31,7 +32,17 @@ trait InteractsWithTransactions
                 ->money(config('servicefund.currency')),
             TextColumn::make('payment_method'),
             TextColumn::make('categories.name'),
-            TextColumn::make('transactional'),
+            TextColumn::make('transactional.name')
+                ->label(function () use ($transactions) {
+
+                    $transactionType = $transactions->first()->type;
+
+                    return match ($transactionType) {
+                        TransactionTypeEnum::Income => 'Paid By',
+                        TransactionTypeEnum::Expense => 'Paid To',
+                        TransactionTypeEnum::Transfer => 'Transferred By'
+                    };
+                }),
             TextColumn::make('approved_by')
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('approved_at')

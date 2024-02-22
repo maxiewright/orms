@@ -8,6 +8,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.1",
+    "aymanalhattami/filament-page-with-sidebar": "^2.4",
     "bezhansalleh/filament-shield": "^3.0@beta",
     "bfinlay/laravel-excel-seeder": "^3.3",
     "coolsam/modules": "^3.0@beta",

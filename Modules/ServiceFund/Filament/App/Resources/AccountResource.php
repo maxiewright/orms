@@ -3,6 +3,8 @@
 namespace Modules\ServiceFund\Filament\App\Resources;
 
 use App\Models\Serviceperson;
+use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
+use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -14,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
 use Modules\ServiceFund\Enums\AccountTypeEnum;
@@ -24,6 +27,56 @@ class AccountResource extends Resource
     protected static ?string $model = Account::class;
 
     protected static ?string $navigationGroup = 'Banking';
+
+    public static function sidebar(Model $record): FilamentPageSidebar
+    {
+        return FilamentPageSidebar::make()
+            ->setTitle($record->name)
+            ->topbarNavigation()
+            ->setNavigationItems([
+                PageNavigationItem::make('Dashboard')
+                    ->url(function () use ($record) {
+                        return static::getUrl('dashboard', ['record' => $record]);
+                    })
+                    ->isActiveWhen(function () use ($record) {
+                        return request()->routeIs('filament.service-fund.resources.accounts.dashboard', $record);
+                    })
+                    ->icon('heroicon-o-home'),
+                PageNavigationItem::make('Income')
+                    ->url(function () use ($record) {
+                        return static::getUrl('income', ['record' => $record]);
+                    })
+                    ->isActiveWhen(function () use ($record) {
+                        return request()->routeIs('filament.service-fund.resources.accounts.income', $record);
+                    })
+                    ->icon('heroicon-o-user-group')
+                    ->badge(function () use ($record) {
+                        return $record->transactions()->income()->count();
+                    }),
+                PageNavigationItem::make('Expenses')
+                    ->url(function () use ($record) {
+                        return static::getUrl('expenses', ['record' => $record]);
+                    })
+                    ->isActiveWhen(function () use ($record) {
+                        return request()->routeIs('filament.service-fund.resources.accounts.expenses', $record);
+                    })
+                    ->icon('heroicon-o-shopping-cart')
+                    ->badge(function () use ($record) {
+                        return $record->transactions()->income()->count();
+                    }),
+                PageNavigationItem::make('Transfers')
+                    ->url(function () use ($record) {
+                        return static::getUrl('transfers', ['record' => $record]);
+                    })
+                    ->isActiveWhen(function () use ($record) {
+                        return request()->routeIs('filament.service-fund.resources.accounts.transfers', $record);
+                    })
+                    ->icon('heroicon-o-ticket')
+                    ->badge(function () use ($record) {
+                        return $record->transactions()->transfer()->count();
+                    }),
+            ]);
+    }
 
     public static function form(Form $form): Form
     {
@@ -174,8 +227,8 @@ class AccountResource extends Resource
             'create' => Pages\CreateAccount::route('/create'),
             'edit' => Pages\EditAccount::route('/{record}/edit'),
             'dashboard' => Pages\AccountDashboard::route('/{record}/dashboard'),
-            'expenses' => Pages\AccountExpense::route('/{record}/expenses'),
             'income' => Pages\AccountIncome::route('/{record}/income'),
+            'expenses' => Pages\AccountExpense::route('/{record}/expenses'),
             'transfers' => Pages\AccountTransfer::route('/{record}/transfers'),
         ];
     }

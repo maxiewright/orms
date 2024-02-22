@@ -38,4 +38,13 @@ enum TransactionTypeEnum: string implements HasColor, HasIcon, HasLabel
             self::Transfer => 'heroicon-o-arrows-right-left',
         };
     }
+
+    public function getTransactionalId(): string
+    {
+        return match ($this) {
+            self::Income => 'Paid By',
+            self::Expense => 'Paid To',
+            self::Transfer => 'Transferred By',
+        };
+    }
 }

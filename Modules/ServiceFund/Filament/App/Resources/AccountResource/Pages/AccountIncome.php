@@ -2,6 +2,7 @@
 
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
+use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
@@ -13,6 +14,7 @@ use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class AccountIncome extends Page implements HasForms, HasTable
 {
+    use HasPageSidebar;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -20,14 +22,19 @@ class AccountIncome extends Page implements HasForms, HasTable
 
     protected static string $view = 'modules.service-fund.filament.resources.account-resource.pages.account-income';
 
+    protected static ?string $title = 'Income';
+
     public Account $record;
 
     public function table(Table $table): Table
     {
+
+        $transactions = $this->record->transactions()->income();
+
         return $table
-            ->relationship(fn () => $this->record->transactions()->income())
+            ->relationship(fn () => $transactions)
             ->inverseRelationship('account')
-            ->columns(Account::getTransactionTableColumns())
+            ->columns(Account::getTransactionTableColumns($transactions))
             ->filters([
                 // ...
             ])

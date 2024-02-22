@@ -2,6 +2,8 @@
 
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
+use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
@@ -13,6 +15,7 @@ use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class AccountTransfer extends Page implements HasForms, HasTable
 {
+    use HasPageSidebar;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -20,19 +23,34 @@ class AccountTransfer extends Page implements HasForms, HasTable
 
     protected static string $view = 'modules.service-fund.filament.resources.account-resource.pages.account-transfer';
 
+    protected static ?string $title = 'Transfers';
+
     public Account $record;
+
+    protected function getHeaderActions(): array
+    {
+
+        return [
+            Action::make('New Transfer')
+                ->form([
+
+                ]),
+        ];
+    }
 
     public function table(Table $table): Table
     {
+        $transactions = $this->record->transactions()->transfer();
+
         return $table
-            ->relationship(fn () => $this->record->transactions()->transfer())
+            ->relationship(fn () => $transactions)
             ->inverseRelationship('account')
-            ->columns(Account::getTransactionTableColumns())
+            ->columns(Account::getTransactionTableColumns($transactions))
             ->filters([
                 // ...
             ])
             ->actions([
-                // ...
+
             ])
             ->bulkActions([
                 // ...
