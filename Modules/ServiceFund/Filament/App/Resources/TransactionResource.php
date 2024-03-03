@@ -15,9 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
-use Modules\ServiceFund\App\Models\TransactionType;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\TransactionResource\Pages;
 
 class TransactionResource extends Resource
@@ -43,11 +42,10 @@ class TransactionResource extends Resource
                             ->required(),
                         Select::make('type')
                             ->label('Transaction Type')
-                            ->options(TransactionTypeEnum::class)
+                            ->options(TransactionType::class)
                             ->required(),
                         DateTimePicker::make('executed_at')
                             ->label('Transaction Date & Time')
-                            ->format(config('servicefund.timestamp.datetime'))
                             ->required()
                             ->default(now())
                             ->seconds(false),
@@ -62,7 +60,7 @@ class TransactionResource extends Resource
                     ->columns(3)
                     ->schema([
                         Select::make('payment_method')
-                            ->options(PaymentMethodEnum::class)
+                            ->options(PaymentMethod::class)
                             ->required(),
                         Select::make('transaction_category_id')
                             ->relationship('category', 'name')

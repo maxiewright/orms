@@ -3,15 +3,20 @@
 use Filament\Actions\DeleteAction;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\Transfer;
+use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
 use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\CreateAccount;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\ListAccounts;
+use Modules\ServiceFund\Filament\App\Resources\TransferResource;
+use Modules\ServiceFund\Filament\App\Resources\TransferResource\Pages\CreateTransfer;
 use Tests\TestCase;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertSoftDeleted;
 use function Pest\Laravel\get;
+use function Pest\Laravel\seed;
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
@@ -22,38 +27,42 @@ beforeEach(function () {
     filament()->setCurrentPanel(
         filament()->getPanel('service-fund')
     );
+
+    seed([TransactionCategorySeeder::class]);
+
     $this->company = app(config('servicefund.company.model'))::all()->random();
     $this->bank = Bank::factory()->create()->first();
-    $this->minimumSignatories = fake()->numberBetween(1, 4);
-    $this->maximumSignatories = fake()->numberBetween($this->minimumSignatories, $this->minimumSignatories + 2);
-    $this->signatories = signatories();
+
 });
 
-it('shows the account index page', function () {
+it('shows the transfer index page', function () {
     // Arrange, Act and Assert
-    get(AccountResource::getUrl())
+    get(TransferResource::getUrl())
         ->assertSuccessful();
 });
 
-it('shows a list of accounts', function () {
+it('shows a list of all transfers', function () {
     // Arrange
-    $accounts = Account::factory()->count(5)->create();
+    $transfers = Transfer::factory()->count(5)->create();
     // Act and Assert
     livewire(AccountResource\Pages\ListAccounts::class)
-        ->assertCanSeeTableRecords($accounts);
+        ->assertCanSeeTableRecords($transfers);
 });
 
-it('creates an account', function () {
+it('creates an transfer', function () {
 
     // Act and Assert
-    livewire(AccountResource\Pages\CreateAccount::class)
-        ->fillForm(getFormFields())
+    livewire(CreateTransfer::class)
+        ->fillForm([
+
+        ])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $account = Account::first();
+    $account = Transfer::first();
 
-    assertDatabaseHas(Account::class, createdAccount($account));
+    assertDatabaseHas(Transfer::class, []);
+
 });
 
 it('validate the user input', function () {
@@ -142,8 +151,7 @@ it('links to the account dashboard when the table row is clicked', function () {
             name: 'view',
             url: route('filament.service-fund.resources.accounts.dashboard', ['record' => $account])
         );
-})->todo();
-
+});
 
 todo('test that only the min and max amount signatories can be selected');
 todo('it shows a list of signatories');
@@ -164,7 +172,6 @@ function createdAccount($account): array
         'active_at' => $account->active_at,
     ];
 }
-
 
 /**
  * @param  TestCase|\PHPUnit\Framework\TestCase  $this

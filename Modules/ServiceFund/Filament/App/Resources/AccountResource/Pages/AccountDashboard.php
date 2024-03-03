@@ -3,14 +3,19 @@
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Actions\CreateAction;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
-class AccountDashboard extends Page
+class AccountDashboard extends Page implements HasActions, HasForms
 {
     use HasPageSidebar;
+    use InteractsWithActions;
+    use InteractsWithForms;
 
     protected static string $resource = AccountResource::class;
 
@@ -23,7 +28,7 @@ class AccountDashboard extends Page
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()
+
         ];
     }
 }

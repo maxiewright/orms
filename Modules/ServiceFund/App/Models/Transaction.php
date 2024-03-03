@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\ServiceFund\Database\factories\TransactionFactory;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -32,7 +33,7 @@ class Transaction extends Model implements HasMedia
         'transaction_category_id',
         'transactional_id',
         'transactional_type',
-        'description',
+        'particulars',
         'approved_by',
         'approved_at',
         'created_by',
@@ -47,8 +48,9 @@ class Transaction extends Model implements HasMedia
         'amount' => 'float',
         'executed_at' => 'datetime',
         'approved_at' => 'datetime',
-        'type' => TransactionTypeEnum::class,
-        'payment_method' => PaymentMethodEnum::class,
+        'type' => TransactionType::class,
+        'payment_method' => PaymentMethod::class,
+        'categories' => 'array',
     ];
 
     protected $with = [
@@ -65,9 +67,12 @@ class Transaction extends Model implements HasMedia
         return $this->belongsTo(Account::class);
     }
 
-    public function category(): BelongsTo
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(TransactionCategory::class, 'transaction_category_id');
+        return $this->belongsToMany(
+            related: TransactionCategory::class,
+            table: 'transaction_transaction_category',
+        )->withTimestamps();
     }
 
     public function transactional(): MorphTo
@@ -77,17 +82,23 @@ class Transaction extends Model implements HasMedia
 
     public function scopeDebit(Builder $query): void
     {
-        $query->where('type', TransactionTypeEnum::Debit);
+        $query->where('type', TransactionType::Debit);
     }
 
     public function scopeCredit(Builder $query): void
     {
-        $query->where('type', TransactionTypeEnum::Credit);
+        $query->where('type', TransactionType::Credit);
     }
 
-    public function scopeTransfer(Builder $query): void
+    public function scopeDebitTransfer(Builder $query): void
     {
-        $query->where('type', TransactionTypeEnum::Transfer);
+        $query->where('type', TransactionType::DebitTransfer);
+
+    }
+
+    public function scopeCreditTransfer(Builder $query): void
+    {
+        $query->where('type', TransactionType::CreditTransfer);
 
     }
 

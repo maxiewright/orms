@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
-class AccountTransfer extends Page implements HasForms, HasTable
+class AccountDebitTransfer extends Page implements HasForms, HasTable
 {
     use HasPageSidebar;
     use InteractsWithForms;
@@ -21,7 +21,7 @@ class AccountTransfer extends Page implements HasForms, HasTable
 
     protected static string $resource = AccountResource::class;
 
-    protected static string $view = 'servicefund::filament.resources.account-resource.pages.account-transfer';
+    protected static string $view = 'servicefund::filament.resources.account-resource.pages.account-debit-transfer';
 
     protected static ?string $title = 'Transfers';
 
@@ -40,7 +40,7 @@ class AccountTransfer extends Page implements HasForms, HasTable
 
     public function table(Table $table): Table
     {
-        $transactions = $this->record->transactions()->transfer();
+        $transactions = $this->record->transactions()->debitTransfer();
 
         return $table
             ->relationship(fn () => $transactions)

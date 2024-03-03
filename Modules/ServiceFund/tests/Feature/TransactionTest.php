@@ -6,8 +6,8 @@ use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\App\Models\TransactionCategory;
 use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\TransactionResource;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -53,22 +53,22 @@ it('creates an transaction', function () {
     livewire(TransactionResource\Pages\CreateTransaction::class)
         ->fillForm([
             'account_id' => $account->id,
-            'type' => fake()->randomElement(TransactionTypeEnum::cases()),
+            'type' => fake()->randomElement(TransactionType::cases()),
             'executed_at' => now(),
             'amount' => fake()->randomFloat(),
-            'payment_method' => fake()->randomElement(PaymentMethodEnum::cases()),
+            'payment_method' => fake()->randomElement(PaymentMethod::cases()),
             'transaction_category_id' => $category->id,
-            'transactional_id' => transactional()::factory()->create(),
             'transactional_type' => transactional(),
-            'description' => null,
-            'approved_by' => app(config('servicefund.user.model'))::factory()->create(),
+            'transactional_id' => transactional()::factory()->create(),
+            'particulars' => null,
+            'approved_by' => app(config('servicefund.user.model'))::factory()->create()->number,
             'approved_at' => fake()->dateTimeBetween('-2 days'),
             'created_by' => auth()->id(),
         ])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $transaction = Transaction::first();
+    $transaction = Transaction::latest()->first();
 
     assertDatabaseHas(Transaction::class, createdTransaction($transaction));
 })->todo();

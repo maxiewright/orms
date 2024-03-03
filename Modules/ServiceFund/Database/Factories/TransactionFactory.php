@@ -8,8 +8,8 @@ use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\App\Models\TransactionCategory;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 
 class TransactionFactory extends Factory
 {
@@ -28,14 +28,14 @@ class TransactionFactory extends Factory
 
         return [
             'account_id' => Account::factory(),
-            'type' => fake()->randomElement(TransactionTypeEnum::cases()),
+            'type' => fake()->randomElement(TransactionType::cases()),
             'executed_at' => $executionDate,
             'amount' => fake()->randomFloat(2),
-            'payment_method' => fake()->randomElement(PaymentMethodEnum::cases()),
+            'payment_method' => fake()->randomElement(PaymentMethod::cases()),
             'transaction_category_id' => TransactionCategory::all()->random()->id,
             'transactional_id' => $transactional::factory(),
             'transactional_type' => $transactional,
-            'description' => fake()->text(),
+            'particulars' => fake()->text(),
             'approved_by' => app(config('servicefund.user.model'))::factory(),
             'approved_at' => Carbon::make($executionDate)->subDay(),
             'created_by' => auth()->id(),
@@ -45,23 +45,31 @@ class TransactionFactory extends Factory
     public function credit(): self
     {
         return $this->state(fn () => [
-            'type' => TransactionTypeEnum::Credit,
+            'type' => TransactionType::Credit,
         ]);
     }
 
     public function debit(): self
     {
         return $this->state(fn () => [
-            'type' => TransactionTypeEnum::Debit,
+            'type' => TransactionType::Debit,
         ]);
     }
 
-    public function transfer(): self
+    public function debitTransfer(): self
     {
         return $this->state(fn () => [
-            'type' => TransactionTypeEnum::Transfer,
+            'type' => TransactionType::DebitTransfer,
         ]);
     }
+
+    public function creditTransfer(): self
+    {
+        return $this->state(fn () => [
+            'type' => TransactionType::CreditTransfer,
+        ]);
+    }
+
 
     private function transactional()
     {

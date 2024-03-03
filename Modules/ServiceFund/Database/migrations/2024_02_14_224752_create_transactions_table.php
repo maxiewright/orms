@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('transactions', function (Blueprint $table) {
@@ -25,18 +26,34 @@ return new class extends Migration
             $table->decimal('amount', 13);
             $table->string('payment_method');
             $table->integer('cheque_number')->nullable();
-            $table->foreignId('transaction_category_id')->constrained();
-            $table->text('description')->nullable();
+            $table->text('particulars')->nullable();
             $table->foreignId('parent_id')
                 ->nullable()
                 ->constrained('transactions')
                 ->cascadeOnDelete();
             $table->morphs('transactional');
-            $table->foreignId('approved_by');
-            $table->dateTime('approved_at');
+            $table->foreignId('approved_by')->nullable();
+            $table->dateTime('approved_at')->nullable();
             $table->foreignId('created_by');
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('transaction_transaction_category', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transaction_id')->constrained('transactions');
+            $table->foreignId('transaction_category_id')->constrained('transaction_categories');
+            $table->timestamps();
+        });
+
+        Schema::create('transfers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('credit_transaction_id')->constrained('transactions');
+            $table->foreignId('debit_transaction_id')->constrained('transactions');
+            $table->dateTime('transferred_at');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
     }
 };

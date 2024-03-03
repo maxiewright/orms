@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\ServiceFund\Contracts\TransactionLookupInterface;
 use Modules\ServiceFund\Database\factories\AccountFactory;
-use Modules\ServiceFund\Enums\AccountTypeEnum;
+use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Traits\InteractsWithTransactions;
 use Modules\ServiceFund\Traits\SluggableByName;
 
@@ -40,7 +40,7 @@ class Account extends Model implements TransactionLookupInterface
 
     protected $casts = [
         'active_at' => 'datetime',
-        'type' => AccountTypeEnum::class,
+        'type' => AccountType::class,
     ];
 
     protected $appends = [

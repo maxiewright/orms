@@ -2,26 +2,22 @@
 
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
-use App\Models\Serviceperson;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Actions\CreateAction;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Modules\ServiceFund\App\Actions\ProcessTransactionAction;
 use Modules\ServiceFund\App\Models\Account;
-use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class AccountCredit extends Page implements HasForms, HasTable
@@ -44,15 +40,26 @@ class AccountCredit extends Page implements HasForms, HasTable
             CreateAction::make()
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['account_id'] = $this->record->id;
-                    $data['type'] = TransactionTypeEnum::Credit;
+                    $data['type'] = TransactionType::Credit;
+                    $data['created_by'] = auth()->id();
 
                     return $data;
                 })
-                ->label('New Credit')
+                ->using(function (array $data): Model {
+
+                    $processTransaction = new ProcessTransactionAction();
+
+                    return $processTransaction($data);
+                })
+                ->successNotification(
+                    Notification::make()->success()
+                        ->title(fn (): string => "{$this->record->name} credited!")
+                        ->body(fn (): string => "The {$this->record->name} account has been credited successfully!")
+                )
                 ->model(Transaction::class)
                 ->modelLabel('Credit')
                 ->slideOver()
-                ->form([]),
+                ->form(Account::getTransactionForm(transactionType: TransactionType::Credit)),
         ];
 
     }
@@ -66,9 +73,7 @@ class AccountCredit extends Page implements HasForms, HasTable
             ->relationship(fn () => $transactions)
             ->inverseRelationship('account')
             ->columns(Account::getTransactionTableColumns($transactions))
-            ->filters([
-                // ...
-            ])
+            ->filters(Account::getTransactionTableFilters())
             ->actions([
                 // ...
             ])

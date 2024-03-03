@@ -25,7 +25,7 @@ class ContactFactory extends Factory
             'address_line_1' => fake()->streetAddress(),
             'address_line_2' => null,
             'city_id' => app(config('servicefund.address.city'))::all()->random()->id,
-            'added_by' => auth()->id(),
+            'added_by' => 1,
             'is_active' => fake()->boolean(80),
         ];
     }

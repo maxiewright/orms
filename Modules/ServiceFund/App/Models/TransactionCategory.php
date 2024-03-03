@@ -2,23 +2,47 @@
 
 namespace Modules\ServiceFund\App\Models;
 
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Modules\ServiceFund\Contracts\TransactionLookupInterface;
-use Modules\ServiceFund\Traits\InteractsWithTransactions;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 use Modules\ServiceFund\Traits\SluggableByName;
 
-class TransactionCategory extends Model implements TransactionLookupInterface
+class TransactionCategory extends Model
 {
-    use InteractsWithTransactions;
     use SluggableByName;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Str::ucwords($value),
+            set: fn ($value) => Str::lower($value),
+        );
+    }
+
+    public function transactions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            related: Transaction::class,
+            table: 'transaction_transaction_category'
+        )
+            ->withTimestamps();
+    }
 
     public static function getForm(): array
     {
-        // TODO - Build the form
         return [
-
+            TextInput::make('name')
+                ->required(),
+            Textarea::make('description')
+                ->required(),
         ];
     }
 }

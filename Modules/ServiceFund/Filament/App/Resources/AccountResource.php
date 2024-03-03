@@ -14,12 +14,13 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
-use Modules\ServiceFund\Enums\AccountTypeEnum;
+use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
 class AccountResource extends Resource
@@ -62,18 +63,29 @@ class AccountResource extends Resource
                     })
                     ->icon('heroicon-o-shopping-cart')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->debit()->count();
+                        return $record->transactions()->credit()->count();
                     }),
-                PageNavigationItem::make('Transfers')
+                PageNavigationItem::make('Debit Transfers')
                     ->url(function () use ($record) {
-                        return static::getUrl('transfers', ['record' => $record]);
+                        return static::getUrl('debit-transfers', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.transfers', $record);
+                        return request()->routeIs('filament.service-fund.resources.accounts.debit-transfers', $record);
                     })
                     ->icon('heroicon-o-ticket')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->transfer()->count();
+                        return $record->transactions()->debitTransfer()->count();
+                    }),
+                PageNavigationItem::make('Credit Transfers')
+                    ->url(function () use ($record) {
+                        return static::getUrl('credit-transfers', ['record' => $record]);
+                    })
+                    ->isActiveWhen(function () use ($record) {
+                        return request()->routeIs('filament.service-fund.resources.accounts.credit-transfers', $record);
+                    })
+                    ->icon('heroicon-o-ticket')
+                    ->badge(function () use ($record) {
+                        return $record->transactions()->creditTransfer()->count();
                     }),
             ]);
     }
@@ -104,7 +116,7 @@ class AccountResource extends Resource
                     ->columns(3)
                     ->schema([
                         Select::make('type')
-                            ->options(AccountTypeEnum::class)
+                            ->options(AccountType::class)
                             ->required()
                             ->live(),
                         TextInput::make('name')
@@ -175,6 +187,7 @@ class AccountResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Model $record) => static::getUrl('dashboard', ['record' => $record]))
             ->columns([
                 Tables\Columns\TextColumn::make('company.name'),
                 Tables\Columns\TextColumn::make('type'),
@@ -189,7 +202,7 @@ class AccountResource extends Resource
                     ->relationship(name: 'company',
                         titleAttribute: config('servicefund.company.title-attribute')),
                 Tables\Filters\SelectFilter::make('type')
-                    ->options(AccountTypeEnum::class),
+                    ->options(AccountType::class),
                 Tables\Filters\SelectFilter::make('bank')
                     ->relationship('bank', 'name'),
                 Tables\Filters\TernaryFilter::make('is_active')
@@ -204,7 +217,8 @@ class AccountResource extends Resource
             ])
             ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
-                //                Tables\Actions\EditAction::make(),
+                Action::make('view')
+                    ->url(fn (Account $record) => route('filament.service-fund.resources.accounts.dashboard', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -229,7 +243,8 @@ class AccountResource extends Resource
             'dashboard' => Pages\AccountDashboard::route('/{record}/dashboard'),
             'debits' => Pages\AccountDebit::route('/{record}/debits'),
             'credits' => Pages\AccountCredit::route('/{record}/credits'),
-            'transfers' => Pages\AccountTransfer::route('/{record}/transfers'),
+            'debit-transfers' => Pages\AccountDebitTransfer::route('/{record}/debit-transfers'),
+            'credit-transfers' => Pages\AccountDebitTransfer::route('/{record}/credit-transfers'),
         ];
     }
 }

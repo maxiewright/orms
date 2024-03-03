@@ -6,7 +6,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum PaymentMethodEnum: string implements HasColor, HasIcon, HasLabel
+enum PaymentMethod: string implements HasColor, HasIcon, HasLabel
 {
     case Cash = 'cash';
     case Cheque = 'cheque';

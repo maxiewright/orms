@@ -1,22 +1,24 @@
 <?php
 
+use Modules\ServiceFund\App\Actions\ProcessTransactionAction;
+use Modules\ServiceFund\App\Events\TransactionCreated;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\App\Models\TransactionCategory;
 use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
-use Modules\ServiceFund\Enums\PaymentMethodEnum;
-use Modules\ServiceFund\Enums\TransactionTypeEnum;
+use Modules\ServiceFund\Enums\PaymentMethod;
+use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountCredit;
+use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountCreditTransfer;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountDashboard;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountDebit;
-use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountTransfer;
+use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\AccountDebitTransfer;
 use Tests\TestCase;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
 use function Pest\Laravel\seed;
-use function Pest\Laravel\withoutExceptionHandling;
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
@@ -31,9 +33,10 @@ beforeEach(function () {
     seed([TransactionCategorySeeder::class]);
 
     $this->account = Account::factory()->create();
-    $this->credits = Transaction::factory()->expense()->for($this->account)->count(5)->create();
+    $this->credits = Transaction::factory()->credit()->for($this->account)->count(5)->create();
     $this->debit = Transaction::factory()->debit()->for($this->account)->count(5)->create();
-    $this->transfers = Transaction::factory()->transfer()->for($this->account)->count(5)->create();
+    $this->debitTransfers = Transaction::factory()->debitTransfer()->for($this->account)->count(5)->create();
+    $this->creditTransfers = Transaction::factory()->creditTransfer()->for($this->account)->count(5)->create();
 });
 
 it('shows the account transactions dashboard', function () {
@@ -52,7 +55,8 @@ it('lists only debits transaction on the debit page', function () {
     ])
         ->assertCanSeeTableRecords($this->debit)
         ->assertCanNotSeeTableRecords($this->credits)
-        ->assertCanNotSeeTableRecords($this->transfers)
+        ->assertCanNotSeeTableRecords($this->debitTransfers)
+        ->assertCanNotSeeTableRecords($this->creditTransfers)
         ->assertCountTableRecords(5);
 });
 
@@ -67,46 +71,117 @@ it('lists only credits transaction on the credit page', function () {
     ])
         ->assertCanSeeTableRecords($this->credits)
         ->assertCanNotSeeTableRecords($this->debit)
-        ->assertCanNotSeeTableRecords($this->transfers)
+        ->assertCanNotSeeTableRecords($this->debitTransfers)
+        ->assertCanNotSeeTableRecords($this->creditTransfers)
         ->assertCountTableRecords(5);
 });
 
 it('renders the transactions transfers page', function () {
-    get(AccountTransfer::getUrl(['record' => $this->account]))
+    get(AccountDebitTransfer::getUrl(['record' => $this->account]))
         ->assertSuccessful();
 });
 
-it('lists only transfers transaction on the transfer page', function () {
-    livewire(AccountTransfer::class, [
+it('lists only debit transfers transaction on the debit transfer page', function () {
+    livewire(AccountDebitTransfer::class, [
         'record' => $this->account,
     ])
-        ->assertCanSeeTableRecords($this->transfers)
+        ->assertCanSeeTableRecords($this->debitTransfers)
+        ->assertCanNotSeeTableRecords($this->creditTransfers)
         ->assertCanNotSeeTableRecords($this->debit)
         ->assertCanNotSeeTableRecords($this->credits)
         ->assertCountTableRecords(5);
 });
 
-it('can add a debit transaction', function () {
+it('lists only credit transfers transaction on the credit transfer page', function () {
+    livewire(AccountCreditTransfer::class, [
+        'record' => $this->account,
+    ])
+        ->assertCanSeeTableRecords($this->creditTransfers)
+        ->assertCanNotSeeTableRecords($this->debitTransfers)
+        ->assertCanNotSeeTableRecords($this->debit)
+        ->assertCanNotSeeTableRecords($this->credits)
+        ->assertCountTableRecords(5);
+});
 
-    livewire(AccountDebit::class, ['record' => $this->account])
-        ->callAction(name: 'create', data: debitAndCreditTransactionFields())
-        ->assertHasNoActionErrors();
+it('can process a transaction and dispatch its creation event', function () {
+    // Arrange
+    Event::fake();
 
-    $transaction = Transaction::first();
+    // Act and Assert
+    $processTransaction = new ProcessTransactionAction();
+
+    $transaction = $processTransaction(transactionFields());
+
+    Event::assertDispatched(TransactionCreated::class);
 
     assertDatabaseHas('transactions', [
         'account_id' => $this->account->id,
-        'type' => TransactionTypeEnum::Debit,
+        'type' => $transaction->type,
+        'amount' => $transaction->amount,
+    ]);
+});
+
+it('has the add debit label', function () {
+    livewire(AccountDebit::class, [
+        'record' => $this->account,
+    ])
+        ->assertActionHasLabel('create', 'New Debit')
+        ->assertActionDoesNotHaveLabel('create', 'Create')
+        ->assertActionDoesNotHaveLabel('create', 'New Credit')
+        ->assertActionDoesNotHaveLabel('create', 'Add Transfer');
+});
+
+it('can add a debit transaction', function () {
+    Event::fake();
+
+    livewire(AccountDebit::class, [
+        'record' => $this->account,
+    ])
+        ->callAction(name: 'create', data: debitAndCreditFields())
+        ->assertHasNoActionErrors();
+
+    Event::assertDispatched(TransactionCreated::class);
+
+    $transaction = Transaction::latest()->first();
+
+    assertDatabaseHas('transactions', [
+        'account_id' => $this->account->id,
+        'type' => TransactionType::Debit,
+        'amount' => $transaction->amount,
     ]);
 
-})->todo();
+});
+
+it('has the add credit label', function () {
+    livewire(AccountCredit::class, [
+        'record' => $this->account,
+    ])
+        ->assertActionHasLabel('create', 'New Credit')
+        ->assertActionDoesNotHaveLabel('create', 'Create')
+        ->assertActionDoesNotHaveLabel('create', 'New Debit')
+        ->assertActionDoesNotHaveLabel('create', 'Add Transfer');
+});
 
 it('can add a credit transaction', function () {
-    // Arrange
+    Event::fake();
 
-    // Act and Assert
+    livewire(AccountCredit::class, [
+        'record' => $this->account,
+    ])
+        ->callAction(name: 'create', data: debitAndCreditFields())
+        ->assertHasNoActionErrors();
 
-})->todo();
+    Event::assertDispatched(TransactionCreated::class);
+
+    $transaction = Transaction::latest()->first();
+
+    assertDatabaseHas('transactions', [
+        'account_id' => $this->account->id,
+        'type' => TransactionType::Credit,
+        'amount' => $transaction->amount,
+    ]);
+
+});
 
 it('can perform a transfer transaction', function () {
     // Arrange
@@ -115,15 +190,31 @@ it('can perform a transfer transaction', function () {
 
 })->todo();
 
-function debitAndCreditTransactionFields(): array
+function transactionFields(): array
 {
+    return debitAndCreditFields() + [
+        'account_id' => test()->account->id,
+        'type' => TransactionType::Debit,
+        'created_by' => auth()->id(),
+    ];
+}
+
+function debitAndCreditFields(): array
+{
+    $transactionalType = transactional();
+    $transactionalId = ($transactionalType === 'App\Models\Serviceperson')
+        ? app(config('servicefund.user.model'))::factory()->create()->number
+        : Contact::factory()->create()->id;
+
     return [
-        'payment_method' => fake()->randomElement(PaymentMethodEnum::cases()),
+        'payment_method' => fake()->randomElement(PaymentMethod::cases()),
         'amount' => fake()->randomFloat(),
         'transaction_category_id' => TransactionCategory::all()->random()->id,
-        'transactional_id' => transactional()::factory()->create(),
-        'transactional_type' => transactional(),
-        'approved_by' => auth()->id(),
+        'transactional_type' => $transactionalType,
+        'transactional_id' => $transactionalId,
+        'approved_by' => app(config('servicefund.user.model'))::factory()->create()->number,
+        'executed_at' => now(),
+        'approved_at' => now(),
     ];
 }
 

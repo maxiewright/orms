@@ -3,9 +3,10 @@
 namespace Modules\ServiceFund\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
-use Modules\ServiceFund\Enums\AccountTypeEnum;
+use Modules\ServiceFund\Enums\AccountType;
 
 class AccountFactory extends Factory
 {
@@ -19,11 +20,13 @@ class AccountFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->userName();
 
         return [
             'company_id' => app(config('servicefund.company.model'))::all()->random()->id,
-            'type' => fake()->randomElement(AccountTypeEnum::cases()),
-            'name' => fake()->userName(),
+            'type' => fake()->randomElement(AccountType::cases()),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'number' => fake()->randomNumber(6),
             'bank_id' => Bank::factory(),
             'opening_balance' => fake()->randomNumber(5),
