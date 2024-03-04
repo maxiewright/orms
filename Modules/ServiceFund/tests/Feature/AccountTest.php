@@ -3,15 +3,17 @@
 use Filament\Actions\DeleteAction;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\Transaction;
+use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
 use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\CreateAccount;
-use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\ListAccounts;
 use Tests\TestCase;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertSoftDeleted;
 use function Pest\Laravel\get;
+use function Pest\Laravel\seed;
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
@@ -22,6 +24,9 @@ beforeEach(function () {
     filament()->setCurrentPanel(
         filament()->getPanel('service-fund')
     );
+
+    seed([TransactionCategorySeeder::class]);
+
     $this->company = app(config('servicefund.company.model'))::all()->random();
     $this->bank = Bank::factory()->create()->first();
     $this->minimumSignatories = fake()->numberBetween(1, 4);
@@ -133,17 +138,18 @@ it('ensures that the amount of signatories selected is not below the minimum', f
 
 })->todo();
 
-it('links to the account dashboard when the table row is clicked', function () {
+it('has a balance', function () {
     // Arrange
-    $account = Account::factory()->create();
-    // Act and Assert
-    livewire(ListAccounts::class)
-        ->assertTableActionHasUrl(
-            name: 'view',
-            url: route('filament.service-fund.resources.accounts.dashboard', ['record' => $account])
-        );
-})->todo();
+    $account = Account::factory()->create(['opening_balance' => 100]);
 
+    Transaction::factory()->debit()->for($account)->create(['amount' => 10]);
+    Transaction::factory()->credit()->for($account)->create(['amount' => 5]);
+    Transaction::factory()->debitTransfer()->for($account)->create(['amount' => 10]);
+    Transaction::factory()->creditTransfer()->for($account)->create(['amount' => 5]);
+    //
+    // Act and Assert
+    expect($account->balance)->toBe(110);
+});
 
 todo('test that only the min and max amount signatories can be selected');
 todo('it shows a list of signatories');
@@ -164,7 +170,6 @@ function createdAccount($account): array
         'active_at' => $account->active_at,
     ];
 }
-
 
 /**
  * @param  TestCase|\PHPUnit\Framework\TestCase  $this

@@ -41,20 +41,53 @@ class Account extends Model implements TransactionLookupInterface
     protected $casts = [
         'active_at' => 'datetime',
         'type' => AccountType::class,
+        'opening_balance' => 'float',
     ];
 
     protected $appends = [
         'active_since',
+        'debits',
+        'credits',
+        'balance',
     ];
 
     protected $with = [
-        'transactions'
+        'transactions',
     ];
+
+    public function debits(): Attribute
+    {
+        $debitSum = $this->transactions()->debit()->sum('amount');
+        $debitTransferSum = $this->transactions()->debitTransfer()->sum('amount');
+
+        return Attribute::make(
+            get: fn () => $debitSum + $debitTransferSum,
+        );
+
+    }
+
+    public function credits(): Attribute
+    {
+        $creditSum = $this->transactions()->credit()->sum('amount');
+        $creditTransferSum = $this->transactions()->creditTransfer()->sum('amount');
+
+        return Attribute::make(
+            get: fn () => $creditSum + $creditTransferSum,
+        );
+    }
+
+    public function balance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ($this->opening_balance + $this->debits) - $this->credits,
+        );
+    }
 
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
+
     protected static function newFactory(): AccountFactory
     {
         return AccountFactory::new();

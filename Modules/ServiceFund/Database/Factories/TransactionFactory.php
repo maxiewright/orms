@@ -32,7 +32,6 @@ class TransactionFactory extends Factory
             'executed_at' => $executionDate,
             'amount' => fake()->randomFloat(2),
             'payment_method' => fake()->randomElement(PaymentMethod::cases()),
-            'transaction_category_id' => TransactionCategory::all()->random()->id,
             'transactional_id' => $transactional::factory(),
             'transactional_type' => $transactional,
             'particulars' => fake()->text(),

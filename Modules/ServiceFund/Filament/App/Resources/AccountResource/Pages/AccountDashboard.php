@@ -9,6 +9,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
 use Modules\ServiceFund\App\Models\Account;
+use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\AccountResource\Widgets\AccountCashFlowChart;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class AccountDashboard extends Page implements HasActions, HasForms
@@ -24,6 +25,26 @@ class AccountDashboard extends Page implements HasActions, HasForms
     protected static ?string $title = 'Dashboard';
 
     public Account $record;
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            AccountResource\Widgets\AccountOverview::make([
+                'balance' => $this->record->balance,
+                'debits' => $this->record->debits,
+                'credits' => $this->record->credits,
+            ]),
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            AccountCashFlowChart::make([
+                'account' => $this->record,
+            ]),
+        ];
+    }
 
     protected function getHeaderActions(): array
     {

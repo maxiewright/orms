@@ -14,7 +14,6 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +21,7 @@ use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
 use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
+use Modules\ServiceFund\Filament\App\Resources\AccountResource\Widgets\AccountOverview;
 
 class AccountResource extends Resource
 {
@@ -217,8 +217,11 @@ class AccountResource extends Resource
             ])
             ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
-                Action::make('view')
-                    ->url(fn (Account $record) => route('filament.service-fund.resources.accounts.dashboard', $record)),
+
+                Tables\Actions\ViewAction::make()
+                    ->url(fn (Account $record): string => route('filament.service-fund.resources.accounts.dashboard', $record)),
+
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -245,6 +248,13 @@ class AccountResource extends Resource
             'credits' => Pages\AccountCredit::route('/{record}/credits'),
             'debit-transfers' => Pages\AccountDebitTransfer::route('/{record}/debit-transfers'),
             'credit-transfers' => Pages\AccountDebitTransfer::route('/{record}/credit-transfers'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            AccountOverview::make(),
         ];
     }
 }
