@@ -6,7 +6,7 @@
     "priority": 0,
     "providers": [
         "Modules\\ServiceFund\\App\\Providers\\ServiceFundServiceProvider",
-        "Modules\\ServiceFund\\Providers\\Filament\\AppPanelProvider"
+        "Modules\\ServiceFund\\Providers\\Filament\\ServiceFundPanelProvider"
     ],
     "files": []
 }

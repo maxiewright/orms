@@ -2,6 +2,7 @@
 
 namespace Modules\ServiceFund\Providers\Filament;
 
+use App\Filament\Resources\ServicepersonResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -20,7 +21,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 
-class AppPanelProvider extends PanelProvider
+class ServiceFundPanelProvider extends PanelProvider
 {
     private string $module = 'ServiceFund';
 
@@ -47,7 +48,7 @@ class AppPanelProvider extends PanelProvider
             ->navigationItems([
                 NavigationItem::make('Home')
                     ->icon('heroicon-o-arrow-uturn-left')
-                    ->url('../admin/servicepeople'),
+                    ->url(url('admin/servicepeople')),
             ])
             ->discoverResources(in: module_path($this->module, 'Filament/App/Resources'), for: "$moduleNamespace\\Filament\\App\\Resources")
             ->discoverPages(in: module_path($this->module, 'Filament/App/Pages'), for: "$moduleNamespace\\Filament\\App\\Pages")
