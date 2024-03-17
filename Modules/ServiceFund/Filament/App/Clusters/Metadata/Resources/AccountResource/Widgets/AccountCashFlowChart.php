@@ -33,7 +33,7 @@ class AccountCashFlowChart extends ApexChartWidget
             ->dateColumn('executed_at')
             ->between(now()->subYear(), now())
             ->perMonth()
-            ->sum('amount');
+            ->sum('amount_in_cents');
     }
 
     protected function getOptions(): array

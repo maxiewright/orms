@@ -17,6 +17,7 @@ class TransactionCategorySeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         $categories = [
+            'deposit',
             'reimbursement',
             'advance',
         ];

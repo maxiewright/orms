@@ -18,9 +18,21 @@ class ProcessTransactionAction
 
         DB::transaction(function () use ($transaction, $data) {
 
-            $transaction->create($data)
-                ->categories()
-                ->attach($data['categories']);
+            $transaction->account_id = $data['account_id'];
+            $transaction->type = $data['type'];
+            $transaction->executed_at = $data['executed_at'];
+            $transaction->amount_in_cents = $data['amount_in_cents'];
+            $transaction->payment_method = $data['payment_method'];
+            $transaction->transactional_type = $data['transactional_type'];
+            $transaction->transactional_id = $data['transactional_id'];
+            $transaction->created_by = $data['created_by'];
+            $transaction->particulars = $data['particulars'] ?? null;
+
+            $transaction->save();
+
+            if (isset($data['categories'])) {
+                $transaction->categories()->attach($data['categories']);
+            }
 
             TransactionCreated::dispatch($transaction);
 

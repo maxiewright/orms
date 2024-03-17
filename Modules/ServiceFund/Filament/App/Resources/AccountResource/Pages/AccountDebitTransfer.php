@@ -3,14 +3,19 @@
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Modules\ServiceFund\App\Actions\ProcessTransferAction;
 use Modules\ServiceFund\App\Models\Account;
+use Modules\ServiceFund\App\Models\Transaction;
+use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class AccountDebitTransfer extends Page implements HasForms, HasTable
@@ -29,12 +34,34 @@ class AccountDebitTransfer extends Page implements HasForms, HasTable
 
     protected function getHeaderActions(): array
     {
-
         return [
-            Action::make('New Transfer')
-                ->form([
+            CreateAction::make()
+                ->label('New Debit Transfer')
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['credit_account_id'] = $data['credit_account_id'] ?? $this->record->id;
+                    $data['debit_account_id'] = $data['debit_account_id'] ?? $this->record->id;
+                    $data['created_by'] = auth()->id();
 
-                ]),
+                    return $data;
+                })
+                ->using(function (array $data): Model {
+
+                    $transfer = (new ProcessTransferAction())($data);
+
+                    return $transfer->debitTransaction;
+                })
+                ->successNotification(
+                    Notification::make()->success()
+                        ->title(fn (): string => 'Transfer Completed!')
+                        ->body(fn (): string => 'The transfer was successful!')
+                )
+                ->model(Transaction::class)
+                ->modelLabel('Debit Transfer')
+                ->slideOver()
+                ->form(Account::getTransactionForm(
+                    record: $this->record,
+                    transactionType: TransactionType::DebitTransfer
+                )),
         ];
     }
 

@@ -14,6 +14,10 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('transaction_categories')
+                ->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,7 +27,7 @@ return new class extends Migration
             $table->foreignId('account_id');
             $table->string('type');
             $table->dateTime('executed_at');
-            $table->decimal('amount', 13);
+            $table->decimal('amount_in_cents', 13);
             $table->string('payment_method');
             $table->integer('cheque_number')->nullable();
             $table->text('particulars')->nullable();
@@ -39,7 +43,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('transaction_transaction_category', function (Blueprint $table) {
+        Schema::create('transaction_category', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id')->constrained('transactions');
             $table->foreignId('transaction_category_id')->constrained('transaction_categories');

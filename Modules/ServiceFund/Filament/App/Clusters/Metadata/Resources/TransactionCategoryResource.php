@@ -3,41 +3,38 @@
 namespace Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources;
 
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\TransactionCategory;
 use Modules\ServiceFund\Filament\App\Clusters\Metadata;
-use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\BankResource\Pages;
+use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\TransactionCategoryResource\Pages;
 
-class BankResource extends Resource
+class TransactionCategoryResource extends Resource
 {
-    protected static ?string $model = Bank::class;
+    protected static ?string $model = TransactionCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Metadata::class;
+    protected static ?string $modelLabel = 'Category';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->required()
+                    ->required(),
+                Select::make('parent_id')
+                    ->relationship('category', 'name')
+                    ->placeholder('Select Parent Category')
+                    ->searchable()
+                    ->preload(),
+                Textarea::make('description')
                     ->columnSpanFull(),
-                TextInput::make('email')
-                    ->email(),
-                TextInput::make('phone'),
-                TextInput::make('address_line_1')
-                    ->columnSpanFull(),
-                TextInput::make('address_line_2')
-                    ->columnSpanFull(),
-                Select::make('city_id')
-                    ->relationship('city', 'name')
-                    ->placeholder('Select City')
-                    ->searchable(),
             ]);
     }
 
@@ -48,18 +45,19 @@ class BankResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Parent Category')
+                    ->placeholder('No Parent Category')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -71,7 +69,8 @@ class BankResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBanks::route('/'),
+            'index' => Pages\ManageTransactionCategories::route('/'),
         ];
     }
+
 }

@@ -21,17 +21,17 @@ class TransferFactory extends Factory
     public function definition(): array
     {
         $account = Account::factory()->create();
-        $amount = fake()->randomFloat();
+        $amount = fake()->numberBetween(100, 1000);
 
         return [
             'credit_transaction_id' => Transaction::factory()->create([
                 'account_id' => $account->id,
-                'amount' => $amount,
+                'amount_in_cents' => $amount,
                 'type' => TransactionType::CreditTransfer,
             ]),
             'debit_transaction_id' => Transaction::factory()->create([
                 'account_id' => $account->id,
-                'amount' => $amount,
+                'amount_in_cents' => $amount,
                 'type' => TransactionType::DebitTransfer,
             ]),
             'transferred_at' => fake()->dateTime(),

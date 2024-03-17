@@ -10,6 +10,8 @@ use Modules\ServiceFund\Enums\PaymentMethod;
 use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\TransactionResource;
 
+use Modules\ServiceFund\Filament\App\Resources\TransactionResource\Pages\CreateTransaction;
+use Modules\ServiceFund\Filament\App\Resources\TransactionResource\Pages\EditTransaction;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertSoftDeleted;
 use function Pest\Laravel\get;
@@ -17,6 +19,8 @@ use function Pest\Laravel\seed;
 use function Pest\Livewire\livewire;
 
 uses(\Tests\TestCase::class);
+
+include 'Helper.php';
 
 beforeEach(function () {
     logInAsUserWithRole();
@@ -47,23 +51,27 @@ it('shows a list of transactions', function () {
 it('creates an transaction', function () {
     // Arrange
     $account = Account::factory()->create();
-    $category = TransactionCategory::all()->random();
+    $categories = TransactionCategory::pluck('id')->take(2);
+    $transactionalType = transactional();
+    $transactionalId = ($transactionalType === 'App\Models\Serviceperson')
+        ? app(config('servicefund.user.model'))::factory()->create()->number
+        : Contact::factory()->create()->id;
 
     // Act and Assert
-    livewire(TransactionResource\Pages\CreateTransaction::class)
+    livewire(CreateTransaction::class)
         ->fillForm([
             'account_id' => $account->id,
             'type' => fake()->randomElement(TransactionType::cases()),
             'executed_at' => now(),
-            'amount' => fake()->randomFloat(),
+            'amount_in_cents' => fake()->numberBetween(100, 100000),
             'payment_method' => fake()->randomElement(PaymentMethod::cases()),
-            'transaction_category_id' => $category->id,
-            'transactional_type' => transactional(),
-            'transactional_id' => transactional()::factory()->create(),
+            'transactional_type' => $transactionalType,
+            'transactional_id' => $transactionalId,
             'particulars' => null,
             'approved_by' => app(config('servicefund.user.model'))::factory()->create()->number,
             'approved_at' => fake()->dateTimeBetween('-2 days'),
             'created_by' => auth()->id(),
+            'categories' => $categories,
         ])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -71,7 +79,7 @@ it('creates an transaction', function () {
     $transaction = Transaction::latest()->first();
 
     assertDatabaseHas(Transaction::class, createdTransaction($transaction));
-})->todo();
+});
 
 it('validate the user input', function () {
     livewire(TransactionResource\Pages\CreateTransaction::class)
@@ -79,9 +87,8 @@ it('validate the user input', function () {
             'account_id' => null,
             'type' => null,
             'executed_at' => 'some date',
-            'amount' => 'some big figure',
+            'amount_in_cents' => 'some big figure',
             'payment_method' => null,
-            'transaction_category_id' => null,
             'approved_by' => null,
             'approved_at' => 'an approval date',
         ])
@@ -90,9 +97,8 @@ it('validate the user input', function () {
             'account_id' => 'required',
             'type' => 'required',
             'executed_at' => 'date',
-            'amount' => 'numeric',
+            'amount_in_cents' => 'numeric',
             'payment_method' => 'required',
-            'transaction_category_id' => 'required',
             'approved_by' => 'required',
             'approved_at' => 'date',
         ]);
@@ -109,7 +115,7 @@ it('shows the data in the edit form', function () {
     // Arrange
     $transaction = Transaction::factory()->create();
     // Act and Assert
-    livewire(TransactionResource\Pages\EditTransaction::class, [
+    livewire(EditTransaction::class, [
         'record' => $transaction->getRouteKey(),
     ])
         ->assertFormSet(createdTransaction($transaction));
@@ -120,7 +126,7 @@ it('can be soft deleted', function () {
     $transaction = Transaction::factory()->create();
 
     // Act and Assert
-    livewire(TransactionResource\Pages\EditTransaction::class, [
+    livewire(EditTransaction::class, [
         'record' => $transaction->getRouteKey(),
     ])
         ->callAction(DeleteAction::class);
@@ -128,24 +134,4 @@ it('can be soft deleted', function () {
     assertSoftDeleted($transaction);
 });
 
-function createdTransaction($transaction): array
-{
-    return [
-        'account_id' => $transaction->account_id,
-        'type' => $transaction->type->value,
-        'executed_at' => $transaction->executed_at->format('Y-m-d H:i'),
-        'amount' => $transaction->amount,
-        'payment_method' => $transaction->payment_method->value,
-        'transaction_category_id' => $transaction->transaction_category_id,
-        'approved_by' => $transaction->approved_by,
-        'approved_at' => $transaction->approved_at->format('Y-m-d H:i'),
-    ];
-}
 
-function transactional()
-{
-    return fake()->randomElement([
-        app(config('servicefund.user.model'))::class,
-        Contact::class,
-    ]);
-}

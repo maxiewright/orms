@@ -30,7 +30,7 @@ class TransactionFactory extends Factory
             'account_id' => Account::factory(),
             'type' => fake()->randomElement(TransactionType::cases()),
             'executed_at' => $executionDate,
-            'amount' => fake()->randomFloat(2),
+            'amount_in_cents' => fake()->numberBetween(100, 100000),
             'payment_method' => fake()->randomElement(PaymentMethod::cases()),
             'transactional_id' => $transactional::factory(),
             'transactional_type' => $transactional,

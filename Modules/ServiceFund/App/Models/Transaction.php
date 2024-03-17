@@ -3,10 +3,12 @@
 namespace Modules\ServiceFund\App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\ServiceFund\Database\factories\TransactionFactory;
@@ -28,7 +30,7 @@ class Transaction extends Model implements HasMedia
         'account_id',
         'type',
         'executed_at',
-        'amount',
+        'amount_in_cents',
         'payment_method',
         'transaction_category_id',
         'transactional_id',
@@ -39,15 +41,10 @@ class Transaction extends Model implements HasMedia
         'created_by',
     ];
 
-    /*
-     * TODO - Add Enums for transaction type, payment method, transaction category an maybe add them
-     *  to the cast array as well.
-     */
-
     protected $casts = [
-        'amount' => 'float',
-        'executed_at' => 'datetime',
-        'approved_at' => 'datetime',
+        'amount_in_cents' => 'integer',
+        'executed_at' => 'datetime:Y-m-d H:i',
+        'approved_at' => 'datetime:Y-m-d H:i',
         'type' => TransactionType::class,
         'payment_method' => PaymentMethod::class,
         'categories' => 'array',
@@ -71,13 +68,30 @@ class Transaction extends Model implements HasMedia
     {
         return $this->belongsToMany(
             related: TransactionCategory::class,
-            table: 'transaction_transaction_category',
+            table: 'transaction_category',
         )->withTimestamps();
     }
 
     public function transactional(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->amount_in_cents / 100,
+            set: fn ($value) => $this->amount_in_cents = $value * 100,
+        );
+    }
+    public function debitTransfers(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'debit_transaction_id');
+    }
+
+    public function creditTransfers(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'credit_transaction_id');
     }
 
     public function scopeDebit(Builder $query): void
@@ -90,6 +104,12 @@ class Transaction extends Model implements HasMedia
         $query->where('type', TransactionType::Credit);
     }
 
+    public function scopeTransfer(Builder $query): void
+    {
+        $query->where('type', TransactionType::DebitTransfer)
+            ->orWhere('type', TransactionType::CreditTransfer);
+    }
+
     public function scopeDebitTransfer(Builder $query): void
     {
         $query->where('type', TransactionType::DebitTransfer);
@@ -99,7 +119,6 @@ class Transaction extends Model implements HasMedia
     public function scopeCreditTransfer(Builder $query): void
     {
         $query->where('type', TransactionType::CreditTransfer);
-
     }
 
     public function approvedBy(): BelongsTo

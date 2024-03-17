@@ -14,6 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\App\Models\TransactionCategory;
@@ -44,15 +45,43 @@ trait InteractsWithTransactions
             TextColumn::make('payment_method'),
             TextColumn::make('categories.name')
                 ->badge()
-                ->label('Category'),
+                ->label('Category')
+                ->placeholder('No Category'),
             TextColumn::make('transactional.name')
                 ->label(function () use ($transactions) {
                     return match ($transactions->first()->type) {
                         TransactionType::Debit => 'Paid By',
                         TransactionType::Credit => 'Paid To',
-                        TransactionType::CreditTransfer,
-                        TransactionType::DebitTransfer => 'Transferred By'
+                        TransactionType::DebitTransfer,
+                        TransactionType::CreditTransfer => 'Transferred By',
                     };
+                }),
+            TextColumn::make('debitTransfers.creditAccount.name')
+                ->hidden(fn () => $transactions?->first()?->type !== TransactionType::DebitTransfer)
+                ->label('Transferred From')
+                ->icon('heroicon-o-currency-dollar')
+                ->description('click to view account')
+                ->url(function ($record) {
+
+                    $account = $record->load('debitTransfers.creditAccount')
+                        ->debitTransfers->first()?->creditAccount;
+
+                    return $account
+                        ? route('filament.service-fund.resources.accounts.dashboard', ['record' => $account->slug])
+                        : '';
+                }),
+            TextColumn::make('creditTransfers.debitAccount.name')
+                ->hidden(fn () => $transactions?->first()?->type !== TransactionType::CreditTransfer)
+                ->label('Transferred To')
+                ->icon('heroicon-o-currency-dollar')
+                ->description('click to view account')
+                ->url(function ($record) {
+                    $account = $record->load('debitTransfers.creditAccount')
+                        ->creditTransfers->first()?->debitAccount;
+
+                    return $account
+                        ? route('filament.service-fund.resources.accounts.dashboard', ['record' => $account])
+                        : '';
                 }),
             TextColumn::make('approved_by')
                 ->toggleable(isToggledHiddenByDefault: true),
@@ -70,12 +99,25 @@ trait InteractsWithTransactions
         ];
     }
 
-    public static function getTransactionForm($transactionType = TransactionType::Debit): array
+    public static function getTransactionForm($record, $transactionType = TransactionType::Debit): array
     {
         return [
+
             Fieldset::make('General')
                 ->columns(3)
                 ->schema([
+                    Select::make('credit_account_id')
+                        ->label('Transfer From')
+                        ->options(fn () => Account::pluck('name', 'id')->except($record->id))
+                        ->searchable()
+                        ->required()
+                        ->hidden(fn () => $transactionType !== TransactionType::DebitTransfer),
+                    Select::make('debit_account_id')
+                        ->label('Transfer To')
+                        ->options(fn () => Account::pluck('name', 'id')->except($record->id))
+                        ->searchable()
+                        ->required()
+                        ->hidden(fn () => $transactionType !== TransactionType::CreditTransfer),
                     DateTimePicker::make('executed_at')
                         ->label('Date & Time')
                         ->required()
@@ -85,7 +127,8 @@ trait InteractsWithTransactions
                         ->enum(PaymentMethod::class)
                         ->options(PaymentMethod::class)
                         ->required(),
-                    TextInput::make('amount')
+                    TextInput::make('amount_in_cents')
+                        ->label('Amount')
                         ->prefix(config('servicefund.currency'))
                         ->required()
                         ->numeric(),
@@ -100,8 +143,8 @@ trait InteractsWithTransactions
                         ->types([
                             MorphToSelect\Type::make(app(config('servicefund.user.model'))::class)
                                 //TODO - Find a way to not hardcode the Serviceperson class here
-                                ->getOptionLabelFromRecordUsing(function (Serviceperson $record): string {
-                                    return $record->military_name;
+                                ->getOptionLabelFromRecordUsing(function (Serviceperson $serviceperson): string {
+                                    return $serviceperson->military_name;
                                 }),
                             MorphToSelect\Type::make(Contact::class)
                                 ->titleAttribute('name'),

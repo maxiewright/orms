@@ -32,7 +32,19 @@ class TransferResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('creditAccount.name')
+                    ->label('From'),
+                Tables\Columns\TextColumn::make('debitAccount.name')
+                    ->label('To'),
+                Tables\Columns\TextColumn::make('transferred_at')
+                    ->label('Transferred on')
+                    ->date(config('servicefund.timestamp.date')),
+                Tables\Columns\TextColumn::make('amount_in_cents')
+                    ->label('Amount')
+                    ->money(config('servicefund.currency')),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Transfer Method'),
+                Tables\Columns\TextColumn::make('Remitter'),
             ])
             ->filters([
                 //

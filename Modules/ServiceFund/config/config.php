@@ -40,7 +40,7 @@ return [
 
     'timestamp' => [
         'time' => 'H:i A',
-        'date' => 'D, d M Y',
+        'date' => 'D d M Y',
         'datetime' => 'D, d M Y - H:i A',
     ],
 

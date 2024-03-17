@@ -32,7 +32,7 @@ class Account extends Model implements TransactionLookupInterface
         'slug',
         'number',
         'bank_id',
-        'opening_balance',
+        'opening_balance_in_cents',
         'minimum_signatories',
         'maximum_signatories',
         'active_at',
@@ -41,7 +41,7 @@ class Account extends Model implements TransactionLookupInterface
     protected $casts = [
         'active_at' => 'datetime',
         'type' => AccountType::class,
-        'opening_balance' => 'float',
+        'opening_balance' => 'integer',
     ];
 
     protected $appends = [
@@ -55,24 +55,32 @@ class Account extends Model implements TransactionLookupInterface
         'transactions',
     ];
 
+    public function openingBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->opening_balance_in_cents / 100,
+            set: fn ($value) => $this->opening_balance_in_cents = $value * 100,
+        );
+    }
+
     public function debits(): Attribute
     {
-        $debitSum = $this->transactions()->debit()->sum('amount');
-        $debitTransferSum = $this->transactions()->debitTransfer()->sum('amount');
+        $debitSum = $this->transactions()->debit()->sum('amount_in_cents');
+        $debitTransferSum = $this->transactions()->debitTransfer()->sum('amount_in_cents');
 
         return Attribute::make(
-            get: fn () => $debitSum + $debitTransferSum,
+            get: fn () => ($debitSum + $debitTransferSum) / 100,
         );
 
     }
 
     public function credits(): Attribute
     {
-        $creditSum = $this->transactions()->credit()->sum('amount');
-        $creditTransferSum = $this->transactions()->creditTransfer()->sum('amount');
+        $creditSum = $this->transactions()->credit()->sum('amount_in_cents');
+        $creditTransferSum = $this->transactions()->creditTransfer()->sum('amount_in_cents');
 
         return Attribute::make(
-            get: fn () => $creditSum + $creditTransferSum,
+            get: fn () => ($creditSum + $creditTransferSum) / 100,
         );
     }
 

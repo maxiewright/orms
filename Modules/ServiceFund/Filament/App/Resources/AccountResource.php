@@ -67,7 +67,7 @@ class AccountResource extends Resource
                     }),
                 PageNavigationItem::make('Debit Transfers')
                     ->url(function () use ($record) {
-                        return static::getUrl('debit-transfers', ['record' => $record]);
+                        return static::getUrl('debit_transfers', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
                         return request()->routeIs('filament.service-fund.resources.accounts.debit-transfers', $record);
@@ -78,7 +78,7 @@ class AccountResource extends Resource
                     }),
                 PageNavigationItem::make('Credit Transfers')
                     ->url(function () use ($record) {
-                        return static::getUrl('credit-transfers', ['record' => $record]);
+                        return static::getUrl('credit_transfers', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
                         return request()->routeIs('filament.service-fund.resources.accounts.credit-transfers', $record);
@@ -133,7 +133,7 @@ class AccountResource extends Resource
                             ->preload()
                             ->createOptionForm(Bank::getForm())
                             ->required(),
-                        TextInput::make('opening_balance')
+                        TextInput::make('opening_balance_in_cents')
                             ->required()
                             ->numeric(),
                     ]),
@@ -189,13 +189,16 @@ class AccountResource extends Resource
         return $table
             ->recordUrl(fn (Model $record) => static::getUrl('dashboard', ['record' => $record]))
             ->columns([
-                Tables\Columns\TextColumn::make('company.name'),
-                Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('company.short_name'),
+                Tables\Columns\TextColumn::make('type')
+                ->badge(),
                 Tables\Columns\TextColumn::make('number'),
                 Tables\Columns\TextColumn::make('bank.name'),
-                Tables\Columns\TextColumn::make('opening_balance'),
-                Tables\Columns\TextColumn::make('active_since'),
+                Tables\Columns\TextColumn::make('opening_balance')
+                    ->money(config('servicefund.currency')),
+                Tables\Columns\TextColumn::make('active_since')
+                    ->date(config('servicefund.timestamp.date')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('company')
@@ -217,10 +220,6 @@ class AccountResource extends Resource
             ])
             ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
-
-                Tables\Actions\ViewAction::make()
-                    ->url(fn (Account $record): string => route('filament.service-fund.resources.accounts.dashboard', $record)),
-
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -244,10 +243,11 @@ class AccountResource extends Resource
             'create' => Pages\CreateAccount::route('/create'),
             'edit' => Pages\EditAccount::route('/{record}/edit'),
             'dashboard' => Pages\AccountDashboard::route('/{record}/dashboard'),
-            'debits' => Pages\AccountDebit::route('/{record}/debits'),
-            'credits' => Pages\AccountCredit::route('/{record}/credits'),
-            'debit-transfers' => Pages\AccountDebitTransfer::route('/{record}/debit-transfers'),
-            'credit-transfers' => Pages\AccountDebitTransfer::route('/{record}/credit-transfers'),
+            'debits' => Pages\AccountDebitTransaction::route('/{record}/debits'),
+            'credits' => Pages\AccountCreditTransaction::route('/{record}/credits'),
+            'debit_transfers' => Pages\AccountDebitTransfer::route('/{record}/debit-transfers'),
+            'credit_transfers' => Pages\AccountCreditTransfer::route('/{record}/credit_transfers'),
+
         ];
     }
 

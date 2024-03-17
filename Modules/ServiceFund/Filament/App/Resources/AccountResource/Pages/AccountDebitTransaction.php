@@ -10,17 +10,15 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Modules\ServiceFund\App\Actions\ProcessTransactionAction;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Transaction;
-use Modules\ServiceFund\Enums\PaymentMethod;
 use Modules\ServiceFund\Enums\TransactionType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
-class AccountCredit extends Page implements HasForms, HasTable
+class AccountDebitTransaction extends Page implements HasForms, HasTable
 {
     use HasPageSidebar;
     use InteractsWithForms;
@@ -28,19 +26,19 @@ class AccountCredit extends Page implements HasForms, HasTable
 
     protected static string $resource = AccountResource::class;
 
-    protected static string $view = 'servicefund::filament.resources.account-resource.pages.account-credit';
+    protected static string $view = 'servicefund::filament.resources.account-resource.pages.account-debit';
 
-    protected static ?string $title = 'Credits';
+    protected static ?string $title = 'Debits';
 
     public Account $record;
 
-    protected function getHeaderActions(): array
+    public function getHeaderActions(): array
     {
         return [
             CreateAction::make()
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['account_id'] = $this->record->id;
-                    $data['type'] = TransactionType::Credit;
+                    $data['type'] = TransactionType::Debit;
                     $data['created_by'] = auth()->id();
 
                     return $data;
@@ -53,32 +51,29 @@ class AccountCredit extends Page implements HasForms, HasTable
                 })
                 ->successNotification(
                     Notification::make()->success()
-                        ->title(fn (): string => "{$this->record->name} credited!")
-                        ->body(fn (): string => "The {$this->record->name} account has been credited successfully!")
+                        ->title(fn (): string => "{$this->record->name} debited!")
+                        ->body(fn (): string => "The {$this->record->name} account has been debited successfully!")
                 )
                 ->model(Transaction::class)
-                ->modelLabel('Credit')
+                ->modelLabel('Debit')
                 ->slideOver()
-                ->form(Account::getTransactionForm(transactionType: TransactionType::Credit)),
+                ->form(Account::getTransactionForm(record: $this->record)),
         ];
-
     }
 
     public function table(Table $table): Table
     {
 
-        $transactions = $this->record->transactions()->credit();
+        $transactions = $this->record->transactions()->debit();
 
         return $table
             ->relationship(fn () => $transactions)
             ->inverseRelationship('account')
             ->columns(Account::getTransactionTableColumns($transactions))
             ->filters(Account::getTransactionTableFilters())
-            ->actions([
-                // ...
-            ])
+            ->actions([])
             ->bulkActions([
-                // ...
+                // ..
             ]);
     }
 }

@@ -40,9 +40,8 @@ class AccountDashboard extends Page implements HasActions, HasForms
     protected function getFooterWidgets(): array
     {
         return [
-            AccountCashFlowChart::make([
-                'account' => $this->record,
-            ]),
+            AccountCashFlowChart::make(['account' => $this->record]),
+            AccountResource\Widgets\LatestAccountTransactions::make(['account' => $this->record]),
         ];
     }
 

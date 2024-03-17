@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreignId('bank_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->decimal('opening_balance', 13, 2)->default('0.0000');
+            $table->integer('opening_balance_in_cents');
             $table->dateTime('active_at')->nullable();
             $table->integer('minimum_signatories')->default(1);
             $table->integer('maximum_signatories')->nullable();

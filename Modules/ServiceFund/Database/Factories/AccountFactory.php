@@ -21,6 +21,7 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         $name = fake()->userName();
+        $minimumSignatories = fake()->numberBetween(1, 3);
 
         return [
             'company_id' => app(config('servicefund.company.model'))::all()->random()->id,
@@ -29,7 +30,9 @@ class AccountFactory extends Factory
             'slug' => Str::slug($name),
             'number' => fake()->randomNumber(6),
             'bank_id' => Bank::factory(),
-            'opening_balance' => fake()->randomNumber(5),
+            'opening_balance_in_cents' => fake()->numberBetween(10000, 500000),
+            'minimum_signatories' => $minimumSignatories,
+            'maximum_signatories' => fake()->numberBetween($minimumSignatories, 3),
             'active_at' => now(),
         ];
     }

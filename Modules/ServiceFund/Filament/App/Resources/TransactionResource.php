@@ -37,19 +37,21 @@ class TransactionResource extends Resource
                 Section::make('Transaction')
                     ->columns(4)
                     ->schema([
-                        Select::make('account_id')
-                            ->relationship('account', 'name')
-                            ->required(),
                         Select::make('type')
                             ->label('Transaction Type')
                             ->options(TransactionType::class)
+                            ->enum(TransactionType::class)
+                            ->required(),
+                        Select::make('account_id')
+                            ->relationship('account', 'name')
                             ->required(),
                         DateTimePicker::make('executed_at')
                             ->label('Transaction Date & Time')
                             ->required()
                             ->default(now())
                             ->seconds(false),
-                        TextInput::make('amount')
+                        TextInput::make('amount_in_cents')
+                            ->label('Amount')
                             ->prefix(config('servicefund.currency'))
                             ->required()
                             ->numeric(),
@@ -62,9 +64,22 @@ class TransactionResource extends Resource
                         Select::make('payment_method')
                             ->options(PaymentMethod::class)
                             ->required(),
-                        Select::make('transaction_category_id')
-                            ->relationship('category', 'name')
-                            ->required(),
+                        Select::make('categories')
+                            ->relationship('categories', 'name')
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->required(),
+                                Textarea::make('description')
+                                    ->required(),
+                                Select::make('parent_id')
+                                    ->label('Parent Category')
+                                    ->relationship('category', 'name')
+                                    ->nullable(),
+                            ]),
                         MorphToSelect::make('transactional')
                             ->label('Vendor / Payee')
                             ->types([

@@ -5,7 +5,6 @@ use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
-use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages\CreateAccount;
 use Tests\TestCase;
@@ -17,6 +16,8 @@ use function Pest\Laravel\seed;
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
+
+include 'Helper.php';
 
 beforeEach(function () {
     logInAsUserWithRole();
@@ -69,7 +70,7 @@ it('validate the user input', function () {
             'name' => null,
             'number' => null,
             'bank_id' => null,
-            'opening_balance' => 'some big figure',
+            'opening_balance_in_cents' => 'some big figure',
             'signatories' => null,
         ])
         ->call('create')
@@ -79,7 +80,7 @@ it('validate the user input', function () {
             'name' => 'required',
             'number' => 'required',
             'bank_id' => 'required',
-            'opening_balance' => 'numeric',
+            'opening_balance_in_cents' => 'numeric',
             'signatories' => 'required',
         ]);
 });
@@ -104,7 +105,7 @@ it('shows the data in the edit form', function () {
             'type' => $account->type->value,
             'number' => $account->number,
             'bank_id' => $account->bank->id,
-            'opening_balance' => $account->opening_balance,
+            'opening_balance_in_cents' => $account->opening_balance_in_cents,
         ]);
 });
 
@@ -120,7 +121,21 @@ it('can be soft deleted', function () {
     assertSoftDeleted($account);
 });
 
+it('calculates the correct balance', function () {
+    // Arrange
+    $account = Account::factory()->create(['opening_balance_in_cents' => 10000]);
+
+    Transaction::factory()->debit()->for($account)->create(['amount_in_cents' => 1000]);
+    Transaction::factory()->credit()->for($account)->create(['amount_in_cents' => 500]);
+    Transaction::factory()->debitTransfer()->for($account)->create(['amount_in_cents' => 1000]);
+    Transaction::factory()->creditTransfer()->for($account)->create(['amount_in_cents' => 500]);
+
+    // Act and Assert
+    expect($account->balance)->toBe(110);
+});
+
 it('ensures that the amount of signatories selected is not below the minimum', function () {
+    //TODO: Fix this test and the component to ensure that amount signatories selected is not less than the minimum
     //Arrange
     $this->minimumSignatories = 2;
     $this->maximumSignatories = 4;
@@ -138,60 +153,6 @@ it('ensures that the amount of signatories selected is not below the minimum', f
 
 })->todo();
 
-it('has a balance', function () {
-    // Arrange
-    $account = Account::factory()->create(['opening_balance' => 100]);
-
-    Transaction::factory()->debit()->for($account)->create(['amount' => 10]);
-    Transaction::factory()->credit()->for($account)->create(['amount' => 5]);
-    Transaction::factory()->debitTransfer()->for($account)->create(['amount' => 10]);
-    Transaction::factory()->creditTransfer()->for($account)->create(['amount' => 5]);
-    //
-    // Act and Assert
-    expect($account->balance)->toBe(110);
-});
-
 todo('test that only the min and max amount signatories can be selected');
 todo('it shows a list of signatories');
-
 todo('cannot be delete by unauthorized user');
-
-function createdAccount($account): array
-{
-    return [
-        'company_id' => $account->company->id,
-        'type' => $account->type,
-        'name' => \Illuminate\Support\Str::lower($account->name),
-        'number' => $account->number,
-        'bank_id' => $account->bank->id,
-        'opening_balance' => $account->opening_balance,
-        'minimum_signatories' => $account->minimum_signatories,
-        'maximum_signatories' => $account->maximum_signatories,
-        'active_at' => $account->active_at,
-    ];
-}
-
-/**
- * @param  TestCase|\PHPUnit\Framework\TestCase  $this
- */
-function getFormFields(): array
-{
-    return [
-        'company_id' => test()->company->id,
-        'type' => fake()->randomElement(AccountType::cases()),
-        'name' => 'Some Account',
-        'number' => fake()->randomNumber(6),
-        'bank_id' => test()->bank->id,
-        'opening_balance' => fake()->randomNumber(6),
-        'minimum_signatories' => test()->minimumSignatories,
-        'maximum_signatories' => test()->maximumSignatories,
-        'signatories' => test()->signatories,
-    ];
-}
-
-function signatories(int $count = 1)
-{
-    return app(config('servicefund.user.model'))::factory()
-        ->count($count)
-        ->create();
-}
