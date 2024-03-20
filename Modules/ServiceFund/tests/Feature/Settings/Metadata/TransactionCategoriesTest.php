@@ -2,10 +2,11 @@
 
 namespace Modules\ServiceFund\tests\Feature\Metadata;
 
+use Illuminate\Support\Str;
 use Modules\ServiceFund\App\Models\TransactionCategory;
 use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
-use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\TransactionCategoryResource;
-use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\TransactionCategoryResource\Pages\ManageTransactionCategories;
+use Modules\ServiceFund\Filament\App\Resources\TransactionCategoryResource;
+use Modules\ServiceFund\Filament\App\Resources\TransactionCategoryResource\Pages\ManageTransactionCategories;
 use Tests\TestCase;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -46,12 +47,12 @@ it('shows a list of categories', function () {
 it('creates a category', function () {
     livewire(ManageTransactionCategories::class)
         ->callAction('create', [
-            'name' => 'New Category',
+            'name' => 'Category',
             'description' => 'New Category Description',
         ])->assertHasNoActionErrors();
 
     assertDatabaseHas('transaction_categories', [
-        'name' => 'new category',
+        'name' => 'category',
         'description' => 'New Category Description',
     ]);
 
@@ -100,7 +101,7 @@ it('restores a category', function () {
     $restoredCategory = $deletedCategory->fresh();
 
     assertDatabaseHas('transaction_categories', [
-        'name' => $restoredCategory->name,
+        'name' => Str::lower($restoredCategory->name),
         'description' => $restoredCategory->description,
         'deleted_at' => null,
     ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources;
+namespace Modules\ServiceFund\Filament\App\Resources;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -10,24 +10,23 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Modules\ServiceFund\App\Models\TransactionCategory;
-use Modules\ServiceFund\Filament\App\Clusters\Metadata;
-use Modules\ServiceFund\Filament\App\Clusters\Metadata\Resources\TransactionCategoryResource\Pages;
+use Modules\ServiceFund\Filament\App\Resources\TransactionCategoryResource\Pages;
 
 class TransactionCategoryResource extends Resource
 {
     protected static ?string $model = TransactionCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Metadata';
 
-    protected static ?string $cluster = Metadata::class;
-    protected static ?string $modelLabel = 'Category';
+    protected static ?string $label = 'Category';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->unique(table: TransactionCategory::class, ignoreRecord: true),
                 Select::make('parent_id')
                     ->relationship('category', 'name')
                     ->placeholder('Select Parent Category')
@@ -72,5 +71,4 @@ class TransactionCategoryResource extends Resource
             'index' => Pages\ManageTransactionCategories::route('/'),
         ];
     }
-
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\BankBranch;
 use Modules\ServiceFund\Enums\AccountType;
 
 class AccountFactory extends Factory
@@ -29,7 +30,7 @@ class AccountFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name),
             'number' => fake()->randomNumber(6),
-            'bank_id' => Bank::factory(),
+            'bank_branch_id' => BankBranch::factory(),
             'opening_balance_in_cents' => fake()->numberBetween(10000, 500000),
             'minimum_signatories' => $minimumSignatories,
             'maximum_signatories' => fake()->numberBetween($minimumSignatories, 3),

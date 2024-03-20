@@ -4,14 +4,14 @@ namespace Modules\ServiceFund\App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\ServiceFund\Database\factories\ContactFactory;
+use Modules\ServiceFund\Traits\HasAddress;
 use Modules\ServiceFund\Traits\HasTransactions;
-use Modules\ServiceFund\Traits\IsSignatory;
 
 class Contact extends Model
 {
+    use HasAddress;
     use HasFactory;
     use HasTransactions;
     use SoftDeletes;
@@ -37,14 +37,17 @@ class Contact extends Model
         'is_active' => 'boolean',
     ];
 
+    protected $with = [
+        'city',
+    ];
+
+    protected $appends = [
+        'address',
+    ];
+
     protected static function newFactory(): ContactFactory
     {
         return ContactFactory::new();
-    }
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(app(config('servicefund.address.city'))::class);
     }
 
     public static function getCityModelName(): string

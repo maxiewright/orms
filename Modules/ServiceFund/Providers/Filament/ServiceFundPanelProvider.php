@@ -41,7 +41,10 @@ class ServiceFundPanelProvider extends PanelProvider
                     ->label('Banking')
                     ->icon('heroicon-o-currency-dollar'),
                 NavigationGroup::make()
-                    ->label('Settings')
+                    ->label('Contacts')
+                    ->icon('heroicon-o-user-group'),
+                NavigationGroup::make()
+                    ->label('Metadata')
                     ->icon('heroicon-o-cog-6-tooth')
                     ->collapsed(),
             ])

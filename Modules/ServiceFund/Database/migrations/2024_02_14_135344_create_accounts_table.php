@@ -15,13 +15,23 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->string('email')->unique()->nullable();
-            $table->string('phone')->nullable();
-            $table->text('address_line_1')->nullable();
-            $table->text('address_line_2')->nullable();
-            $table->foreignId('city_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('bank_branches', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('bank_id')->constrained();
+            $table->string('email')->unique()->nullable();
+            $table->string('phone')->nullable();
+            $table->text('address_line_1');
+            $table->text('address_line_2')->nullable();
+            $table->foreignId('city_id');
+            $table->boolean('is_head_office')->default(false);
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['bank_id', 'address_line_1', 'city_id'], 'branch_address');
         });
 
         Schema::create('accounts', function (Blueprint $table) {
@@ -31,7 +41,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('number');
-            $table->foreignId('bank_id')
+            $table->foreignId('bank_branch_id')
                 ->constrained()
                 ->cascadeOnDelete();
             $table->integer('opening_balance_in_cents');
@@ -41,7 +51,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['number', 'bank_id', 'type'], 'bank_account_number');
+            $table->unique(['number', 'bank_branch_id', 'type'], 'bank_account_number');
         });
 
     }

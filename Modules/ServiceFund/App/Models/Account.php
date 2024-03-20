@@ -31,7 +31,7 @@ class Account extends Model implements TransactionLookupInterface
         'name',
         'slug',
         'number',
-        'bank_id',
+        'bank_branch_id',
         'opening_balance_in_cents',
         'minimum_signatories',
         'maximum_signatories',
@@ -53,6 +53,7 @@ class Account extends Model implements TransactionLookupInterface
 
     protected $with = [
         'transactions',
+        'bankBranch',
     ];
 
     public function openingBalance(): Attribute
@@ -109,9 +110,9 @@ class Account extends Model implements TransactionLookupInterface
         );
     }
 
-    public function bank(): BelongsTo
+    public function bankBranch(): BelongsTo
     {
-        return $this->belongsTo(Bank::class);
+        return $this->belongsTo(BankBranch::class);
     }
 
     public function signatories(): BelongsToMany

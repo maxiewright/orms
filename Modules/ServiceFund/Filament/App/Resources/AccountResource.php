@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\ServiceFund\App\Models\Account;
-use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\BankBranch;
 use Modules\ServiceFund\Enums\AccountType;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource\Widgets\AccountOverview;
@@ -123,15 +123,15 @@ class AccountResource extends Resource
                             ->required(),
                         TextInput::make('number')
                             ->required(),
-                        Select::make('bank_id')
+                        Select::make('bank_branch_id')
                             ->columnSpan(2)
                             ->helperText('If the bank does not exist add one by click the plus icon')
-                            ->relationship('bank', 'name')
-                            ->getOptionLabelFromRecordUsing(fn (Bank $bank) => $bank->name)
+                            ->relationship('bankBranch', 'name')
+                            ->getOptionLabelFromRecordUsing(fn (BankBranch $branch) => $branch->name)
                             ->label('Bank')
                             ->searchable()
                             ->preload()
-                            ->createOptionForm(Bank::getForm())
+                            ->createOptionForm(BankBranch::getForm())
                             ->required(),
                         TextInput::make('opening_balance_in_cents')
                             ->required()
@@ -192,9 +192,9 @@ class AccountResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('company.short_name'),
                 Tables\Columns\TextColumn::make('type')
-                ->badge(),
+                    ->badge(),
                 Tables\Columns\TextColumn::make('number'),
-                Tables\Columns\TextColumn::make('bank.name'),
+                Tables\Columns\TextColumn::make('bankBranch.bank.name'),
                 Tables\Columns\TextColumn::make('opening_balance')
                     ->money(config('servicefund.currency')),
                 Tables\Columns\TextColumn::make('active_since')
@@ -207,7 +207,7 @@ class AccountResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->options(AccountType::class),
                 Tables\Filters\SelectFilter::make('bank')
-                    ->relationship('bank', 'name'),
+                    ->relationship('bankBranch.bank', 'name'),
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Account Status')
                     ->trueLabel('Active')

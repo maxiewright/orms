@@ -3,6 +3,7 @@
 use Filament\Actions\DeleteAction;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Bank;
+use Modules\ServiceFund\App\Models\BankBranch;
 use Modules\ServiceFund\App\Models\Transaction;
 use Modules\ServiceFund\Database\Seeders\TransactionCategorySeeder;
 use Modules\ServiceFund\Filament\App\Resources\AccountResource;
@@ -29,7 +30,7 @@ beforeEach(function () {
     seed([TransactionCategorySeeder::class]);
 
     $this->company = app(config('servicefund.company.model'))::all()->random();
-    $this->bank = Bank::factory()->create()->first();
+    $this->bankBranch = BankBranch::factory()->create()->first();
     $this->minimumSignatories = fake()->numberBetween(1, 4);
     $this->maximumSignatories = fake()->numberBetween($this->minimumSignatories, $this->minimumSignatories + 2);
     $this->signatories = signatories();
@@ -69,7 +70,7 @@ it('validate the user input', function () {
             'type' => null,
             'name' => null,
             'number' => null,
-            'bank_id' => null,
+            'bank_branch_id' => null,
             'opening_balance_in_cents' => 'some big figure',
             'signatories' => null,
         ])
@@ -79,7 +80,7 @@ it('validate the user input', function () {
             'type' => 'required',
             'name' => 'required',
             'number' => 'required',
-            'bank_id' => 'required',
+            'bank_branch_id' => 'required',
             'opening_balance_in_cents' => 'numeric',
             'signatories' => 'required',
         ]);
@@ -104,7 +105,7 @@ it('shows the data in the edit form', function () {
             'name' => $account->name,
             'type' => $account->type->value,
             'number' => $account->number,
-            'bank_id' => $account->bank->id,
+            'bank_branch_id' => $account->bankBranch->id,
             'opening_balance_in_cents' => $account->opening_balance_in_cents,
         ]);
 });
