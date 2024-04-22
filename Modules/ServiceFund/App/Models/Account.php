@@ -39,6 +39,9 @@ class Account extends Model implements TransactionLookupInterface
     ];
 
     protected $casts = [
+        'balance' => 'float',
+        'debits' => 'float',
+        'credits' => 'float',
         'active_at' => 'datetime',
         'type' => AccountType::class,
         'opening_balance' => 'integer',
@@ -88,8 +91,22 @@ class Account extends Model implements TransactionLookupInterface
     public function balance(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->opening_balance + $this->debits) - $this->credits,
+            get: fn () => $this->opening_balance + ($this->debits - $this->credits),
         );
+    }
+
+    public function balanceAt($date): float
+    {
+
+        $debitsToDate = $this->transactions()->debit()->debitTransfer()
+            ->whereDate('executed_at', '<=', $date)
+            ->sum('amount_in_cents');
+
+        $creditsToDate = $this->transactions()->credit()->creditTransfer()
+            ->whereDate('executed_at', '<=', $date)
+            ->sum('amount_in_cents');
+
+        return ($this->opening_balance_in_cents + ($debitsToDate - $creditsToDate)) / 100;
     }
 
     public function getRouteKeyName(): string

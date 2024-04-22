@@ -15,6 +15,8 @@ class CreateAccount extends CreateRecord
             $data['active_at'] = now();
         }
 
+        $data['opening_balance_in_cents'] = $data['opening_balance_in_cents'] * 100;
+
         return $data;
     }
 

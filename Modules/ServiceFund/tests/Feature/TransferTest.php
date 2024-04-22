@@ -146,21 +146,21 @@ it('can process a transfer', function () {
     assertDatabaseHas('transactions', [
         'account_id' => $creditAccount->id,
         'type' => TransactionType::CreditTransfer,
-        'executed_at' => '2024-01-01 00:00:00',
+        'executed_at' => '2024-01-01',
         'amount_in_cents' => 50000,
     ]);
 
     assertDatabaseHas('transactions', [
         'account_id' => $debitAccount->id,
         'type' => TransactionType::DebitTransfer,
-        'executed_at' => '2024-01-01 00:00:00',
+        'executed_at' => '2024-01-01',
         'amount_in_cents' => 50000,
     ]);
 
     assertDatabaseHas('transfers', [
         'debit_transaction_id' => $transfer->debitTransaction->id,
         'credit_transaction_id' => $transfer->creditTransaction->id,
-        'transferred_at' => '2024-01-01 00:00:00',
+        'transferred_at' => '2024-01-01',
     ]);
 
     expect($creditAccount->balance)->toBe(500)

@@ -38,12 +38,17 @@ class Transaction extends Model implements HasMedia
         'particulars',
         'approved_by',
         'approved_at',
+    ];
+
+    protected $guarded = [
+        'reconciliation_id',
         'created_by',
     ];
 
     protected $casts = [
         'amount_in_cents' => 'integer',
-        'executed_at' => 'datetime:Y-m-d H:i',
+        'amount' => 'float',
+        'executed_at' => 'datetime',
         'approved_at' => 'datetime:Y-m-d H:i',
         'type' => TransactionType::class,
         'payment_method' => PaymentMethod::class,
@@ -53,6 +58,21 @@ class Transaction extends Model implements HasMedia
     protected $with = [
         'transactional',
     ];
+
+    protected $appends = [
+        'amount',
+        'execution_date',
+        'reconciled',
+    ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        self::creating(function (Transaction $transaction) {
+            $transaction->created_by = auth()->id();
+        });
+    }
 
     protected static function newFactory(): TransactionFactory
     {
@@ -84,6 +104,14 @@ class Transaction extends Model implements HasMedia
             set: fn ($value) => $this->amount_in_cents = $value * 100,
         );
     }
+
+    public function executionDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->executed_at->format('Y-m-d'),
+        );
+    }
+
     public function debitTransfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'debit_transaction_id');
@@ -124,5 +152,17 @@ class Transaction extends Model implements HasMedia
     public function approvedBy(): BelongsTo
     {
         return $this->belongsTo(app(config('servicefund.user.model'))::class, 'approved_by', 'number');
+    }
+
+    public function reconciliation(): BelongsTo
+    {
+        return $this->belongsTo(Reconciliation::class);
+    }
+
+    public function reconciled(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->reconciliation()->exists()
+        );
     }
 }

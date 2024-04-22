@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignId('account_id');
             $table->string('type');
             $table->dateTime('executed_at');
-            $table->decimal('amount_in_cents', 13);
+            $table->integer('amount_in_cents');
             $table->string('payment_method');
             $table->integer('cheque_number')->nullable();
             $table->text('particulars')->nullable();
@@ -36,6 +36,10 @@ return new class extends Migration
                 ->constrained('transactions')
                 ->cascadeOnDelete();
             $table->morphs('transactional');
+            $table->foreignId('reconciliation_id')
+                ->nullable()
+                ->constrained('reconciliations')
+                ->nullOnDelete();
             $table->foreignId('approved_by')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->foreignId('created_by');

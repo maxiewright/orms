@@ -40,7 +40,7 @@ class AccountResource extends Resource
                         return static::getUrl('dashboard', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.dashboard', $record);
+//                        return request()->routeIs('filament.service-fund.resources.accounts.dashboard', $record);
                     })
                     ->icon('heroicon-o-home'),
                 PageNavigationItem::make('Debits')
@@ -48,7 +48,7 @@ class AccountResource extends Resource
                         return static::getUrl('debits', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.debits', $record);
+//                        return request()->routeIs('filament.service-fund.resources.accounts.debits', $record);
                     })
                     ->icon('heroicon-o-user-group')
                     ->badge(function () use ($record) {
@@ -59,7 +59,7 @@ class AccountResource extends Resource
                         return static::getUrl('credits', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.credits', $record);
+//                        return request()->routeIs('filament.service-fund.resources.accounts.credits', $record);
                     })
                     ->icon('heroicon-o-shopping-cart')
                     ->badge(function () use ($record) {
@@ -70,22 +70,22 @@ class AccountResource extends Resource
                         return static::getUrl('debit_transfers', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.debit-transfers', $record);
+//                        return request()->routeIs('filament.service-fund.resources.accounts.debit-transfers', $record);
                     })
                     ->icon('heroicon-o-ticket')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->debitTransfer()->count();
+//                        return $record->transactions()->debitTransfer()->count();
                     }),
                 PageNavigationItem::make('Credit Transfers')
                     ->url(function () use ($record) {
-                        return static::getUrl('credit_transfers', ['record' => $record]);
+//                        return static::getUrl('credit_transfers', ['record' => $record]);
                     })
                     ->isActiveWhen(function () use ($record) {
-                        return request()->routeIs('filament.service-fund.resources.accounts.credit-transfers', $record);
+//                        return request()->routeIs('filament.service-fund.resources.accounts.credit-transfers', $record);
                     })
                     ->icon('heroicon-o-ticket')
                     ->badge(function () use ($record) {
-                        return $record->transactions()->creditTransfer()->count();
+//                        return $record->transactions()->creditTransfer()->count();
                     }),
             ]);
     }
@@ -134,8 +134,11 @@ class AccountResource extends Resource
                             ->createOptionForm(BankBranch::getForm())
                             ->required(),
                         TextInput::make('opening_balance_in_cents')
+                            ->prefix(config('servicefund.currency'))
+                            ->label('Opening Balance')
                             ->required()
-                            ->numeric(),
+                            ->numeric()
+                            ->inputMode('decimal'),
                     ]),
                 Section::make('Signatories')
                     ->columns(6)

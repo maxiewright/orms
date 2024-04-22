@@ -2,9 +2,9 @@
 
 namespace Modules\ServiceFund\Filament\App\Resources\AccountResource\Pages;
 
-use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Modules\ServiceFund\Filament\App\Resources\AccountResource;
 
 class EditAccount extends EditRecord
 {
@@ -15,5 +15,19 @@ class EditAccount extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['opening_balance_in_cents'] = $data['opening_balance_in_cents'] / 100;
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['opening_balance_in_cents'] = $data['opening_balance_in_cents'] * 100;
+
+        return $data;
     }
 }

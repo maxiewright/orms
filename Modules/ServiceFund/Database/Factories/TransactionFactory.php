@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Contact;
 use Modules\ServiceFund\App\Models\Transaction;
-use Modules\ServiceFund\App\Models\TransactionCategory;
 use Modules\ServiceFund\Enums\PaymentMethod;
 use Modules\ServiceFund\Enums\TransactionType;
 
@@ -23,7 +22,10 @@ class TransactionFactory extends Factory
      */
     public function definition(): array
     {
-        $executionDate = fake()->dateTimeBetween('-30 days');
+        $startOfMonth = now()->subMonth()->startOfMonth();
+        $endOfMonth = now()->subMonth()->endOfMonth();
+        $executionDate = fake()->dateTimeBetween($startOfMonth, $endOfMonth);
+
         $transactional = $this->transactional();
 
         return [
@@ -37,7 +39,6 @@ class TransactionFactory extends Factory
             'particulars' => fake()->text(),
             'approved_by' => app(config('servicefund.user.model'))::factory(),
             'approved_at' => Carbon::make($executionDate)->subDay(),
-            'created_by' => auth()->id(),
         ];
     }
 
@@ -69,7 +70,6 @@ class TransactionFactory extends Factory
         ]);
     }
 
-
     private function transactional()
     {
         return fake()->randomElement([
@@ -82,6 +82,13 @@ class TransactionFactory extends Factory
     {
         return $this->state(fn () => [
             'parent_id' => Transaction::factory(),
+        ]);
+    }
+
+    public function reconciled($reconciliationId): self
+    {
+        return $this->state(fn () => [
+            'reconciliation_id' => $reconciliationId,
         ]);
     }
 }

@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\ServiceFund\App\Models\Account;
 use Modules\ServiceFund\App\Models\Contact;
@@ -26,6 +27,13 @@ trait InteractsWithTransactions
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function transactionsBetween($startDate, $endDate): Collection
+    {
+        return $this->transactions()
+            ->whereBetween('executed_at', [$startDate, $endDate])
+            ->get();
     }
 
     public function name(): Attribute

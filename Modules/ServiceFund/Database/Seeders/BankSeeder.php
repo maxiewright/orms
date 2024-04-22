@@ -29,5 +29,7 @@ class BankSeeder extends Seeder
                 'name' => $bank,
             ]);
         }
+
+
     }
 }

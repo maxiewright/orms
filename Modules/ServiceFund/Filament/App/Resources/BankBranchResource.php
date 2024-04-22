@@ -21,8 +21,7 @@ class BankBranchResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Branches (Bank - Address)')
-                    ->searchable(),
+                    ->label('Branches (Bank - Address)'),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')

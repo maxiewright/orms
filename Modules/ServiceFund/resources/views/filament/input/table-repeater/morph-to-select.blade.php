@@ -1,0 +1,1 @@
+{{ $getChildComponentContainer()->extraAttributes(['style' => 'gap: 2px']) }}

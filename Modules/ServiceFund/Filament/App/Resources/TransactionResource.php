@@ -123,8 +123,21 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('executed_at')
                     ->label('Transaction Date')
                     ->date(config('servicefund.timestamp.date')),
-                Tables\Columns\TextColumn::make('amount')
-                    ->money(config('servicefund.currency')),
+                Tables\Columns\TextColumn::make('amount_in_cents')
+                    ->label('Amount')
+                    ->money(config('servicefund.currency'))
+                    ->summarize([
+                        Tables\Columns\Summarizers\Sum::make()
+                            ->label('Debits')
+                            ->query(fn ($query) => $query
+                                ->where('type', TransactionType::Debit)
+                                ->orWhere('type', TransactionType::DebitTransfer)),
+                        Tables\Columns\Summarizers\Sum::make()
+                            ->label('Credits')
+                            ->query(fn ($query) => $query
+                                ->where('type', TransactionType::Credit)
+                                ->orWhere('type', TransactionType::CreditTransfer)),
+                    ]),
                 Tables\Columns\TextColumn::make('payment_method')->badge(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->badge()->color('info'),
@@ -139,7 +152,14 @@ class TransactionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('account_id')
+                    ->relationship('account', 'name')
+                    ->searchable()
+                    ->label('Account'),
+                Tables\Filters\SelectFilter::make('type')
+                    ->multiple()
+                    ->options(TransactionType::class)
+                    ->label('Transaction Type'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

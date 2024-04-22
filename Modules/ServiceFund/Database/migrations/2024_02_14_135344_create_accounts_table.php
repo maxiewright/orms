@@ -24,8 +24,8 @@ return new class extends Migration
             $table->foreignId('bank_id')->constrained();
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
-            $table->text('address_line_1');
-            $table->text('address_line_2')->nullable();
+            $table->string('address_line_1');
+            $table->string('address_line_2')->nullable();
             $table->foreignId('city_id');
             $table->boolean('is_head_office')->default(false);
             $table->timestamps();
@@ -52,6 +52,19 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique(['number', 'bank_branch_id', 'type'], 'bank_account_number');
+        });
+
+        Schema::create('reconciliations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('account_id')->constrained();
+            $table->dateTime('started_at');
+            $table->dateTime('ended_at');
+            $table->integer('closing_balance_in_cents');
+            $table->foreignId('created_by')->constrained('users');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['account_id', 'started_at', 'ended_at'], 'account_reconciliation_period');
         });
 
     }

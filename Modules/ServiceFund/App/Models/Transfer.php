@@ -24,7 +24,7 @@ class Transfer extends Model
     ];
 
     protected $casts = [
-        'transferred_at' => 'datetime',
+        'transferred_at' => 'datetime:Y-m-d H:i',
     ];
 
     protected $with = [

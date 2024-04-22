@@ -8,11 +8,10 @@ use Illuminate\Support\Number;
 
 class AccountOverview extends BaseWidget
 {
-    public int $balance;
+    public float $balance;
+    public float $debits;
 
-    public int $debits;
-
-    public int $credits;
+    public float $credits;
 
     protected function getStats(): array
     {
