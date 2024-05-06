@@ -10,6 +10,7 @@
     "php": "^8.1",
     "bezhansalleh/filament-shield": "^3.0@beta",
     "bfinlay/laravel-excel-seeder": "^3.3",
+    "coolsam/modules": "^4.0",
     "filament/filament": "^3.0-stable",
     "flowframe/laravel-trend": "^0.1.5",
     "guzzlehttp/guzzle": "^7.2",
@@ -93,7 +94,8 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true,
       "php-http/discovery": true,
-      "ralphjsmit/packages": true
+      "ralphjsmit/packages": true,
+      "wikimedia/composer-merge-plugin": true
     }
   },
   "repositories": [
