@@ -31,7 +31,7 @@ class TransactionFactory extends Factory
         return [
             'account_id' => Account::factory(),
             'type' => fake()->randomElement(TransactionType::cases()),
-            'executed_at' => $executionDate,
+            'executed_at' => Carbon::make($executionDate),
             'amount_in_cents' => fake()->numberBetween(100, 100000),
             'payment_method' => fake()->randomElement(PaymentMethod::cases()),
             'transactional_id' => $transactional::factory(),
@@ -39,7 +39,15 @@ class TransactionFactory extends Factory
             'particulars' => fake()->text(),
             'approved_by' => app(config('servicefund.user.model'))::factory(),
             'approved_at' => Carbon::make($executionDate)->subDay(),
+            'reconciliation_id' => null,
         ];
+    }
+
+    public function executedAt($date): self
+    {
+        return $this->state(fn () => [
+            'executed_at' => $date,
+        ]);
     }
 
     public function credit(): self

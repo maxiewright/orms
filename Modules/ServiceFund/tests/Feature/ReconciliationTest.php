@@ -53,24 +53,42 @@ it('creates an reconciliation', function () {
 
     $account = Account::factory()->create();
 
+    $transaction = Transaction::factory()->create([
+        'account_id' => $account->id,
+    ])->toArray();
+
     livewire(CreateReconciliation::class)
         ->fillForm([
             'account_id' => $account->id,
             'started_at' => now()->subMonth()->startOfMonth(),
             'ended_at' => now()->subMonth()->endOfMonth(),
-            'closing_balance_in_cents' => 200000,
+            'closing_balance_in_cents' => 200,
         ])
         ->call('create')
         ->assertHasNoFormErrors();
 
     assertDatabaseHas('reconciliations', [
         'account_id' => $account->id,
-        'started_at' => now()->subMonth()->startOfMonth(),
-        'ended_at' => now()->subMonth()->endOfMonth(),
-        'closing_balance_in_cents' => 2000,
+        'started_at' => now()->subMonth()->startOfMonth()->format('Y-m-d'),
+        'ended_at' => now()->subMonth()->endOfMonth()->format('Y-m-d'),
+        'closing_balance_in_cents' => 20000,
+    ]);
+
+    ray(Reconciliation::first()->transactions->toArray());
+
+    assertDatabaseHas('transactions', [
+        'account_id' => $account->id,
+        'executed_at' => $transaction['executed_at'],
+        'amount_in_cents' => $transaction['amount_in_cents'],
+        'payment_method' => $transaction['payment_method'],
+        'transactional_id' => $transaction['transactional_id'],
+        'transactional_type' => $transaction['transactional_type'],
+        'particulars' => $transaction['particulars'],
+        'approved_by' => $transaction['approved_by'],
+        'approved_at' => $transaction['approved_at'],
+        'reconciliation_id' => 1,
     ]);
 });
-
 
 //it('shows the edit view', function () {
 //    // Arrange

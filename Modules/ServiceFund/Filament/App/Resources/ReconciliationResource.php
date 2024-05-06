@@ -7,6 +7,7 @@ use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MorphToSelect;
@@ -125,10 +126,10 @@ class ReconciliationResource extends Resource
                     ->relationship()
                     ->streamlined()
                     ->headers([
-                        Header::make('Date')
+                        Header::make('Date & time')
                             ->markAsRequired()
                             ->align(Alignment::Center)
-                            ->width('100px'),
+                            ->width('75px'),
                         Header::make('Payment Method')
                             ->markAsRequired()
                             ->align(Alignment::Center),
@@ -148,15 +149,15 @@ class ReconciliationResource extends Resource
                     ])
                     ->schema([
                         Hidden::make('account_id'),
-                        DatePicker::make('execution_date')
+                        DateTimePicker::make('executed_at')
                             ->live()
                             ->afterStateUpdated(function (Set $set, $state) {
-                                $set('executed_at', $state);
+                                $set('execution_date', $state);
                             })
+                            ->seconds(false)
                             ->required()
                             ->dehydrated(false)
                             ->default(now()),
-                        Hidden::make('executed_at'),
                         Select::make('payment_method')
                             ->options(PaymentMethod::class)
                             ->required(),

@@ -250,7 +250,6 @@ class AccountResource extends Resource
             'credits' => Pages\AccountCreditTransaction::route('/{record}/credits'),
             'debit_transfers' => Pages\AccountDebitTransfer::route('/{record}/debit-transfers'),
             'credit_transfers' => Pages\AccountCreditTransfer::route('/{record}/credit_transfers'),
-
         ];
     }
 

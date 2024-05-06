@@ -29,7 +29,6 @@ class ProcessReconciliationTransactionsAction
     public function prepareTransaction(Reconciliation $reconciliation, array &$transaction): void
     {
         $transaction['account_id'] = $reconciliation->account_id;
-        $transaction['executed_at'] = $transaction['execution_date'];
         $transaction['amount_in_cents'] = $transaction['amount'] * 100;
     }
 

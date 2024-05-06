@@ -48,7 +48,7 @@ class Transaction extends Model implements HasMedia
     protected $casts = [
         'amount_in_cents' => 'integer',
         'amount' => 'float',
-        'executed_at' => 'datetime',
+        'executed_at' => 'datetime:Y-m-d H:i',
         'approved_at' => 'datetime:Y-m-d H:i',
         'type' => TransactionType::class,
         'payment_method' => PaymentMethod::class,
