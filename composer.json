@@ -85,6 +85,11 @@
       "dont-discover": [
         "laravel/telescope"
       ]
+    },
+    "merge-plugin": {
+      "include": [
+        "Modules/*/composer.json"
+      ]
     }
   },
   "config": {
