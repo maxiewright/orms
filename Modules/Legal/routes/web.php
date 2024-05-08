@@ -14,6 +14,6 @@ use Modules\Legal\Http\Controllers\LegalController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('legal', LegalController::class)->names('legal');
-});
+//Route::group([], function () {
+//    Route::resource('legal', LegalController::class)->names('legal');
+//});

@@ -4,6 +4,7 @@ namespace Modules\Legal\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Legal\Providers\Filament\LegalPanelProvider;
 
 class LegalServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,7 @@ class LegalServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(LegalPanelProvider::class);
     }
 
     /**

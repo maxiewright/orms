@@ -1,10 +1,9 @@
 <?php
 
-namespace Modules\Legal\Filament\Clusters\Legal\Resources;
+namespace Modules\Legal\Filament\Resources;
 
-use Modules\Legal\Filament\Clusters\Legal;
-use Modules\Legal\Filament\Clusters\Legal\Resources\InfractionResource\Pages;
-use Modules\Legal\Filament\Clusters\Legal\Resources\InfractionResource\RelationManagers;
+use Modules\Legal\Filament\Resources\InfractionResource\Pages;
+use Modules\Legal\Filament\Resources\InfractionResource\RelationManagers;
 use Modules\Legal\Models\Infraction;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,8 +18,6 @@ class InfractionResource extends Resource
     protected static ?string $model = Infraction::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $cluster = Legal::class;
 
     public static function form(Form $form): Form
     {

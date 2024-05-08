@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Legal\Filament\Clusters\Legal\Resources\InfractionResource\Pages;
+namespace Modules\Legal\Filament\Resources\InfractionResource\Pages;
 
-use Modules\Legal\Filament\Clusters\Legal\Resources\InfractionResource;
+use Modules\Legal\Filament\Resources\InfractionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
