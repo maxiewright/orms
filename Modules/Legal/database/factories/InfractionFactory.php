@@ -2,7 +2,10 @@
 
 namespace Modules\Legal\Database\Factories;
 
+use App\Models\Metadata\Contact\Division;
+use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Legal\Enums\InfractionStatus;
 
 class InfractionFactory extends Factory
 {
@@ -16,7 +19,18 @@ class InfractionFactory extends Factory
      */
     public function definition(): array
     {
-        return [];
+        $division = Division::all()->random()->id;
+        $city = Division::find($division)->cities->random()->id;
+
+        return [
+            'serviceperson_number' => Serviceperson::factory()->enlisted(),
+            'occurred_at' => fake()->dateTime(),
+            'address_line_1' => fake()->address(),
+            'address_line_2' => fake()->streetAddress(),
+            'division_id' => $division,
+            'city_id' => $city,
+            'status' => fake()->randomElement(InfractionStatus::cases()),
+            'particulars' => fake()->sentence(),
+        ];
     }
 }
-

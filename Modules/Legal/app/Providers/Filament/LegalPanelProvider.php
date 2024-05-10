@@ -2,11 +2,12 @@
 
 namespace Modules\Legal\Providers\Filament;
 
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Coolsam\Modules\ModulesPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -18,6 +19,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 
 class LegalPanelProvider extends PanelProvider
 {
@@ -26,8 +29,16 @@ class LegalPanelProvider extends PanelProvider
         return $panel
             ->id('legal')
             ->path('legal')
+            ->login()
+            ->emailVerification()
+            ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Home')
+                    ->icon('heroicon-o-home')
+                    ->url(url('/admin/servicepeople')),
             ])
             ->discoverResources(in: app_path('Filament/Legal/Resources'), for: 'App\\Filament\\Legal\\Resources')
             ->discoverPages(in: app_path('Filament/Legal/Pages'), for: 'App\\Filament\\Legal\\Pages')
@@ -51,7 +62,10 @@ class LegalPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([
-                ModulesPlugin::make() ,
+                ModulesPlugin::make(),
+                FilamentApexChartsPlugin::make(),
+                BreezyCore::make()->myProfile(),
+//                FilamentShieldPlugin::make(),
             ]);
     }
 }

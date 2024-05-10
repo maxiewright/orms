@@ -13,8 +13,12 @@ return [
         'database_table' => 'servicepeople',
 
         'id' => 'number',
-    ],
 
+        'location' => \App\Models\Unit\Battalion::class,
+
+        'department' => \App\Models\Unit\Company::class,
+    ],
+    
     /*
      * The address classed used for all address fields in the module
      */

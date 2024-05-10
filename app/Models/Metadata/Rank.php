@@ -13,11 +13,11 @@ class Rank extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
+//    protected $casts = [
+//
+//    ];
 
-    ];
-
-    public function servicepersons(): HasMany
+    public function servicepeople(): HasMany
     {
         return $this->hasMany(Serviceperson::class);
     }

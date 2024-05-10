@@ -4,9 +4,9 @@ namespace Modules\Legal\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Legal\Database\Factories\LegalTagFactory;
+use Modules\Legal\Database\Factories\IncarcerationFactory;
 
-class LegalTag extends Model
+class Incarceration extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class LegalTag extends Model
      */
     protected $fillable = [];
 
-    protected static function newFactory(): LegalTagFactory
+    protected static function newFactory(): IncarcerationFactory
     {
-        //return LegalTagFactory::new();
+        //return IncarcerationFactory::new();
     }
 }

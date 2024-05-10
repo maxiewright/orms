@@ -4,9 +4,9 @@ namespace Modules\Legal\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Legal\Database\Factories\SummaryOffenceFactory;
+use Modules\Legal\Database\Factories\InterdicationFactory;
 
-class SummaryOffence extends Model
+class Interdiction extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class SummaryOffence extends Model
      */
     protected $fillable = [];
 
-    protected static function newFactory(): SummaryOffenceFactory
+    protected static function newFactory(): InterdicationFactory
     {
-        //return SummaryOffenceFactory::new();
+        //return InterdictionFactory::new();
     }
 }
