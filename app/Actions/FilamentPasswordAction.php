@@ -22,7 +22,7 @@ class FilamentPasswordAction
 
         Filament::auth()->login($user);
 
-        $livewire->redirect(ServicepersonResource::getUrl());
+        redirect()->intended(url('/admin'));
 
         Notification::make()
             ->success()
