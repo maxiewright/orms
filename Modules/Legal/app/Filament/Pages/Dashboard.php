@@ -12,11 +12,13 @@ use Modules\Legal\Filament\Widgets\LegalMattersOverview;
 
 class Dashboard extends FilamentDashboard
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-scale';
 
     protected static string $view = 'legal::filament.pages.dashboard';
 
     protected static ?string $title = 'Dashboard';
+
+    protected static ?int $navigationSort = 2;
 
     public function getHeaderWidgets(): array
     {

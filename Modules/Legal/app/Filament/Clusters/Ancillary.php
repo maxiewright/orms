@@ -7,6 +7,7 @@ use Nwidart\Modules\Facades\Module;
 
 class Ancillary extends Cluster
 {
+    protected static ?int $navigationSort = 5;
     public static function getModuleName(): string
     {
         return 'Legal';

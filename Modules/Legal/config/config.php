@@ -6,19 +6,11 @@ return [
     /*
      * The accused model and database table
      */
-    'accused' => [
 
-        'class' => \App\Models\Serviceperson::class,
+    'timezones' => 'America/Port_of_Spain',
+    'datetime_format' => 'D d M y, H:i',
+    'date_format' => 'Y-m-d',
 
-        'database_table' => 'servicepeople',
-
-        'id' => 'number',
-
-        'location' => \App\Models\Unit\Battalion::class,
-
-        'department' => \App\Models\Unit\Company::class,
-    ],
-    
     /*
      * The address classed used for all address fields in the module
      */

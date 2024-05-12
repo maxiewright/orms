@@ -2,11 +2,12 @@
 
 namespace Modules\Legal\Providers\Filament;
 
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use App\Actions\ChangePasswordAction;
 use Coolsam\Modules\ModulesPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -21,6 +22,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 class LegalPanelProvider extends PanelProvider
 {
@@ -34,6 +37,10 @@ class LegalPanelProvider extends PanelProvider
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->navigationGroups([
+                NavigationGroup::make('Court')
+                    ->icon('heroicon-o-building-library'),
             ])
             ->navigationItems([
                 NavigationItem::make('Home')
@@ -61,11 +68,16 @@ class LegalPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                OnboardMiddleware::class,
             ])->plugins([
                 ModulesPlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 BreezyCore::make()->myProfile(),
-//                FilamentShieldPlugin::make(),
+                ChangePasswordAction::make(),
+                FilamentFullCalendarPlugin::make()
+                    ->selectable()
+                    ->editable()
+                    ->timezone('america/port_of_spain'),
             ]);
     }
 }

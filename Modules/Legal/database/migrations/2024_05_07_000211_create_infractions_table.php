@@ -7,8 +7,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Legal\Models\Ancillary\Infraction\PoliceStation;
-use Modules\Legal\Models\Ancillary\Infraction\SummaryOffenceDivision;
-use Modules\Legal\Models\Ancillary\Infraction\SummaryOffenceSection;
+use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
+use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
 use Modules\Legal\Models\Infraction;
 
@@ -19,19 +19,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('summary_offence_divisions', function (Blueprint $table) {
+        Schema::create('offence_divisions', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('type');
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->string('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('summary_offence_sections', function (Blueprint $table) {
+        Schema::create('offence_sections', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(SummaryOffenceDivision::class)->constrained();
-            $table->string('section_number')->unique();
-            $table->string('name')->unique();
+            $table->foreignIdFor(OffenceDivision::class)->constrained();
+            $table->string('section_number');
+            $table->unique(['offence_division_id', 'section_number'], 'offence_division_section_number');
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -40,6 +44,7 @@ return new class extends Migration
         Schema::create('justice_institutions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->string('type');
             $table->string('address_line_1');
             $table->string('address_line_2')->nullable();
@@ -66,7 +71,7 @@ return new class extends Migration
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Infraction::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(SummaryOffenceSection::class)->constrained();
+            $table->foreignIdFor(OffenceSection::class)->constrained();
             $table->dateTime('charged_at');
             $table->foreignIdFor(JusticeInstitution::class)->constrained();
             $table->string('charged_by')->nullable();
@@ -76,6 +81,7 @@ return new class extends Migration
         Schema::create('legal_tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

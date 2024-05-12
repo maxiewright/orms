@@ -8,6 +8,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.1",
+    "awcodes/filament-table-repeater": "^3.0",
     "bezhansalleh/filament-shield": "^3.0@beta",
     "bfinlay/laravel-excel-seeder": "^3.3",
     "coolsam/modules": "^4.0",
@@ -23,6 +24,7 @@
     "masbug/flysystem-google-drive-ext": "^2.2",
     "pxlrbt/filament-excel": "^2.0",
     "ralphjsmit/laravel-filament-onboard": "^2.3",
+    "saade/filament-fullcalendar": "^3.0",
     "spatie/laravel-backup": "^8.1",
     "spatie/laravel-sluggable": "^3.5",
     "symfony/http-client": "^7.0",

@@ -9,7 +9,7 @@ class LegalProfesionalFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Legal\Models\Ancillary\CourtAttendance\LegalProfessional::class;
+    protected $model = \Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional::class;
 
     /**
      * Define the model's default state.

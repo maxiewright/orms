@@ -14,15 +14,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('legal_actions', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->foreignIdFor(Serviceperson::class);
+            $table->string('status');
             $table->dateTime('started_at');
+            $table->dateTime('respond_by');
+            $table->dateTime('responded_at')->nullable();
             $table->dateTime('ended_at')->nullable();
-            $table->text('particulars');
+            $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('serviceperson_legal_action', function (Blueprint $table) {
+            $table->foreignIdFor(Serviceperson::class);
+            $table->foreignIdFor(LegalAction::class);
+            $table->unique(['serviceperson_number', 'legal_action_id'], 'serviceperson_legal_action');
+            $table->timestamps();
         });
 
         Schema::create('legal_action_reference_documents', function (Blueprint $table) {
