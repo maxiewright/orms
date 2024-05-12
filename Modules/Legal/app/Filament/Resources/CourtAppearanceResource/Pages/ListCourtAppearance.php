@@ -2,13 +2,13 @@
 
 namespace Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
 
-use Modules\Legal\Filament\Resources\CourtAttendenceResource;
+use Modules\Legal\Filament\Resources\CourtAppearanceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListCourtAttendences extends ListRecords
+class ListCourtAppearance extends ListRecords
 {
-    protected static string $resource = CourtAttendenceResource::class;
+    protected static string $resource = CourtAppearanceResource::class;
 
     protected function getHeaderActions(): array
     {

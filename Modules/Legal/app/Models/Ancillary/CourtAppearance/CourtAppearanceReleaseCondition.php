@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Legal\Models\Ancillary\CourtAttendance;
+namespace Modules\Legal\Models\Ancillary\CourtAppearance;
 
 use Google\Service\AnalyticsData\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Legal\Database\Factories\CourtAttendenceReleaseConditionFactory;
 
-class CourtAttendanceReleaseCondition extends Pivot
+class CourtAppearanceReleaseCondition extends Pivot
 {
     use HasFactory;
 

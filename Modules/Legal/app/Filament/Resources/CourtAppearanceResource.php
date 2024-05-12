@@ -2,22 +2,22 @@
 
 namespace Modules\Legal\Filament\Resources;
 
-use Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
-use Modules\Legal\Filament\Resources\CourtAttendenceResource\RelationManagers;
-use Modules\Legal\Models\CourtAttendance;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
+use Modules\Legal\Models\CourtAppearance;
 
-class CourtAttendenceResource extends Resource
+class CourtAppearanceResource extends Resource
 {
-    protected static ?string $model = CourtAttendance::class;
+    protected static ?string $model = CourtAppearance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Court';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $label = 'Appearance';
 
     public static function form(Form $form): Form
     {
@@ -56,9 +56,9 @@ class CourtAttendenceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCourtAttendences::route('/'),
-            'create' => Pages\CreateCourtAttendence::route('/create'),
-            'edit' => Pages\EditCourtAttendence::route('/{record}/edit'),
+            'index' => Pages\ListCourtAppearance::route('/'),
+            'create' => Pages\CreateCourtAppearance::route('/create'),
+            'edit' => Pages\EditCourtAppearance::route('/{record}/edit'),
         ];
     }
 }

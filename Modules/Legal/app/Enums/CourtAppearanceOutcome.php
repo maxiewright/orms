@@ -2,7 +2,7 @@
 
 namespace Modules\Legal\Enums;
 
-enum CourtAttendanceOutcome: string
+enum CourtAppearanceOutcome: string
 {
     case Sentenced = 'sentenced';
     case Acquitted = 'acquitted';

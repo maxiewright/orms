@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Models\Ancillary\CourtAttendance;
+namespace Modules\Legal\Models\Ancillary\CourtAppearance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
