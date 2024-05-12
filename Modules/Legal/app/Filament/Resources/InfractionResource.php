@@ -11,15 +11,10 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Legal\Enums\InfractionStatus;
-use Modules\Legal\Enums\JusticeInstitutionType;
-use Modules\Legal\Enums\OffenceType;
 use Modules\Legal\Filament\Resources\InfractionResource\Pages;
-use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
-use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
-use Modules\Legal\Models\Ancillary\JusticeInstitution;
+use Modules\Legal\Models\Charge;
 use Modules\Legal\Models\Infraction;
 
 class InfractionResource extends Resource
@@ -51,7 +46,7 @@ class InfractionResource extends Resource
                         Forms\Components\DateTimePicker::make('occurred_at')
                             ->label('Date and Time')
                             ->required()
-                            ->before(now())
+                            ->before('now')
                             ->seconds(false),
                         Forms\Components\Select::make('status')
                             ->options(InfractionStatus::class)
@@ -89,57 +84,8 @@ class InfractionResource extends Resource
                     ->relationship('charges')
                     ->columns(3)
                     ->columnSpanFull()
-                    ->schema([
-                        Forms\Components\Select::make('offence_type')
-                            ->label('Offence Type')
-                            ->options(OffenceType::class)
-                            ->enum(OffenceType::class)
-                            ->live()
-                            ->required(),
-                        Forms\Components\Select::make('offence_division_id')
-                            ->label('Offence Division')
-                            ->placeholder('Select Division')
-                            ->options(function (Get $get) {
-                                return OffenceDivision::query()
-                                    ->where('type', $get('offence_type'))
-                                    ->pluck('name', 'id');
-                            })
-                            ->live()
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                        Forms\Components\Select::make('offence_section_id')
-                            ->label('Offence Section')
-                            ->placeholder(fn (Get $get) => empty($get('offence_division_id')) ? 'Select Offence Division First' : 'Select Offence')
-                            ->relationship(
-                                name: 'offence',
-                                titleAttribute: 'name',
-                                modifyQueryUsing: function (Builder $query, Get $get) {
-                                    return $query->where('offence_division_id', $get('offence_division_id'));
-                                }
-                            )
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                        Forms\Components\DateTimePicker::make('charged_at')
-                            ->label('Date Charged')
-                            ->required()
-                            ->seconds(false),
-                        Forms\Components\Select::make('justice_institution_id')
-                            ->label('Police Station')
-                            ->relationship(
-                                name: 'policeStation',
-                                titleAttribute: 'name',
-                                modifyQueryUsing: function (Builder $query) {
-                                    return $query->where('type', 'police station');
-                                }
-                            )
-                            ->createOptionForm(JusticeInstitution::getForm(type: JusticeInstitutionType::PoliceStation))
-                            ->required(),
-                        Forms\Components\TextInput::make('charged_by')
-                            ->label('Charged By')
-                            ->required(),
-                    ]),
+                    ->schema(Charge::getForm())
+                    ->addActionLabel('Add Charge'),
                 Forms\Components\RichEditor::make('particulars')
                     ->label('Particulars')
                     ->columnSpanFull(),

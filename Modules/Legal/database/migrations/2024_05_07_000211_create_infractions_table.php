@@ -2,11 +2,9 @@
 
 use App\Models\Metadata\Contact\City;
 use App\Models\Metadata\Contact\Division;
-use App\Models\Serviceperson;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Legal\Models\Ancillary\Infraction\PoliceStation;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
@@ -63,7 +61,7 @@ return new class extends Migration
             $table->foreignIdFor(Division::class)->constrained();
             $table->foreignIdFor(City::class)->constrained();
             $table->string('status');
-            $table->text('particulars');
+            $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -71,6 +69,8 @@ return new class extends Migration
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Infraction::class)->constrained()->cascadeOnDelete();
+            $table->string('offence_type');
+            $table->foreignIdFor(OffenceDivision::class)->constrained();
             $table->foreignIdFor(OffenceSection::class)->constrained();
             $table->dateTime('charged_at');
             $table->foreignIdFor(JusticeInstitution::class)->constrained();

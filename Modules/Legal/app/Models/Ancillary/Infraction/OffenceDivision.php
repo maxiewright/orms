@@ -6,6 +6,7 @@ use App\Traits\SluggableByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Legal\Enums\OffenceType;
+use Modules\Legal\Models\Infraction;
 use Spatie\Sluggable\HasSlug;
 
 class OffenceDivision extends Model
@@ -20,5 +21,10 @@ class OffenceDivision extends Model
     public function summaryOffenceSections(): HasMany
     {
         return $this->hasMany(OffenceSection::class);
+    }
+
+    public function infractions(): HasMany
+    {
+        return $this->hasMany(Infraction::class);
     }
 }

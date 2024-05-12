@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\Legal\Database\Factories\LegalActionFactory;
 use Modules\Legal\Enums\LegalActionStatus;
 use Modules\Legal\Enums\LegalActionType;
-use Modules\Legal\Models\Ancillary\Interdication\ReferenceDocument;
+use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 
 class LegalAction extends Model
 {
@@ -49,7 +49,7 @@ class LegalAction extends Model
 
     public function referenceDocuments(): BelongsToMany
     {
-        return $this->belongsToMany(ReferenceDocument::class)
+        return $this->belongsToMany(LegalCorrespondence::class)
             ->using(LegalActionReferenceDocument::class)
             ->withPivot('particulars')
             ->withTimestamps();

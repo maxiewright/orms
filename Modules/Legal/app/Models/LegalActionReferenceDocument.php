@@ -4,7 +4,7 @@ namespace Modules\Legal\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Modules\Legal\Models\Ancillary\Interdication\ReferenceDocument;
+use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 
 class LegalActionReferenceDocument extends Pivot
 {
@@ -17,6 +17,6 @@ class LegalActionReferenceDocument extends Pivot
 
     public function referenceDocument(): BelongsTo
     {
-        return $this->belongsTo(ReferenceDocument::class);
+        return $this->belongsTo(LegalCorrespondence::class);
     }
 }
