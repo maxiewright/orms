@@ -3,6 +3,9 @@
 namespace Modules\Legal\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Modules\Legal\Database\Seeders\Offences\SummaryOffenceDivisionSeeder;
+use Modules\Legal\Database\Seeders\Offences\SummaryOffenceSectionSeeder;
 
 class OffenceSeeder extends Seeder
 {
@@ -11,6 +14,11 @@ class OffenceSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        DB::transaction(function () {
+            $this->call([
+                SummaryOffenceDivisionSeeder::class,
+                SummaryOffenceSectionSeeder::class,
+            ]);
+        });
     }
 }
