@@ -3,10 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Legal\Models\Ancillary\Interdication\ReferenceDocument;
-use Modules\Legal\Models\Ancillary\Interdication\ReferenceDocumentType;
+use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
+use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondenceType;
 use Modules\Legal\Models\Infraction;
-use Modules\Legal\Models\Interdiction;
 
 return new class extends Migration
 {
@@ -15,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reference_document_types', function (Blueprint $table) {
+        Schema::create('legal_correspondence_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
@@ -24,16 +23,25 @@ return new class extends Migration
             $table->softDeletes();
 
         });
-        Schema::create('reference_documents', function (Blueprint $table) {
+
+        Schema::create('legal_correspondences', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('index');
-            $table->foreignIdFor(ReferenceDocumentType::class)->constrained();
-            $table->string('abbreviation')->nullable();
+            $table->string('reference');
             $table->dateTime('date');
+            $table->string('name');
+            $table->string('subject');
+            $table->string('slug');
+            $table->foreignIdFor(LegalCorrespondenceType::class)->constrained();
             $table->string('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('referenceables', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(LegalCorrespondence::class);
+            $table->morphs('referenceable');
+            $table->timestamps();
         });
 
         Schema::create('interdictions', function (Blueprint $table) {
@@ -43,14 +51,6 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->string('status');
             $table->text('particulars');
-            $table->timestamps();
-        });
-
-        Schema::create('interdiction_reference_document', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Interdiction::class)->constrained();
-            $table->foreignIdFor(ReferenceDocument::class)->constrained();
-            $table->text('particulars')->nullable();
             $table->timestamps();
         });
     }

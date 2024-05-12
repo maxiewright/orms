@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Models\Ancillary\Interdication;
+namespace Modules\Legal\Models\Ancillary\Interdiction;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

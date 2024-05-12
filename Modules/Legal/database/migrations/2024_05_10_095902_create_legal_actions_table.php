@@ -4,7 +4,7 @@ use App\Models\Serviceperson;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Legal\Models\Ancillary\Interdication\ReferenceDocument;
+use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 use Modules\Legal\Models\LegalAction;
 
 return new class extends Migration
@@ -38,7 +38,7 @@ return new class extends Migration
         Schema::create('legal_action_reference_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(LegalAction::class);
-            $table->foreignIdFor(ReferenceDocument::class);
+            $table->foreignIdFor(LegalCorrespondence::class);
             $table->text('particulars')->nullable();
             $table->timestamps();
         });
