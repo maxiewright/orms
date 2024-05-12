@@ -6,7 +6,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
+use Modules\Legal\Filament\Resources\CourtAppearanceResource\Pages;
 use Modules\Legal\Models\CourtAppearance;
 
 class CourtAppearanceResource extends Resource

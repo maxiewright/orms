@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
+namespace Modules\Legal\Filament\Resources\CourtAppearanceResource\Pages;
 
 use Modules\Legal\Filament\Resources\CourtAppearanceResource;
 use Filament\Actions;

@@ -4,7 +4,7 @@ namespace Modules\Legal\Models\Ancillary\CourtAppearance;
 
 use Google\Service\AnalyticsData\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Legal\Database\Factories\CourtAttendenceReleaseConditionFactory;
+use Modules\Legal\Database\Factories\CourtAppearanceReleaseConditionFactory;
 
 class CourtAppearanceReleaseCondition extends Pivot
 {
@@ -15,8 +15,8 @@ class CourtAppearanceReleaseCondition extends Pivot
      */
     protected $fillable = [];
 
-    protected static function newFactory(): CourtAttendenceReleaseConditionFactory
+    protected static function newFactory(): CourtAppearanceReleaseConditionFactory
     {
-        //return CourtAttendenceReleaseConditionFactory::new();
+        //return CourtAppearanceReleaseConditionFactory::new();
     }
 }

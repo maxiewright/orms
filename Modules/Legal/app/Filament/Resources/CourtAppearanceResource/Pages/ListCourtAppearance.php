@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Legal\Filament\Resources\CourtAttendenceResource\Pages;
+namespace Modules\Legal\Filament\Resources\CourtAppearanceResource\Pages;
 
-use Modules\Legal\Filament\Resources\CourtAppearanceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Modules\Legal\Filament\Resources\CourtAppearanceResource;
 
 class ListCourtAppearance extends ListRecords
 {
