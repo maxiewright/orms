@@ -3,11 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessionalType;
 use Modules\Legal\Models\Ancillary\CourtAppearance\ReleaseCondition;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
 use Modules\Legal\Models\CourtAppearance;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 
 return new class extends Migration
 {
@@ -16,20 +15,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('legal_professional_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('legal_professionals', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(LegalProfessionalType::class)->constrained();
+            $table->string('type');
             $table->string('name');
-            $table->string('email')->nullable();
+            $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -40,8 +30,9 @@ return new class extends Migration
             $table->foreignIdFor(JusticeInstitution::class)->constrained();
             $table->dateTime('attended_at')->nullable();
             $table->foreignId('accompanied_by')->nullable()->constrained('servicepeople', 'number');
-            $table->string('outcome');
+            $table->string('outcome')->nullable();
             $table->dateTime('next_date')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('court_appearances');
             $table->integer('bail_amount')->nullable();
             $table->foreignId('judge_id')->nullable()->constrained('legal_professionals');
             $table->foreignId('lawyer_id')->nullable()->constrained('legal_professionals');
@@ -55,7 +46,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('serviceperson_number')->constrained('servicepeople', 'number');
             $table->foreignIdFor(CourtAppearance::class)->constrained();
-            $table->foreignIdFor(Infraction::class)->nullable()->constrained();
+            $table->foreignIdFor(Incident::class)->nullable()->constrained();
             $table->string('reason')->nullable();
             $table->timestamps();
             $table->softDeletes();

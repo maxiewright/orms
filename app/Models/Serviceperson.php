@@ -9,6 +9,7 @@ use App\Traits\Serviceperson\HasBasicInformation;
 use App\Traits\Serviceperson\HasContactInformation;
 use App\Traits\Serviceperson\HasForms;
 use App\Traits\Serviceperson\HasServiceData;
+use App\Traits\Serviceperson\Selectable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,11 +17,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Legal\traits\HasLegalMatters;
 
 class Serviceperson extends Model
 {
     use HasBasicInformation, HasContactInformation, HasFactory, HasInterview, HasServiceData;
     use HasForms;
+    use Selectable;
+    use HasLegalMatters;
 
     protected $primaryKey = 'number';
 

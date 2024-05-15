@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('/admin')
             ->login()
             ->emailVerification()
             ->sidebarFullyCollapsibleOnDesktop()

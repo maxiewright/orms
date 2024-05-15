@@ -5,7 +5,7 @@ namespace Modules\Legal\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum InfractionStatus: string implements HasColor, HasLabel
+enum IncidentStatus: string implements HasColor, HasLabel
 {
     case Pending = 'pending';
     case Charged = 'charged';

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait HasAddress
 {
+
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
@@ -27,6 +28,4 @@ trait HasAddress
                 : "$this->address_line_1, {$this->city->name}";
         });
     }
-
-
 }

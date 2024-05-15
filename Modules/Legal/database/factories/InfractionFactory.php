@@ -5,14 +5,14 @@ namespace Modules\Legal\Database\Factories;
 use App\Models\Metadata\Contact\Division;
 use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Legal\Enums\InfractionStatus;
+use Modules\Legal\Enums\IncidentStatus;
 
 class InfractionFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = \Modules\Legal\Models\Infraction::class;
+    protected $model = \Modules\Legal\Models\Incident::class;
 
     /**
      * Define the model's default state.
@@ -29,7 +29,7 @@ class InfractionFactory extends Factory
             'address_line_2' => fake()->streetAddress(),
             'division_id' => $division,
             'city_id' => $city,
-            'status' => fake()->randomElement(InfractionStatus::cases()),
+            'status' => fake()->randomElement(IncidentStatus::cases()),
             'particulars' => fake()->sentence(),
         ];
     }

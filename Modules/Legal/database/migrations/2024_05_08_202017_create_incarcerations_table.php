@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Legal\Enums\JusticeInstitutionType;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 
 return new class extends Migration
 {
@@ -17,7 +17,7 @@ return new class extends Migration
 
         Schema::create('incarcerations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Infraction::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Incident::class)->constrained()->cascadeOnDelete();
             $table->dateTime('incarcerated_at');
             $table->foreignIdFor(JusticeInstitution::class)->constrained();
             $table->dateTime('released_at')->nullable();

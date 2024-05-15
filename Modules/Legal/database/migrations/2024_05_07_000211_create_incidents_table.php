@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 
 return new class extends Migration
 {
@@ -52,8 +52,9 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('infractions', function (Blueprint $table) {
+        Schema::create('incidents', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
             $table->foreignId('serviceperson_number')->constrained('servicepeople', 'number');
             $table->dateTime('occurred_at');
             $table->string('address_line_1');
@@ -68,7 +69,7 @@ return new class extends Migration
 
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Infraction::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Incident::class)->constrained()->cascadeOnDelete();
             $table->string('offence_type');
             $table->foreignIdFor(OffenceDivision::class)->constrained();
             $table->foreignIdFor(OffenceSection::class)->constrained();

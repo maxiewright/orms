@@ -4,9 +4,9 @@ namespace Modules\Legal\Tests\Unit;
 
 use App\Models\Metadata\Contact\Division;
 use App\Models\Serviceperson;
-use Modules\Legal\Enums\InfractionStatus;
+use Modules\Legal\Enums\IncidentStatus;
 use Modules\Legal\Filament\Resources\InfractionResource\Pages\CreateInfraction;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 use Tests\TestCase;
 
 use function Pest\Livewire\livewire;
@@ -33,7 +33,7 @@ it('can create an infraction', function () {
             'address_line_2' => fake()->address(),
             'division_id' => $division,
             'city_id' => $city,
-            'status' => fake()->randomElement(InfractionStatus::cases()),
+            'status' => fake()->randomElement(IncidentStatus::cases()),
             'particulars' => fake()->sentence(),
         ])->call('create')
         ->assertHasFormErrors();

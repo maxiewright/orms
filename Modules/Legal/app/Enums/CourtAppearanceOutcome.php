@@ -2,7 +2,9 @@
 
 namespace Modules\Legal\Enums;
 
-enum CourtAppearanceOutcome: string
+use Filament\Support\Contracts\HasLabel;
+
+enum CourtAppearanceOutcome: string implements HasLabel
 {
     case Sentenced = 'sentenced';
     case Acquitted = 'acquitted';
@@ -15,4 +17,19 @@ enum CourtAppearanceOutcome: string
     case ConditionalDischarge = 'conditional discharge';
     case ContemptOfCourt = 'contempt of court';
 
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::Sentenced => 'Sentenced',
+            self::Acquitted => 'Acquitted',
+            self::Adjourned => 'Adjourned',
+            self::Dismissed => 'Dismissed',
+            self::Withdrawn => 'Withdrawn',
+            self::GuiltyPlea => 'Guilty Plea',
+            self::BenchWarrant => 'Bench Warrant',
+            self::Appealed => 'Appealed',
+            self::ConditionalDischarge => 'Conditional Discharge',
+            self::ContemptOfCourt => 'Contempt of Court',
+        };
+    }
 }

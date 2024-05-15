@@ -19,10 +19,12 @@ use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
 use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
+use Modules\Legal\traits\HasReferences;
 
 class Charge extends Model
 {
     use HasFactory;
+    use HasReferences;
 
     /**
      * The attributes that are mass assignable.
@@ -49,7 +51,7 @@ class Charge extends Model
 
     public function infraction(): BelongsTo
     {
-        return $this->belongsTo(Infraction::class);
+        return $this->belongsTo(Incident::class);
     }
 
     public function offenceDivision(): BelongsTo
@@ -64,12 +66,8 @@ class Charge extends Model
 
     public function policeStation(): BelongsTo
     {
-        return $this->belongsTo(JusticeInstitution::class, 'justice_institution_id');
-    }
-
-    public function references(): MorphToMany
-    {
-        return $this->morphToMany(LegalCorrespondence::class, 'referenceable');
+        return $this->belongsTo(JusticeInstitution::class, 'justice_institution_id')
+            ->where('type', JusticeInstitutionType::PoliceStation);
     }
 
     public static function getForm(): array
@@ -125,13 +123,7 @@ class Charge extends Model
             TextInput::make('charged_by')
                 ->label('Charged By')
                 ->required(),
-            Select::make('references')
-                ->relationship('references', 'name')
-                ->createOptionForm(LegalCorrespondence::getForm())
-                ->label('Reference Documents')
-                ->columnSpanFull()
-                ->multiple(),
-
+            self::getReferences(),
         ];
     }
 }

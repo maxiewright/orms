@@ -50,9 +50,9 @@ class JusticeInstitution extends Model
                 ->schema([
                     Select::make('type')
                         ->options(JusticeInstitutionType::class)
+                        ->enum(JusticeInstitutionType::class)
                         ->default($type)
                         ->required()
-                        ->enum(JusticeInstitutionType::class)
                         ->live(),
                     TextInput::make('name')
                         ->columnSpan(2)

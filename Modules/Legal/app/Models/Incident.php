@@ -4,22 +4,27 @@ namespace Modules\Legal\Models;
 
 use App\Models\Serviceperson;
 use App\Traits\HasAddress;
+use App\Traits\SluggableByName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Legal\Database\Factories\InfractionFactory;
-use Modules\Legal\Enums\InfractionStatus;
+use Modules\Legal\Enums\IncidentStatus;
+use Modules\Legal\Enums\IncidentType;
 
-class Infraction extends Model
+class Incident extends Model
 {
     use HasAddress;
     use HasFactory;
+    use SluggableByName;
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'name',
+        'type',
         'serviceperson_number',
         'occurred_at',
         'address_line_1',
@@ -32,8 +37,11 @@ class Infraction extends Model
 
     protected $casts = [
         'occurred_at' => 'datetime',
-        'status' => InfractionStatus::class,
+        'type' => IncidentType::class,
+        'status' => IncidentStatus::class,
     ];
+
+    protected $with = ['city', 'division'];
 
     protected $appends = ['address'];
 
@@ -44,7 +52,7 @@ class Infraction extends Model
 
     public function serviceperson(): BelongsTo
     {
-        return $this->belongsTo(Serviceperson::class, 'serviceperson_number', 'number');
+        return $this->belongsTo(Serviceperson::class, 'serviceperson_number');
     }
 
     public function charges(): HasMany
@@ -56,4 +64,6 @@ class Infraction extends Model
     {
         return $this->charges()->doesntExist();
     }
+
+
 }

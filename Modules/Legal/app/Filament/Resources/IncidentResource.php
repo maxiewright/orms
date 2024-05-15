@@ -3,23 +3,22 @@
 namespace Modules\Legal\Filament\Resources;
 
 use App\Models\Metadata\Contact\City;
+use App\Models\Serviceperson;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use Modules\Legal\Enums\InfractionStatus;
-use Modules\Legal\Filament\Resources\InfractionResource\Pages;
+use Modules\Legal\Enums\IncidentStatus;
+use Modules\Legal\Filament\Resources\IncidentResource\Pages;
 use Modules\Legal\Models\Charge;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 
-class InfractionResource extends Resource
+class IncidentResource extends Resource
 {
-    protected static ?string $model = Infraction::class;
+    protected static ?string $model = Incident::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -33,15 +32,8 @@ class InfractionResource extends Resource
                     ->columnSpanFull()
                     ->columns(3)
                     ->schema([
-                        Select::make('serviceperson_number')
-                            ->helperText('Search by number, first name, middle name or last name')
+                        Serviceperson::make()
                             ->label('Serviceperson')
-                            ->relationship(
-                                name: 'serviceperson',
-                                titleAttribute: 'number',
-                            )
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
-                            ->searchable(['number', 'first_name', 'middle_name', 'last_name'])
                             ->required(),
                         Forms\Components\DateTimePicker::make('occurred_at')
                             ->label('Date and Time')
@@ -49,9 +41,9 @@ class InfractionResource extends Resource
                             ->before('now')
                             ->seconds(false),
                         Forms\Components\Select::make('status')
-                            ->options(InfractionStatus::class)
-                            ->default(InfractionStatus::Pending)
-                            ->enum(InfractionStatus::class)
+                            ->options(IncidentStatus::class)
+                            ->default(IncidentStatus::Pending)
+                            ->enum(IncidentStatus::class)
                             ->required()
                             ->live(),
                     ]),
@@ -80,7 +72,7 @@ class InfractionResource extends Resource
                             ->required(),
                     ]),
                 Repeater::make('charges')
-                    ->hidden(fn (Get $get) => $get('status') === InfractionStatus::Pending)
+                    ->hidden(fn (Get $get) => $get('status') === IncidentStatus::Pending)
                     ->relationship('charges')
                     ->columns(3)
                     ->columnSpanFull()
@@ -111,7 +103,7 @@ class InfractionResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('address')
                     ->wrap()
-                    ->label('Infraction Location')
+                    ->label('Incident Location')
                     ->searchable(['address_line_1', 'address_line_2', 'division.name', 'city.name']),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
@@ -124,7 +116,7 @@ class InfractionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->options(InfractionStatus::class)
+                    ->options(IncidentStatus::class)
                     ->label('Status'),
                 Tables\Filters\SelectFilter::make('rank')
                     ->relationship('serviceperson.rank', 'regiment_abbreviation')
@@ -153,9 +145,9 @@ class InfractionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInfractions::route('/'),
-            'create' => Pages\CreateInfraction::route('/create'),
-            'edit' => Pages\EditInfraction::route('/{record}/edit'),
+            'index' => Pages\ListIncidents::route('/'),
+            'create' => Pages\CreateIncident::route('/create'),
+            'edit' => Pages\EditIncident::route('/{record}/edit'),
         ];
     }
 }

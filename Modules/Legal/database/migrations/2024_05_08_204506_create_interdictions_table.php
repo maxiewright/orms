@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondenceType;
-use Modules\Legal\Models\Infraction;
+use Modules\Legal\Models\Incident;
 
 return new class extends Migration
 {
@@ -21,7 +21,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
         });
 
         Schema::create('legal_correspondences', function (Blueprint $table) {
@@ -46,11 +45,15 @@ return new class extends Migration
 
         Schema::create('interdictions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Infraction::class)->constrained()->cascadeOnDelete();
-            $table->dateTime('start_date');
-            $table->dateTime('end_date')->nullable();
+            $table->foreignIdFor(Incident::class)
+                ->unique()
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->dateTime('requested_at');
+            $table->dateTime('interdicted_at')->nullable();
+            $table->dateTime('lifted_at')->nullable();
             $table->string('status');
-            $table->text('particulars');
+            $table->text('particulars')->nullable();
             $table->timestamps();
         });
     }
