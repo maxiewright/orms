@@ -5,19 +5,22 @@ namespace Modules\Legal\Models;
 use App\Models\Serviceperson;
 use App\Traits\HasAddress;
 use App\Traits\SluggableByName;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Legal\Database\Factories\InfractionFactory;
-use Modules\Legal\Enums\IncidentStatus;
-use Modules\Legal\Enums\IncidentType;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Legal\Database\Factories\IncidentFactory;
+use Modules\Legal\Enums\Incident\IncidentStatus;
+use Modules\Legal\Enums\Incident\IncidentType;
 
 class Incident extends Model
 {
     use HasAddress;
     use HasFactory;
     use SluggableByName;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +39,7 @@ class Incident extends Model
     ];
 
     protected $casts = [
-        'occurred_at' => 'datetime',
+        'occurred_at' => 'datetime:Y-m-d H:i',
         'type' => IncidentType::class,
         'status' => IncidentStatus::class,
     ];
@@ -45,9 +48,9 @@ class Incident extends Model
 
     protected $appends = ['address'];
 
-    protected static function newFactory(): InfractionFactory
+    protected static function newFactory(): IncidentFactory
     {
-        return InfractionFactory::new();
+        return IncidentFactory::new();
     }
 
     public function serviceperson(): BelongsTo
@@ -65,5 +68,8 @@ class Incident extends Model
         return $this->charges()->doesntExist();
     }
 
-
+    public function date(): Attribute
+    {
+        return Attribute::get(fn () => $this->occurred_at->format('d M Y'));
+    }
 }

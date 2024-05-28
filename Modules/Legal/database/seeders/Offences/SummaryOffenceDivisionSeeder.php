@@ -3,7 +3,7 @@
 namespace Modules\Legal\Database\Seeders\Offences;
 
 use Illuminate\Database\Seeder;
-use Modules\Legal\Enums\OffenceType;
+use Modules\Legal\Enums\Incident\OffenceType;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
 
 class SummaryOffenceDivisionSeeder extends Seeder

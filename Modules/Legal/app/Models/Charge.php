@@ -3,21 +3,20 @@
 namespace Modules\Legal\Models;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Legal\Database\Factories\ChargeFactory;
+use Modules\Legal\Enums\Incident\OffenceType;
 use Modules\Legal\Enums\JusticeInstitutionType;
-use Modules\Legal\Enums\OffenceType;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceDivision;
 use Modules\Legal\Models\Ancillary\Infraction\OffenceSection;
-use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
 use Modules\Legal\Models\Ancillary\JusticeInstitution;
 use Modules\Legal\traits\HasReferences;
 
@@ -25,23 +24,29 @@ class Charge extends Model
 {
     use HasFactory;
     use HasReferences;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'infraction_id',
+        'incident_id',
         'offence_type',
         'offence_division_id',
         'offence_section_id',
         'charged_at',
         'justice_institution_id',
         'charged_by',
+        'particulars',
     ];
 
     protected $casts = [
-        'charged_at' => 'datetime',
+        'charged_at' => 'datetime:Y-m-d H:i',
         'offence_type' => OffenceType::class,
+    ];
+
+    protected $with = [
+        'offenceDivision', 'offenceSection', 'policeStation',
     ];
 
     protected static function newFactory(): ChargeFactory
@@ -49,7 +54,7 @@ class Charge extends Model
         return ChargeFactory::new();
     }
 
-    public function infraction(): BelongsTo
+    public function incident(): BelongsTo
     {
         return $this->belongsTo(Incident::class);
     }
@@ -108,22 +113,28 @@ class Charge extends Model
                 ->label('Date Charged')
                 ->required()
                 ->before('now')
+                ->after('../../occurred_at')
                 ->seconds(false),
             Select::make('justice_institution_id')
                 ->label('Police Station')
-                ->relationship(
-                    name: 'policeStation',
-                    titleAttribute: 'name',
-                    modifyQueryUsing: function (Builder $query) {
-                        return $query->where('type', 'police station');
+                ->options(function (?Charge $record, Get $get, Set $set) {
+                    if (! empty($record)) {
+                        $set('justice_institution_id', $record->justice_institution_id);
                     }
-                )
+
+                    return JusticeInstitution::query()
+                        ->where('type', 'police station')
+                        ->get()
+                        ->pluck('name', 'id');
+                })
                 ->createOptionForm(JusticeInstitution::getForm(type: JusticeInstitutionType::PoliceStation))
                 ->required(),
             TextInput::make('charged_by')
-                ->label('Charged By')
-                ->required(),
-            self::getReferences(),
+                ->label('Charged By'),
+            self::getReferences()->columnSpanFull(),
+            RichEditor::make('particulars')
+                ->columnSpanFull(),
+
         ];
     }
 }

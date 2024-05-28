@@ -30,22 +30,38 @@ class LegalPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('legal')
-            ->path('legal')
             ->login()
-            ->emailVerification()
+            ->colors([
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => Color::Indigo,
+                'success' => Color::Emerald,
+                'warning' => Color::Rose,
+            ])
+            ->brandName('ORMS - Legal')
+            ->id('legal')
+            ->domain(app()->isProduction() ? 'legal.orms.app' : 'legal.orms.test')
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
-                NavigationGroup::make('Court')
+                NavigationGroup::make('Occurrences')
+                    ->icon('occurrences'),
+                NavigationGroup::make('Legal Actions')
+                    ->icon('legal-action'),
+                NavigationGroup::make('Court Matters')
                     ->icon('heroicon-o-building-library'),
+                NavigationGroup::make('Ancillary')
+                    ->icon('heroicon-o-cog'),
             ])
             ->navigationItems([
                 NavigationItem::make('Home')
                     ->icon('heroicon-o-home')
-                    ->url(url('/admin/servicepeople')),
+                    ->url(function () {
+                        return filament()->getPanel('servicepeople')->route('pages.servicepeople-dashboard');
+                    }),
             ])
             ->discoverResources(in: app_path('Filament/Legal/Resources'), for: 'App\\Filament\\Legal\\Resources')
             ->discoverPages(in: app_path('Filament/Legal/Pages'), for: 'App\\Filament\\Legal\\Pages')

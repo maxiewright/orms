@@ -11,14 +11,14 @@ enum InterdictionStatus: string implements HasColor, HasLabel
 
     case Interdicted = 'interdicted';
 
-    case Lifted = 'lifted';
+    case Revoked = 'revoked';
 
     public function getLabel(): ?string
     {
         return match ($this) {
             self::Pending => 'Pending',
             self::Interdicted => 'Interdicted',
-            self::Lifted => 'Lifted',
+            self::Revoked => 'Revoked',
         };
     }
 
@@ -27,7 +27,7 @@ enum InterdictionStatus: string implements HasColor, HasLabel
         return match ($this) {
             self::Pending => 'warning',
             self::Interdicted => 'danger',
-            self::Lifted => 'success',
+            self::Revoked => 'success',
         };
     }
 }

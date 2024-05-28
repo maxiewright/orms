@@ -45,8 +45,8 @@ class DatabaseSeeder extends Seeder
             RankSeeder::class,
             GenderSeeder::class,
             EnlistmentTypeSeeder::class,
-            SpreadsheetSeeder::class,
-            AdminSeeder::class,
+//            SpreadsheetSeeder::class,
+//            AdminSeeder::class,
             OfficerAppraisalGradeSeeder::class,
 
             // Units

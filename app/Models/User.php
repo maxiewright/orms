@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
@@ -18,6 +19,7 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
     use HasPageShield;
+    use HasPanelShield;
 
     protected static function booted()
     {
@@ -72,6 +74,10 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'servicepeople') {
+            return true;
+        }
+
         return true;
     }
 

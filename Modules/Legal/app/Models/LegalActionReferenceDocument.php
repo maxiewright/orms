@@ -12,7 +12,7 @@ class LegalActionReferenceDocument extends Pivot
 
     public function legalAction(): BelongsTo
     {
-        return $this->belongsTo(LegalAction::class);
+        return $this->belongsTo(Litigation::class);
     }
 
     public function referenceDocument(): BelongsTo

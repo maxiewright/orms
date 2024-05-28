@@ -47,6 +47,7 @@ return new class extends Migration
             $table->foreignId('serviceperson_number')->constrained('servicepeople', 'number');
             $table->foreignIdFor(CourtAppearance::class)->constrained();
             $table->foreignIdFor(Incident::class)->nullable()->constrained();
+            $table->unique(['serviceperson_number', 'court_appearance_id'], 'serviceperson_court_appearance_unique');
             $table->string('reason')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -63,6 +64,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(CourtAppearance::class);
             $table->foreignIdFor(ReleaseCondition::class);
+            $table->unique(['court_appearance_id', 'release_condition_id'], 'court_appearance_release_condition_unique');
             $table->text('particulars');
             $table->timestamps();
             $table->softDeletes();

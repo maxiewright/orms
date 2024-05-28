@@ -20,8 +20,8 @@ class OffenceSection extends Model
         'particulars',
     ];
 
-    public function offenceDivision(): BelongsTo
+    public function division(): BelongsTo
     {
-        return $this->belongsTo(OffenceDivision::class);
+        return $this->belongsTo(OffenceDivision::class, 'offence_division_id');
     }
 }

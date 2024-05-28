@@ -6,11 +6,12 @@ use App\Models\Serviceperson;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Modules\Legal\Enums\InterdictionStatus;
-use Modules\Legal\Filament\Resources\InterdicationResource\Pages;
+use Modules\Legal\Filament\Resources\InterdictionResource\Pages;
 use Modules\Legal\Models\Incident;
 use Modules\Legal\Models\Interdiction;
 
@@ -18,9 +19,9 @@ class InterdictionResource extends Resource
 {
     protected static ?string $model = Interdiction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Occurrences';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -28,6 +29,7 @@ class InterdictionResource extends Resource
             ->columns(3)
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
+                    ->label('Serviceperson')
                     ->helperText('Search by number, first name, middle name or last name')
                     ->searchable(['number', 'first_name', 'middle_name', 'last_name'])
                     ->searchable()
@@ -39,6 +41,7 @@ class InterdictionResource extends Resource
                             ->pluck('military_name', 'number');
                     }),
                 Forms\Components\Select::make('incident_id')
+                    ->label('Incident')
                     ->placeholder(fn (Get $get) => $get('serviceperson')
                         ? 'Select an incident'
                         : 'Select Serviceperson first')
@@ -53,9 +56,9 @@ class InterdictionResource extends Resource
                             ->get()
                             ->pluck('name', 'id');
                     })
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->validationMessages([
-                        'unique' => 'An :attribute record already exist for this incident',
+                        'unique' => 'A interdiction record already exist for this incident',
                     ])
                     ->required(),
                 Forms\Components\Select::make('status')
@@ -63,20 +66,37 @@ class InterdictionResource extends Resource
                     ->enum(InterdictionStatus::class)
                     ->default(InterdictionStatus::Pending)
                     ->required()
-                    ->live(),
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        if ($state == InterdictionStatus::Pending->value) {
+                            $set('interdicted_at', null);
+                            $set('revoked_at', null);
+                        }
+                    }),
                 Forms\Components\DateTimePicker::make('requested_at')
                     ->label('Date Requested')
                     ->required()
                     ->beforeOrEqual('now'),
                 Forms\Components\DateTimePicker::make('interdicted_at')
                     ->label('Date Interdicted')
-                    ->required(fn (Get $get) => $get('status') !== InterdictionStatus::Pending)
+                    ->required(fn (Get $get) => $get('status') == InterdictionStatus::Interdicted->value)
                     ->beforeOrEqual('now')
-                    ->after('requested_at'),
-                Forms\Components\DateTimePicker::make('lifted_at')
-                    ->label('Date Lifted')
-                    ->required(fn (Get $get) => $get('status') === InterdictionStatus::Lifted)
-                    ->after('interdicted_at'),
+                    ->after('requested_at')
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        if ($state) {
+                            $set('status', InterdictionStatus::Interdicted);
+                        }
+                    }),
+                Forms\Components\DateTimePicker::make('revoked_at')
+                    ->label('Date Revoked')
+                    ->required(fn (Get $get) => $get('status') == InterdictionStatus::Revoked->value)
+                    ->after('interdicted_at')
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        if ($state) {
+                            $set('status', InterdictionStatus::Revoked);
+                        }
+                    }),
                 Interdiction::getReferences()->columnSpanFull(),
                 Forms\Components\RichEditor::make('particulars')
                     ->columnSpanFull(),
@@ -87,11 +107,14 @@ class InterdictionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('incident.serviceperson.name')
+                Tables\Columns\TextColumn::make('incident.serviceperson.military_name')
                     ->description(function ($record) {
-                        return $record->name;
+                        return $record->incident->serviceperson?->company?->short_name;
                     })
                     ->label('Serviceperson'),
+                Tables\Columns\TextColumn::make('incident.type')
+                    ->label('Type')
+                    ->description(fn ($record) => $record->incident->date),
                 Tables\Columns\TextColumn::make('incident.charges.offenceSection.name')
                     ->listWithLineBreaks()
                     ->bulleted()
@@ -99,24 +122,34 @@ class InterdictionResource extends Resource
                     ->label('Charges'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
+                Tables\Columns\TextColumn::make('requested_at')
+                    ->toggleable(isToggledHiddenByDefault: function ($record) {
+                        return $record?->status !== InterdictionStatus::Pending;
+                    })
+                    ->label('Request Date')
+                    ->date(config('legal.date')),
                 Tables\Columns\TextColumn::make('interdicted_at')
+                    ->toggleable()
                     ->label('Interdiction Date')
                     ->placeholder('Pending Response')
-                    ->date(),
-                Tables\Columns\TextColumn::make('lifted_at')
-                    ->label('Interdiction Lift Date')
+                    ->date(config('legal.date')),
+                Tables\Columns\TextColumn::make('revoked_at')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Revocation Date')
                     ->placeholder(function ($record) {
-                        return $record->status === InterdictionStatus::Interdicted
+                        return $record->status == InterdictionStatus::Interdicted
                             ? 'On going'
                             : 'Pending Response';
                     })
                     ->date(),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(InterdictionStatus::class),
+            ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->slideOver(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -135,9 +168,7 @@ class InterdictionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInterdications::route('/'),
-            'create' => Pages\CreateInterdication::route('/create'),
-            'edit' => Pages\EditInterdication::route('/{record}/edit'),
+            'index' => Pages\ListInterdiction::route('/'),
         ];
     }
 }

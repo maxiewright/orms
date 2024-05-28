@@ -4,12 +4,13 @@ return [
     'name' => 'Legal',
 
     /*
-     * The accused model and database table
+     * The date and time formats used by the module
      */
-
     'timezones' => 'America/Port_of_Spain',
-    'datetime_format' => 'D d M y, H:i',
-    'date_format' => 'Y-m-d',
+
+    'datetime' => 'd M Y \a\t\ Hi\h\r\s',
+
+    'date' => 'd M Y',
 
     /*
      * The address classed used for all address fields in the module

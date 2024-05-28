@@ -2,7 +2,9 @@
 
 namespace Modules\Legal\Database\Factories;
 
+use App\Models\Metadata\Contact\Division;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Legal\Enums\JusticeInstitutionType;
 
 class JusticeInstitutionFactory extends Factory
 {
@@ -16,7 +18,21 @@ class JusticeInstitutionFactory extends Factory
      */
     public function definition(): array
     {
-        return [];
+        $division = Division::all()->random()->id;
+        $city = Division::find($division)->cities->random()->id;
+
+        return [
+            'name' => fake()->company(),
+            'type' => fake()->randomElement(JusticeInstitutionType::cases())->value,
+            'address_line_1' => fake()->streetAddress(),
+            'address_line_2' => null,
+            'division_id' => $division,
+            'city_id' => $city,
+        ];
+    }
+
+    public function whereType($type): self
+    {
+        return $this->state(fn () => ['type' => $type]);
     }
 }
-

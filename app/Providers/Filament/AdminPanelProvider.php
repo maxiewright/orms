@@ -3,16 +3,13 @@
 namespace App\Providers\Filament;
 
 use App\Actions\ChangePasswordAction;
-use App\Actions\FilamentPasswordAction;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Coolsam\Modules\ModulesPlugin;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
@@ -25,11 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
-use RalphJSmit\Filament\Onboard\FilamentOnboard;
-use RalphJSmit\Filament\Onboard\Http\Livewire\Wizard;
 use RalphJSmit\Filament\Onboard\Http\Middleware\OnboardMiddleware;
-use RalphJSmit\Filament\Onboard\Step;
-use RalphJSmit\Filament\Onboard\Track;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,8 +30,10 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('/admin')
+            ->brandName('ORMS - Servicepeople')
+            ->id('servicepeople')
+//            ->path('/admin')
+            ->domain(app()->isProduction() ? 'servicepeople.orms.app' : 'servicepeople.orms.test')
             ->login()
             ->emailVerification()
             ->sidebarFullyCollapsibleOnDesktop()
@@ -52,7 +47,9 @@ class AdminPanelProvider extends PanelProvider
             ->navigationItems([
                 NavigationItem::make('Legal')
                     ->icon('heroicon-o-document-text')
-                    ->url(url('legal'))
+                    ->url(function () {
+                        return filament()->getPanel('legal')->route('pages.dashboard');
+                    })
                     ->group('Servicepeople'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

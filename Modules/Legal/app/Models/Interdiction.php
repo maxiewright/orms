@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Modules\Legal\Database\Factories\InterdicationFactory;
+use Modules\Legal\Database\Factories\InterdictionFactory;
 use Modules\Legal\Enums\InterdictionStatus;
 use Modules\Legal\traits\HasReferences;
 
@@ -23,7 +24,7 @@ class Interdiction extends Model
         'incident_id',
         'requested_at',
         'interdicted_at',
-        'lifted_at',
+        'revoked_at',
         'status',
         'particulars',
     ];
@@ -43,10 +44,5 @@ class Interdiction extends Model
     public function incident(): BelongsTo
     {
         return $this->belongsTo(Incident::class);
-    }
-
-    public function serviceperson(): HasOneThrough
-    {
-        return $this->hasOneThrough(Serviceperson::class, Incident::class);
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Legal\Database\Factories\CourtAppearanceFactory;
-use Modules\Legal\Enums\CourtAppearanceOutcome;
+use Modules\Legal\Enums\CourtApperance\CourtAppearanceOutcome;
 use Modules\Legal\Enums\JusticeInstitutionType;
 use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional;
 use Modules\Legal\Models\Ancillary\CourtAppearance\ServicepersonCourtAppearance;

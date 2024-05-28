@@ -31,7 +31,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(OffenceDivision::class)->constrained();
             $table->string('section_number');
-            $table->unique(['offence_division_id', 'section_number'], 'offence_division_section_number');
+            $table->unique(['offence_division_id', 'section_number'], 'offence_division_section_number_unique');
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('particulars')->nullable();
@@ -54,6 +54,8 @@ return new class extends Migration
 
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->string('type');
             $table->foreignId('serviceperson_number')->constrained('servicepeople', 'number');
             $table->dateTime('occurred_at');
@@ -76,7 +78,9 @@ return new class extends Migration
             $table->dateTime('charged_at');
             $table->foreignIdFor(JusticeInstitution::class)->constrained();
             $table->string('charged_by')->nullable();
+            $table->text('particulars')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('legal_tags', function (Blueprint $table) {

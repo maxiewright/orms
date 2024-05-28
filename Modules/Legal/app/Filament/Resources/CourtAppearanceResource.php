@@ -15,8 +15,8 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Modules\Legal\Enums\CourtAppearanceOutcome;
-use Modules\Legal\Enums\CourtAppearanceReason;
+use Modules\Legal\Enums\CourtApperance\CourtAppearanceOutcome;
+use Modules\Legal\Enums\CourtApperance\CourtAppearanceReason;
 use Modules\Legal\Enums\JusticeInstitutionType;
 use Modules\Legal\Enums\LegalProfessionalType;
 use Modules\Legal\Filament\Resources\CourtAppearanceResource\Pages;
@@ -29,9 +29,9 @@ class CourtAppearanceResource extends Resource
 {
     protected static ?string $model = CourtAppearance::class;
 
-    protected static ?string $navigationGroup = 'Court';
+    protected static ?string $navigationGroup = 'Court Matters';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

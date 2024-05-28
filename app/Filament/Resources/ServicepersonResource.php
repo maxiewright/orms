@@ -42,7 +42,7 @@ class ServicepersonResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordUrl(fn (Serviceperson $record) => route('filament.admin.resources.servicepeople.view', $record))
+            ->recordUrl(fn (Serviceperson $record) => route('filament.servicepeople.resources.servicepeople.view', $record))
             ->columns([
                 Tables\Columns\ImageColumn::make('image_url')
                     ->label('Photo')

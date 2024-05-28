@@ -25,12 +25,12 @@ return new class extends Migration
 
         Schema::create('legal_correspondences', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(LegalCorrespondenceType::class)->constrained();
             $table->string('reference');
             $table->dateTime('date');
             $table->string('name');
-            $table->string('subject');
             $table->string('slug');
-            $table->foreignIdFor(LegalCorrespondenceType::class)->constrained();
+            $table->string('subject');
             $table->string('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -51,7 +51,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->dateTime('requested_at');
             $table->dateTime('interdicted_at')->nullable();
-            $table->dateTime('lifted_at')->nullable();
+            $table->dateTime('revoked_at')->nullable();
             $table->string('status');
             $table->text('particulars')->nullable();
             $table->timestamps();
@@ -63,9 +63,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('interdiction_reference_document');
-        Schema::dropIfExists('interdiction');
-        Schema::dropIfExists('reference_documents');
-        Schema::dropIfExists('reference_document_types');
+        Schema::dropIfExists('interdictions');
+        Schema::dropIfExists('referenceables');
+        Schema::dropIfExists('legal_correspondences');
+        Schema::dropIfExists('legal_correspondence_types');
     }
 };

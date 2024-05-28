@@ -92,7 +92,7 @@ class ServicepersonFactory extends Factory
         $rank = fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
 
         return $this->state(fn () => [
-            'number' => fake()->unique()->numberBetween(9000, 14000),
+            'number' => fake()->unique()->numberBetween(15000, 20000),
             'rank_id' => $rank,
             'enlistment_date' => $this->getEnlistmentDate($rank),
             'enlistment_type_id' => EnlistmentTypeEnum::enlisted->value,
