@@ -11,6 +11,9 @@ class LegalDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            OffenceSeeder::class,
+            LegalCorrespondenceTypeSeeder::class,
+        ]);
     }
 }

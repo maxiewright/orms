@@ -41,12 +41,27 @@ class LegalCorrespondence extends Model implements HasMedia
         'particulars',
     ];
 
-    protected static function newFactory(): LegalCorrespondenceFactory
+    protected $casts = [
+        'date' => 'date',
+    ];
+
+    protected static function booted(): void
     {
-        return ReferenceDocumentFactory::new();
+        static::saving(function (LegalCorrespondence $correspondence) {
+            $reference = $correspondence->reference;
+            $date = $correspondence->date->format(config('legal.date'));
+            $subject = $correspondence->subject;
+
+            $correspondence->name = $reference.' dated '.$date.' - '.$subject;
+        });
     }
 
-    public function documentType(): BelongsTo
+    protected static function newFactory(): LegalCorrespondenceFactory
+    {
+        return LegalCorrespondenceFactory::new();
+    }
+
+    public function type(): BelongsTo
     {
         return $this->belongsTo(LegalCorrespondenceType::class, 'legal_correspondence_type_id');
     }
@@ -66,16 +81,16 @@ class LegalCorrespondence extends Model implements HasMedia
                 ->columnSpanFull()
                 ->schema([
                     Select::make('legal_correspondence_type_id')
-                        ->relationship('documentType', 'name')
+                        ->relationship(name: 'type', titleAttribute: 'name')
                         ->label('Document Type')
                         ->default($type)
                         ->required()
                         ->createOptionForm(LegalCorrespondenceType::getForm()),
                     TextInput::make('reference')
-                        ->label('Reference')
+                        ->label('Reference Number / Index')
                         ->required(),
                     DatePicker::make('date')
-                        ->label('Date')
+                        ->label('Document Dated')
                         ->required()
                         ->live()
                         ->afterStateUpdated(function (Get $get, Set $set, $state) {
@@ -86,15 +101,13 @@ class LegalCorrespondence extends Model implements HasMedia
                             $set('name', $name);
                         })
                         ->before('now'),
-                    TextInput::make('name')
-                        ->label('Name')
-                        ->required(),
                     TextInput::make('subject')
-                        ->label('Subject')
-                        ->columnSpan(2)
+                        ->label('Subject / Caption')
+                        ->columnSpanFull()
                         ->required(),
                 ]),
             SpatieMediaLibraryFileUpload::make('correspondence')
+                ->helperText('Upload the file related to the reference document that you are adding')
                 ->collection('legal_correspondence')
                 ->acceptedFileTypes(['application/pdf'])
                 ->columnSpanFull()

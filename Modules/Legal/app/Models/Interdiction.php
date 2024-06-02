@@ -6,8 +6,9 @@ use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Modules\Legal\Database\Factories\InterdicationFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Legal\Database\Factories\InterdictionFactory;
 use Modules\Legal\Enums\InterdictionStatus;
 use Modules\Legal\traits\HasReferences;
@@ -16,6 +17,7 @@ class Interdiction extends Model
 {
     use HasFactory;
     use HasReferences;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,13 +32,13 @@ class Interdiction extends Model
     ];
 
     protected $casts = [
-        'requested_at' => 'datetime',
-        'interdicted_at' => 'datetime',
-        'lifted_at' => 'datetime',
+        'requested_at' => 'datetime:Y-m-d H:i',
+        'interdicted_at' => 'datetime:Y-m-d H:i',
+        'lifted_at' => 'datetime:Y-m-d H:i',
         'status' => InterdictionStatus::class,
     ];
 
-    protected static function newFactory(): InterdicationFactory
+    protected static function newFactory(): InterdictionFactory
     {
         return InterdictionFactory::new();
     }
@@ -45,4 +47,29 @@ class Interdiction extends Model
     {
         return $this->belongsTo(Incident::class);
     }
+
+    public function serviceperson(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Serviceperson::class,
+            Incident::class,
+            'id',
+            'number',
+            'incident_id',
+            'serviceperson_number',
+        );
+    }
+    public function charges(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Charge::class,
+            Incident::class,
+            'id',
+            'incident_id',
+            'incident_id',
+            'id',
+        );
+    }
+
+
 }

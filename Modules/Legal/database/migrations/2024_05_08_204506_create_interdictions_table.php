@@ -55,6 +55,7 @@ return new class extends Migration
             $table->string('status');
             $table->text('particulars')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

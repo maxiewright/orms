@@ -16,10 +16,10 @@ trait HasReferences
     public static function getReferences()
     {
         return Select::make('references')
-            ->relationship('references', 'name')
+            ->relationship(name: 'references', titleAttribute: 'name')
             ->createOptionForm(LegalCorrespondence::getForm())
             ->label('Reference Documents')
-            ->searchable()
+            ->searchable(['reference', 'date', 'subject'])
             ->multiple()
             ->preload();
     }

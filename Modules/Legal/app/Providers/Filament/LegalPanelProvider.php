@@ -12,6 +12,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -31,6 +32,13 @@ class LegalPanelProvider extends PanelProvider
     {
         return $panel
             ->login()
+
+
+            ->brandName('ORMS - Legal')
+            ->id('legal')
+            ->domain(app()->isProduction() ? 'legal.orms.app' : 'legal.orms.test')
+            ->sidebarFullyCollapsibleOnDesktop()
+//            ->maxContentWidth(MaxWidth::Full)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -38,13 +46,6 @@ class LegalPanelProvider extends PanelProvider
                 'primary' => Color::Indigo,
                 'success' => Color::Emerald,
                 'warning' => Color::Rose,
-            ])
-            ->brandName('ORMS - Legal')
-            ->id('legal')
-            ->domain(app()->isProduction() ? 'legal.orms.app' : 'legal.orms.test')
-            ->sidebarFullyCollapsibleOnDesktop()
-            ->colors([
-                'primary' => Color::Amber,
             ])
             ->navigationGroups([
                 NavigationGroup::make('Occurrences')

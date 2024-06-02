@@ -5,22 +5,29 @@ namespace Modules\Legal\Models;
 use App\Models\Serviceperson;
 use App\Traits\HasAddress;
 use App\Traits\SluggableByName;
+use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Legal\Database\Factories\IncidentFactory;
 use Modules\Legal\Enums\Incident\IncidentStatus;
 use Modules\Legal\Enums\Incident\IncidentType;
+use Modules\Legal\traits\HasBasicFilters;
 
 class Incident extends Model
 {
     use HasAddress;
     use HasFactory;
     use SluggableByName;
+    use SoftCascadeTrait;
     use SoftDeletes;
+    use HasBasicFilters;
+
+    protected array $softCascade = ['charges', 'interdiction'];
 
     /**
      * The attributes that are mass assignable.
@@ -71,5 +78,10 @@ class Incident extends Model
     public function date(): Attribute
     {
         return Attribute::get(fn () => $this->occurred_at->format('d M Y'));
+    }
+
+    public function interdiction(): HasOne
+    {
+        return $this->hasOne(Interdiction::class);
     }
 }

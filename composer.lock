@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9dcb8abd448aa515270e56ff02ce85b8",
+    "content-hash": "77f55a5c547a6566c1fbfcb0e51c357d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -71,6 +71,62 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.2.22"
             },
             "time": "2024-03-22T12:56:46+00:00"
+        },
+        {
+            "name": "askedio/laravel-soft-cascade",
+            "version": "11.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Askedio/laravel-soft-cascade.git",
+                "reference": "0ea4b911fc515edd0b5e53a88d566b0a5c79a88c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Askedio/laravel-soft-cascade/zipball/0ea4b911fc515edd0b5e53a88d566b0a5c79a88c",
+                "reference": "0ea4b911fc515edd0b5e53a88d566b0a5c79a88c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "^10.0|^11.0",
+                "illuminate/database": "^10.0|^11.0",
+                "illuminate/events": "^10.0|^11.0",
+                "illuminate/support": "^10.0|^11.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0|^9.0",
+                "phpunit/phpunit": "^10.0|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Askedio\\SoftCascade\\Providers\\GenericServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Askedio\\SoftCascade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Will Bowman",
+                    "homepage": "https://medium.com/@asked_io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Cascade Soft Delete & Restore",
+            "support": {
+                "issues": "https://github.com/Askedio/laravel-soft-cascade/issues",
+                "source": "https://github.com/Askedio/laravel-soft-cascade/tree/11.0.0"
+            },
+            "time": "2024-03-14T14:57:24+00:00"
         },
         {
             "name": "awcodes/filament-table-repeater",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Tests\Unit;
+namespace Modules\Legal\Tests\Feature;
 
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Repeater;
@@ -64,6 +64,13 @@ it('can create an incident without charge', function () {
     $fakeRepeater();
 
 });
+
+it('can upload a reference document with an incident', function () {
+    // Arrange
+
+    // Act and Assert
+
+})->todo();
 
 it('can create an incident with charge', function () {
 
@@ -157,7 +164,7 @@ it('sets the incident with charges on the incident edit page', function () {
         ]);
 
     $fakeRepeater();
-});
+})->todo();
 
 it('sets all charges for the incident on the edit page', function () {
     $fakeRepeater = Repeater::fake();

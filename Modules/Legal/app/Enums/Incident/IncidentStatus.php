@@ -26,9 +26,9 @@ enum IncidentStatus: string implements HasColor, HasLabel
     {
         return match ($this) {
             self::PendingCharge => 'gray',
-            self::Charged => 'yellow',
-            self::Dismissed => 'green',
-            self::Convicted => 'red',
+            self::Charged => 'warning',
+            self::Dismissed => 'success',
+            self::Convicted => 'danger',
         };
     }
 }

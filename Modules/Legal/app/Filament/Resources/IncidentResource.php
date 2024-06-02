@@ -25,6 +25,10 @@ use Modules\Legal\Enums\Incident\IncidentType;
 use Modules\Legal\Filament\Resources\IncidentResource\Pages;
 use Modules\Legal\Models\Charge;
 use Modules\Legal\Models\Incident;
+use Modules\Legal\Services\Filters\DateBetweenFilter;
+use Modules\Legal\Services\Filters\ServicepersonFilter;
+use Modules\Legal\Services\Filters\StatusFilter;
+use Modules\Legal\Services\Filters\TypeFilter;
 
 class IncidentResource extends Resource
 {
@@ -135,6 +139,7 @@ class IncidentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Incident::query())
             ->recordUrl(fn (Model $record): string => route('filament.legal.resources.incidents.view', $record))
             ->columns([
                 Tables\Columns\TextColumn::make('serviceperson.military_name')
@@ -159,6 +164,10 @@ class IncidentResource extends Resource
                     ->wrap()
                     ->label('Incident Location')
                     ->searchable(['address_line_1', 'address_line_2', 'division.name', 'city.name']),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->badge()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -170,39 +179,12 @@ class IncidentResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-
-                Tables\Filters\SelectFilter::make('status')
-                    ->options(IncidentStatus::class)
-                    ->multiple()
-                    ->preload()
-                    ->label('Status'),
-                Tables\Filters\SelectFilter::make('rank')
-                    ->relationship('serviceperson.rank', 'regiment_abbreviation')
-                    ->label('Rank')
-                    ->multiple()
-                    ->preload(),
-                Tables\Filters\SelectFilter::make('battalion')
-                    ->relationship('serviceperson.battalion', 'name')
-                    ->label('Battalion')
-                    ->multiple()
-                    ->preload(),
-                Tables\Filters\Filter::make('occurred_at')
-                    ->columns()
-                    ->columnSpan(2)
-                    ->form([
-                        Forms\Components\DatePicker::make('occurred_from'),
-                        Forms\Components\DatePicker::make('occurred_to'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['occurred_from'],
-                                fn (Builder $query, $date): Builder => $query
-                                    ->whereDate('occurred_at', '>=', $date))
-                            ->when($data['occurred_to'],
-                                fn (Builder $query, $date): Builder => $query
-                                    ->whereDate('occurred_at', '<=', $date));
-                    }),
-                Tables\Filters\TrashedFilter::make(),
+                ServicepersonFilter::rank(),
+                ServicepersonFilter::battalion(),
+                ServicepersonFilter::company(),
+                StatusFilter::make(options: IncidentStatus::class),
+                TypeFilter::make(options: IncidentType::class),
+                DateBetweenFilter::make('occurred_at', 'occurred_from', 'occurred_to'),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->filtersFormColumns(5)
             ->actions([

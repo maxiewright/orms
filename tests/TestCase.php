@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->seed();
         $this->artisan('db:seed', ['--class' => 'AdminServicepersonSeeder']);
-        $this->artisan('module:seed', ['module' => 'Legal', '--class' => 'OffenceSeeder']);
+        $this->artisan('module:seed', ['module' => 'Legal']);
         $this->artisan('shield:generate');
         $this->artisan('shield:super-admin', ['--user' => 1]);
 

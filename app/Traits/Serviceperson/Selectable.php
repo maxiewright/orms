@@ -14,6 +14,5 @@ trait Selectable
             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
             ->helperText('Search by number, first name, middle name or last name')
             ->searchable(['number', 'first_name', 'middle_name', 'last_name']);
-
     }
 }
