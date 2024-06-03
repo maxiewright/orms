@@ -21,6 +21,7 @@ return new class extends Migration
             $table->dateTime('incarcerated_at');
             $table->foreignIdFor(JusticeInstitution::class)->constrained();
             $table->dateTime('released_at')->nullable();
+            $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +33,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('incarcerations');
-        Schema::dropIfExists('prisons');
     }
 };

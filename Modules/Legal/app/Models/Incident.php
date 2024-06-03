@@ -6,6 +6,7 @@ use App\Models\Serviceperson;
 use App\Traits\HasAddress;
 use App\Traits\SluggableByName;
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,17 +22,14 @@ use Modules\Legal\traits\HasBasicFilters;
 class Incident extends Model
 {
     use HasAddress;
+    use HasBasicFilters;
     use HasFactory;
     use SluggableByName;
     use SoftCascadeTrait;
     use SoftDeletes;
-    use HasBasicFilters;
 
-    protected array $softCascade = ['charges', 'interdiction'];
+    protected array $softCascade = ['charges', 'interdiction', 'incarcerations'];
 
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
         'name',
         'type',
@@ -54,6 +52,23 @@ class Incident extends Model
     protected $with = ['city', 'division'];
 
     protected $appends = ['address'];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Incident $incident) {
+            self::setName($incident);
+        });
+    }
+
+    public function occurrenceDateAndTime(): Attribute
+    {
+        return Attribute::get(fn () => $this->occurred_at->format(config('legal.datetime')));
+    }
+
+    public function occurrenceDate(): Attribute
+    {
+        return Attribute::get(fn () => $this->occurred_at->format(config('legal.date')));
+    }
 
     protected static function newFactory(): IncidentFactory
     {
@@ -83,5 +98,23 @@ class Incident extends Model
     public function interdiction(): HasOne
     {
         return $this->hasOne(Interdiction::class);
+    }
+
+    public function incarcerations(): HasMany
+    {
+        return $this->hasMany(Incarceration::class);
+    }
+
+    public function lastIncarceration(): HasOne
+    {
+        return $this->hasOne(Incarceration::class)->latestOfMany();
+    }
+
+    private static function setName(Incident $incident): void
+    {
+        $type = $incident->type->value;
+        $time = Carbon::make($incident->occurred_at)->format('d M Y');
+
+        $incident->name = "$incident->serviceperson_number $type $time";
     }
 }

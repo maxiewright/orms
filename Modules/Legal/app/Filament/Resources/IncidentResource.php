@@ -4,12 +4,10 @@ namespace Modules\Legal\Filament\Resources;
 
 use App\Models\Metadata\Contact\City;
 use App\Models\Serviceperson;
-use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -44,60 +42,33 @@ class IncidentResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Incident Details')
                     ->columnSpanFull()
-                    ->columns(3)
+                    ->columns(4)
                     ->schema([
                         Serviceperson::make()
                             ->label('Serviceperson')
                             ->required()
                             ->live(),
                         Forms\Components\Select::make('type')
-                            ->helperText(function (Get $get) {
-                                return $get('occurred_at')
-                                    ? 'Select the type of incident that occurred.'
-                                    : 'Select a serviceperson first to enable this field.';
-                            })
-                            ->disabled(fn (Get $get) => ! $get('serviceperson_number'))
                             ->options(IncidentType::class)
                             ->required()
                             ->live(),
                         Forms\Components\DateTimePicker::make('occurred_at')
-                            ->helperText(function (Get $get) {
-                                return $get('serviceperson_number')
-                                    ? 'Select the date and time the incident occurred.'
-                                    : 'Select a date and time first to enable this field.';
-                            })
                             ->label('Date and Time')
-                            ->disabled(fn (Get $get) => ! $get('type'))
                             ->required()
                             ->before('now')
                             ->seconds(false)
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, Get $get, $state) {
-                                $serviceperson = Serviceperson::find($get('serviceperson_number'));
-                                $type = $get('type');
-                                $time = Carbon::make($state)->format('d M Y');
-
-                                if ($serviceperson && $time) {
-                                    $set('name', "$serviceperson->number $type $time");
-                                }
-                            }),
+                            ->live(),
                         Forms\Components\Select::make('status')
                             ->options(IncidentStatus::class)
                             ->default(function (?Incident $incident) {
                                 if ($incident->charges()->exists()) {
                                     return IncidentStatus::Charged;
                                 }
-
                                 return IncidentStatus::PendingCharge;
                             })
                             ->enum(IncidentStatus::class)
                             ->required()
                             ->live(),
-                        Forms\Components\TextInput::make('name')
-                            ->helperText('This field is automatically generated based on the serviceperson, incident type, and date of the incident.')
-                            ->readOnly()
-                            ->label('Incident Identifier')
-                            ->required(),
                     ]),
                 Forms\Components\Section::make('Location')
                     ->columnSpanFull()
@@ -124,7 +95,7 @@ class IncidentResource extends Resource
                             ->required(),
                     ]),
                 Repeater::make('charges')
-                    ->hidden(fn (Get $get) => $get('status') === IncidentStatus::PendingCharge->value)
+                    ->hidden(fn (Get $get) => $get('status') === IncidentStatus::PendingCharge)
                     ->relationship('charges')
                     ->columns(3)
                     ->columnSpanFull()
@@ -178,6 +149,7 @@ class IncidentResource extends Resource
                     ->label('Charges')
                     ->sortable(),
             ])
+            ->defaultSort('occurred_at', 'desc')
             ->filters([
                 ServicepersonFilter::rank(),
                 ServicepersonFilter::battalion(),

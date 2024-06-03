@@ -26,7 +26,7 @@ class ViewInterdiction extends ViewRecord
             Fieldset::make('Interdiction')
                 ->columns(4)
                 ->schema([
-                    TextEntry::make('incident.serviceperson')
+                    TextEntry::make('serviceperson')
                         ->label('Serviceperson')
                         ->formatStateUsing(function ($state) {
                             return "$state->military_name <br> {$state->battalion?->short_name} - {$state->company?->short_name}";

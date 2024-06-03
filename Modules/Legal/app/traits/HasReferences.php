@@ -12,7 +12,6 @@ trait HasReferences
     {
         return $this->morphToMany(LegalCorrespondence::class, 'referenceable');
     }
-
     public static function getReferences()
     {
         return Select::make('references')

@@ -131,6 +131,7 @@ class InterdictionResource extends Resource
                     ->description(function ($record) {
                         return $record->serviceperson?->company?->short_name;
                     })
+                    ->searchable(['name', 'first_name', 'last_name'])
                     ->label('Serviceperson'),
                 Tables\Columns\TextColumn::make('incident.type')
                     ->label('Incident')
@@ -145,15 +146,18 @@ class InterdictionResource extends Resource
                 Tables\Columns\TextColumn::make('requested_at')
                     ->date(config('legal.date'))
                     ->label('Request Date')
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('interdicted_at')
                     ->toggleable()
                     ->label('Interdiction Date')
                     ->placeholder('Pending Response')
+                    ->sortable()
                     ->date(config('legal.date')),
                 Tables\Columns\TextColumn::make('revoked_at')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Revocation Date')
+                    ->sortable()
                     ->placeholder(function ($record) {
                         return $record->status == InterdictionStatus::Interdicted
                             ? 'On going'
@@ -161,6 +165,7 @@ class InterdictionResource extends Resource
                     })
                     ->date(),
             ])
+            ->defaultSort('requested_at')
             ->recordAction(Tables\Actions\ViewAction::class)
             ->filters([
                 ServicepersonFilter::rank(),
