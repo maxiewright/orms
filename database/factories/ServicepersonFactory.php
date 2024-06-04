@@ -30,12 +30,27 @@ class ServicepersonFactory extends Factory
      */
     public function definition(): array
     {
+        $retirementAge = new GetCompulsoryRetirementAgeAction;
+        $number = fake()->unique()->numberBetween(10000, 50000);
+        $rank = ($number < 15000)
+            ? fake()->numberBetween(RankEnum::O1->value, RankEnum::O5->value)
+            : fake()->numberBetween(RankEnum::E1->value, RankEnum::E8->value);
+        $enlistmentDate = $this->getEnlistmentDate($rank);
+        $enlistmentType = ($number < 15000)
+            ? EnlistmentTypeEnum::regularOfficer->value || EnlistmentTypeEnum::specialServiceOfficer
+            : EnlistmentTypeEnum::enlisted->value;
+        $dateOfBirth = fake()->dateTimeBetween($retirementAge->getRetirementAge($rank), '-18 years');
 
         $battalion = Battalion::all()->random();
 
         return [
             // Service Data
             'formation_id' => FormationEnum::Regiment,
+            'number' => $number,
+            'rank_id' => $rank,
+            'enlistment_date' => $enlistmentDate,
+            'enlistment_type_id' => $enlistmentType,
+            'date_of_birth' => $dateOfBirth,
 
             // Basic Information
             'image' => fake()->imageUrl(),

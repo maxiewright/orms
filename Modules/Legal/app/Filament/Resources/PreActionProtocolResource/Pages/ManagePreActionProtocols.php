@@ -4,16 +4,16 @@ namespace Modules\Legal\Filament\Resources\PreActionProtocolResource\Pages;
 
 use Modules\Legal\Filament\Resources\PreActionProtocolResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ManageRecords;
 
-class EditPreActionProtocol extends EditRecord
+class ManagePreActionProtocols extends ManageRecords
 {
     protected static string $resource = PreActionProtocolResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make()->slideOver(),
         ];
     }
 }

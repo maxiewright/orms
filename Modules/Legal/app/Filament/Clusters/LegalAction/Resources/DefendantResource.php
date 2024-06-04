@@ -8,7 +8,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Modules\Legal\Filament\Clusters\LegalAction;
 use Modules\Legal\Filament\Clusters\LegalAction\Resources\DefendantResource\Pages;
-use Modules\Legal\Models\Defendant;
+use Modules\Legal\Models\LegalAction\Defendant;
 
 class DefendantResource extends Resource
 {

@@ -8,7 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Legal\Database\Factories\LegalProfesionalFactory;
+use Modules\Legal\Database\Factories\LegalProfessionalFactory;
 use Modules\Legal\Enums\LegalProfessionalType;
 use Modules\Legal\Models\CourtAppearance;
 
@@ -30,9 +30,9 @@ class LegalProfessional extends Model
         'type' => LegalProfessionalType::class,
     ];
 
-    protected static function newFactory(): LegalProfesionalFactory
+    protected static function newFactory(): LegalProfessionalFactory
     {
-        return LegalProfesionalFactory::new();
+        return LegalProfessionalFactory::new();
     }
 
     public function courtAppearance(): HasMany

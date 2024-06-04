@@ -6,12 +6,13 @@ use App\Models\Serviceperson;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional;
 use Modules\Legal\Models\Ancillary\Litigation\LitigationReason;
 use Modules\Legal\Models\Ancillary\Litigation\LitigationRuling;
 use Modules\Legal\Models\Ancillary\Litigation\PreActionProtocolType;
-use Modules\Legal\Models\Defendant;
+use Modules\Legal\Models\LegalAction\Defendant;
+use Modules\Legal\Models\LegalAction\PreActionProtocol;
 use Modules\Legal\Models\Litigation;
-use Modules\Legal\Models\PreActionProtocol;
 
 return new class extends Migration
 {
@@ -63,9 +64,9 @@ return new class extends Migration
 
         Schema::create('pre_action_protocols', function (Blueprint $table) {
             $table->id();
+            $table->string('subject')->unique();
             $table->foreignIdFor(PreActionProtocolType::class)->constrained();
             $table->foreignId('parent_id')->nullable()->constrained('pre_action_protocols');
-            $table->foreignId('lawyer_id')->nullable()->constrained('legal_professionals');
             $table->dateTime('dated_at');
             $table->foreignId('received_by')->constrained('servicepeople', 'number');
             $table->dateTime('received_at');
@@ -117,6 +118,13 @@ return new class extends Migration
             $table->foreignIdFor(Defendant::class)->constrained();
             $table->foreignIdFor(PreActionProtocol::class)->constrained();
             $table->unique(['defendant_id', 'pre_action_protocol_id'], 'defendant_pre_action_protocol_unique');
+            $table->timestamps();
+        });
+
+        Schema::create('legal_professional_pre_action_protocol', function (Blueprint $table) {
+            $table->foreignIdFor(LegalProfessional::class)->constrained();
+            $table->foreignIdFor(PreActionProtocol::class)->constrained();
+            $table->unique(['legal_professional', 'pre_action_protocol_id'], 'legal_professional_pre_action_protocol_unique');
             $table->timestamps();
         });
 
