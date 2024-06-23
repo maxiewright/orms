@@ -26,4 +26,13 @@
 
     {{-- Vite JS --}}
     {{-- {{ module_vite('build-legal', 'resources/assets/js/app.js') }} --}}
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            window.Echo.private('App.Models.User.1')
+                .listen('PreActionProtocolReceived', (event) => {
+                    // Do something with the event
+                });
+        });
+    </script>
 </body>
