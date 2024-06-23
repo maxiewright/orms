@@ -7,6 +7,7 @@ use App\Models\Serviceperson;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -34,12 +35,21 @@ class UserResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->reactive()
-                    ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                        $serviceperson = Serviceperson::query()->find($state);
-                        $userName = $serviceperson->number.
-                            Str::lower($serviceperson->last_name).
-                            Str::lower(Str::substr($serviceperson->first_name, 0, 1));
-                        $set('name', $userName);
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        if ($state) {
+                            $serviceperson = Serviceperson::query()->find($state);
+                            $firstName = Str::of($serviceperson->first_name)->lower()->replace(' ', '');
+                            $lastName = Str::of($serviceperson->last_name)->lower()->replace(' ', '');
+                            $userName = $serviceperson->number.$lastName.Str::substr($firstName, 0, 1);
+
+                            $set('name', trim($userName));
+                            $set('email', $firstName.'.'.$lastName.'@ttdf.mil.tt');
+
+                            return;
+                        }
+
+                        $set('name', '');
+                        $set('email', '');
                     }),
                 Forms\Components\TextInput::make('name')
                     ->label('Username')
@@ -49,9 +59,12 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->confirmed()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email_confirmation'),
+                    ->confirmed(fn (?User $record, $state) => ! $record || $record->email !== $state)
+                    ->maxLength(255)
+                    ->live(),
+                Forms\Components\TextInput::make('email_confirmation')
+                    ->hidden(fn (?User $record, Forms\Get $get) => $record && ($record->email === $get('email')))
+                    ->live(),
                 Forms\Components\Select::make('user.roles')
                     ->relationship('roles', 'name')
                     ->multiple()
