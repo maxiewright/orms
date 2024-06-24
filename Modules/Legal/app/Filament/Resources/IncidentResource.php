@@ -27,6 +27,7 @@ use Modules\Legal\Services\Filters\DateBetweenFilter;
 use Modules\Legal\Services\Filters\ServicepersonFilter;
 use Modules\Legal\Services\Filters\StatusFilter;
 use Modules\Legal\Services\Filters\TypeFilter;
+use Modules\Legal\Services\Table\TableColumn;
 
 class IncidentResource extends Resource
 {
@@ -110,31 +111,17 @@ class IncidentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Incident::query())
+            ->query(Incident::query()->with('serviceperson.battalion', 'serviceperson.company'))
             ->recordUrl(fn (Model $record): string => route('filament.legal.resources.incidents.view', $record))
             ->columns([
-                Tables\Columns\TextColumn::make('serviceperson.military_name')
-                    ->description(function ($record): string {
-                        $record->serviceperson->load(['battalion', 'company']);
-                        $battalion = $record->serviceperson->battalion;
-
-                        if ($battalion) {
-                            return $record->serviceperson?->battalion?->short_name.' - '.$record->serviceperson?->company?->short_name;
-                        }
-
-                        return '';
-                    })
-                    ->label('Serviceperson')
-                    ->searchable(['serviceperson.number', 'serviceperson.first_name', 'serviceperson.middle_name', 'serviceperson.last_name'])
-                    ->sortable(),
+                TableColumn::serviceperson(),
                 Tables\Columns\TextColumn::make('occurred_at')
                     ->dateTime(config('legal.datetime'))
                     ->label('Date and Time')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('address')
                     ->wrap()
-                    ->label('Incident Location')
-                    ->searchable(['address_line_1', 'address_line_2', 'division.name', 'city.name']),
+                    ->label('Incident Location'),
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->badge()

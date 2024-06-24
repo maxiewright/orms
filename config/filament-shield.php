@@ -56,6 +56,7 @@ return [
 
     'generator' => [
         'option' => 'policies_and_permissions',
+        'policy_directory' => '/../Modules/Legal/app/Policies',
     ],
 
     'exclude' => [

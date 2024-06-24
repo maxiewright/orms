@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Database\Factories;
+namespace Modules\Legal\Database\Factories\LegalAction;
 
 use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -32,7 +32,7 @@ class PreActionProtocolFactory extends Factory
             'received_by' => Serviceperson::all()->random()->number,
             'received_at' => $dateReceived,
             'respond_by' => $respondBy,
-            'status' => PreActionProtocolStatus::Pending,
+            'status' => PreActionProtocolStatus::Received,
             'responded_at' => null,
         ];
     }
@@ -49,5 +49,22 @@ class PreActionProtocolFactory extends Factory
         return $this->state(fn () => [
             'status' => $status,
         ]);
+    }
+
+    public function responseImminent(): self
+    {
+        return $this->state(fn () => [
+            'respond_by' => fake()->dateTimeBetween('-3 days'),
+            'responded_at' => null,
+        ]);
+    }
+
+    public function defaulted(): self
+    {
+        return $this->state(fn () => [
+            'respond_by' => fake()->dateTimeBetween('+1 day', '+30 day'),
+            'responded_at' => null,
+        ]);
+
     }
 }

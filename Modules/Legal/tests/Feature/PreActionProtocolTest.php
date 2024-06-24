@@ -3,17 +3,23 @@
 namespace Modules\Legal\Tests\Feature;
 
 use App\Models\Serviceperson;
-use Modules\Legal\Enums\Incident\IncidentStatus;
+use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
+use Modules\Legal\Enums\LegalProfessionalType;
 use Modules\Legal\Filament\Resources\PreActionProtocolResource;
 use Modules\Legal\Filament\Resources\PreActionProtocolResource\Pages\ManagePreActionProtocols;
+use Modules\Legal\Jobs\ProcessImminentAndDefaultedPreActionProtocols;
+use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional;
 use Modules\Legal\Models\Ancillary\Interdiction\LegalCorrespondence;
-use Modules\Legal\Models\Incident;
 use Modules\Legal\Models\LegalAction\Defendant;
 use Modules\Legal\Models\LegalAction\PreActionProtocol;
+use Modules\Legal\Notifications\SendPreActionProtocolDefaultedNotification;
+use Modules\Legal\Notifications\SendPreActionProtocolResponseImminentNotification;
 use Tests\TestCase;
 
 use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\assertModelMissing;
 use function Pest\Laravel\assertSoftDeleted;
 use function Pest\Laravel\get;
@@ -39,36 +45,47 @@ it('lists preActionProtocols', function () {
 
 it('creates an pre action protocol', function () {
 
-    $servicepeople = Serviceperson::factory()->count(2)->make()->pluck('number')->toArray();
-    $defendants = Defendant::factory()->create()->pluck('id')->toArray();
-    $preActionProtocol = PreActionProtocol::factory()
-        ->hasClaimants(2)
-        ->hasDefendants(2)
-        ->make();
+    $claimants = Serviceperson::factory()->count(2)->create()->pluck('number')->toArray();
+    $defendants = Defendant::factory()->count(2)->create()->pluck('id')->toArray();
+    $legalRepresentatives = LegalProfessional::factory()
+        ->whereType(LegalProfessionalType::Lawyer)
+        ->create()->pluck('id')->toArray();
+    $preActionProtocol = PreActionProtocol::factory()->make();
 
-    livewire(ManagePreActionProtocols::class)
-        ->callAction('create', $preActionProtocol->toArray() +
-            [
-                'serviceperson_number' => $servicepeople,
-                'defendants' => $defendants,
-            ]
-        );
+    $data = $preActionProtocol->toArray() + [
+        'claimants' => $claimants,
+        'legalRepresentatives' => $legalRepresentatives,
+        'defendants' => $defendants,
+    ];
+
+    livewire(ManagePreActionProtocols::class)->callAction('create', $data);
+
+    $newPreActionProtocol = PreActionProtocol::query()->get()->first();
+
+    expect($newPreActionProtocol->defendants()->count())->toBe(2)
+        ->and($newPreActionProtocol->legalRepresentatives()->exists())->toBe(true)
+        ->and($newPreActionProtocol->claimants()->count())->toBe(2);
 
     assertDatabaseHas(PreActionProtocol::class, $preActionProtocol->toArray());
 });
-
-// TODO - Test for existence of servicepeople
-// TODO - Test for existence of defendants
 
 it('creates pre action protocol with references', function () {
     // Arrange
     $references = LegalCorrespondence::factory(2)->create();
     $preActionProtocolWithReferences = PreActionProtocol::factory()->make();
+    $claimants = Serviceperson::factory()->count(2)->make()->pluck('number')->toArray();
+    $defendants = Defendant::factory()->count(2)->create()->pluck('id')->toArray();
+    $legalRepresentatives = LegalProfessional::factory()
+        ->whereType(LegalProfessionalType::Lawyer)
+        ->create()->pluck('id')->toArray();
 
     // Act and Assert
     livewire(ManagePreActionProtocols::class)
         ->assertActionExists('create')
         ->callAction('create', $preActionProtocolWithReferences->toArray() + [
+            'claimants' => $claimants,
+            'legalRepresentatives' => $legalRepresentatives,
+            'defendants' => $defendants,
             'references' => [
                 $references->where('id', 1)->first()->id,
                 $references->where('id', 2)->first()->id,
@@ -80,48 +97,59 @@ it('creates pre action protocol with references', function () {
 });
 
 it('shows an pre action protocol', function () {
-    $preActionProtocol = PreActionProtocol::factory()->create();
+    $preActionProtocol = PreActionProtocol::factory()
+        ->hasClaimants(3)
+        ->hasDefendants()
+        ->hasLegalRepresentatives()
+        ->hasReferences()
+        ->create();
+
+    $claimants = $preActionProtocol->claimants->map(fn ($claimant) => $claimant->military_name)->toArray();
+    $defendants = $preActionProtocol->defendants->map(fn ($defendant) => $defendant->name)->toArray();
+    $legalRepresentatives = $preActionProtocol->legalRepresentatives->map(fn ($legalRepresentative) => $legalRepresentative->name)->toArray();
 
     livewire(ManagePreActionProtocols::class)
         ->assertTableActionExists('view')
         ->callTableAction('view', $preActionProtocol)
-        ->assertSee([
-            // Serviceperson Section
-            $preActionProtocol->serviceperson->military_name,
-            $preActionProtocol->serviceperson->battalion->short_name,
-            $preActionProtocol->serviceperson->company->short_name,
-            //Incident Section
-            ucfirst($preActionProtocol->incident->type->value),
-            // PreActionProtocol
-            $preActionProtocol->correctionalFacility->name,
+        ->assertSee($claimants + $defendants + $legalRepresentatives + [
+            $preActionProtocol->toArray(),
         ]);
 
 });
 
 it('retrieves an pre action protocol', function () {
     // Arrange
-    $preActionProtocol = PreActionProtocol::factory()->create();
+    $preActionProtocol = PreActionProtocol::factory()
+        ->hasClaimants(2)
+        ->hasDefendants(2)
+        ->hasLegalRepresentatives(3)
+        ->hasReferences()
+        ->create();
+
+    $claimants = $preActionProtocol->claimants->map(fn ($claimant) => $claimant->military_name)->toArray();
+    $defendants = $preActionProtocol->defendants->map(fn ($defendant) => $defendant->name)->toArray();
+    $legalRepresentatives = $preActionProtocol->legalRepresentatives->map(fn ($legalRepresentative) => $legalRepresentative->name)
+        ->toArray();
+
     // Act and Assert
     livewire(ManagePreActionProtocols::class, ['record' => $preActionProtocol])
         ->assertTableActionExists('edit')
         ->callTableAction('edit', $preActionProtocol)
-        ->assertSee([
-            // Serviceperson Section
-            $preActionProtocol->serviceperson->military_name,
-            $preActionProtocol->serviceperson->battalion->short_name,
-            $preActionProtocol->serviceperson->company->short_name,
-            //Incident Section
-            ucfirst($preActionProtocol->incident->type->value),
-            // PreActionProtocol
-            $preActionProtocol->correctionalFacility->name,
+        ->assertSee($claimants + $defendants + $legalRepresentatives + [
+            $preActionProtocol->toArray(),
         ]);
 });
 
 it('updates in pre action protocol', function () {
 
-    $preActionProtocol = PreActionProtocol::factory()->create([
-        'particulars' => 'This is an old pre action protocol description',
-    ]);
+    $preActionProtocol = PreActionProtocol::factory()
+        ->hasClaimants(2)
+        ->hasDefendants(2)
+        ->hasLegalRepresentatives(3)
+        ->hasReferences()
+        ->create([
+            'particulars' => 'This is an old pre action protocol description',
+        ]);
 
     livewire(ManagePreActionProtocols::class, ['record' => $preActionProtocol])
         ->callTableAction('edit', $preActionProtocol, [
@@ -167,57 +195,56 @@ it('force deletes an pre action protocol', function () {
     assertModelMissing($preActionProtocol);
 });
 
-// todo - make charge test and test for charges being deleted if incident is (soft and force)
+it('processes imminent and defaulted pre-action protocols when the schedule is called', function () {
+    Queue::fake();
 
-it('soft deletes an pre action protocol if the related incident is deleted', function () {
-    // Arrange
-    $incident = Incident::factory()->whereStatus(IncidentStatus::Charged)->create();
-    $preActionProtocol = PreActionProtocol::factory()
-        ->for($incident)
-        ->create();
-    // Act and Assert
+    preActionProtocol::factory()->responseImminent()->count(5)->create();
 
-    expect($incident->preActionProtocols()->exists())->toBeTrue()
-        ->and($preActionProtocol->incident()->exists())->toBeTrue();
-    assertDatabaseHas('incidents', $incident->getAttributes());
-    assertDatabaseHas('preActionProtocols', $preActionProtocol->getAttributes());
+    Artisan::call('schedule:run');
 
-    $incident->delete();
-
-    assertSoftDeleted($incident);
-    assertSoftDeleted($preActionProtocol);
+    Queue::assertPushed(ProcessImminentAndDefaultedPreActionProtocols::class);
 });
 
-it('restores an pre action protocol if the related incident is restored', function () {
-    // Arrange
-    $incident = Incident::factory()->create();
-    $preActionProtocol = PreActionProtocol::factory()->for($incident)->create();
-    // Act and Assert
+it('notifies the legal users of pre action protocol that require imminent responses', function () {
 
-    $incident->delete();
-    assertSoftDeleted($preActionProtocol);
+    Notification::fake();
+    Queue::fake();
 
-    $incident->restore();
+    PreActionProtocol::factory()->responseImminent()->count(5)->create();
 
-    expect($preActionProtocol->refresh())->deleted_at->toBe(null);
+    $legalUsers = User::factory()->count(5)->create()->each(function ($user) {
+        $user->assignRole('legal_clerk');
+    });
+
+    $job = new ProcessImminentAndDefaultedPreActionProtocols();
+
+    $job::dispatch();
+
+    $job->handle();
+
+    Queue::assertPushed(ProcessImminentAndDefaultedPreActionProtocols::class);
+
+    Notification::assertSentTo($legalUsers, SendPreActionProtocolResponseImminentNotification::class);
+
 });
 
-it('deletes an pre action protocol if the related incident is force deleted', function () {
-    // Arrange
-    $incident = Incident::factory()->whereStatus(IncidentStatus::Charged)->create();
-    $preActionProtocol = PreActionProtocol::factory()->for($incident)->create();
+it('notifies the legal users of defaulted  pre action protocols', function () {
+    Notification::fake();
+    Queue::fake();
 
-    // Act and Assert
+    PreActionProtocol::factory()->defaulted()->count(5)->create();
 
-    expect($incident->preActionProtocols()->exists())->toBeTrue()
-        ->and($preActionProtocol->incident()->exists())->toBeTrue();
-    assertDatabaseHas('incidents', $incident->getAttributes());
-    assertDatabaseHas('preActionProtocols', $preActionProtocol->getAttributes());
+    $legalUsers = User::factory()->count(5)->create()->each(function ($user) {
+        $user->assignRole('legal_clerk');
+    });
 
-    $incident->forceDelete();
+    $job = new ProcessImminentAndDefaultedPreActionProtocols();
 
-    assertDatabaseMissing('preActionProtocols', $preActionProtocol->getAttributes());
-    assertModelMissing($incident);
-    assertModelMissing($preActionProtocol);
+    $job::dispatch();
 
+    $job->handle();
+
+    Queue::assertPushed(ProcessImminentAndDefaultedPreActionProtocols::class);
+
+    Notification::assertSentTo($legalUsers, SendPreActionProtocolDefaultedNotification::class);
 });

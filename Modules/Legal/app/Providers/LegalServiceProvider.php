@@ -18,7 +18,6 @@ class LegalServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerCommands();
-        $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -30,9 +29,11 @@ class LegalServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->register(AuthServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(LegalPanelProvider::class);
+        $this->app->register(ScheduleServiceProvider::class);
     }
 
     /**
@@ -40,19 +41,14 @@ class LegalServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
+
         // $this->commands([]);
     }
 
     /**
      * Register command Schedules.
      */
-    protected function registerCommandSchedules(): void
-    {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
-    }
+
 
     /**
      * Register translations.

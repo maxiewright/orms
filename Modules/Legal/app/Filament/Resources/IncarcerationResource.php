@@ -187,7 +187,6 @@ class IncarcerationResource extends Resource
                 DateBetweenFilter::make('incarcerated_at', 'incarcerated_from', 'incarcerated_to'),
                 DateBetweenFilter::make('released_at', 'released_from', 'released_to'),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
-
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make()

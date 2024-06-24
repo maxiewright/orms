@@ -12,6 +12,7 @@ use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\Legal\Database\Factories\LegalAction\DefendantFactory;
 
 class Defendant extends Model
@@ -37,6 +38,13 @@ class Defendant extends Model
     protected static function newFactory(): DefendantFactory
     {
         return DefendantFactory::new();
+    }
+
+    public function preActionProtocols(): BelongsToMany
+    {
+        return $this->belongsToMany(PreActionProtocol::class, 'defendant_pre_action_protocol')
+            ->using(DefendantPreActionProtocol::class)
+            ->withTimestamps();
     }
 
     public static function getForm($type = null): array

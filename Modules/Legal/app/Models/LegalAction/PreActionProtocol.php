@@ -3,13 +3,18 @@
 namespace Modules\Legal\Models\LegalAction;
 
 use App\Models\Serviceperson;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Legal\Database\Factories\PreActionProtocolFactory;
+use Modules\Legal\Database\Factories\LegalAction\PreActionProtocolFactory;
 use Modules\Legal\Enums\LegalAction\PreActionProtocolStatus;
+use Modules\Legal\Events\PreActionProtocolReceived;
 use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional;
 use Modules\Legal\Models\Ancillary\Litigation\PreActionProtocolType;
 use Modules\Legal\traits\HasReferences;
@@ -30,6 +35,7 @@ class PreActionProtocol extends Model
         'respond_by',
         'status',
         'responded_at',
+        'particulars',
     ];
 
     protected $casts = [
@@ -40,14 +46,20 @@ class PreActionProtocol extends Model
         'status' => PreActionProtocolStatus::class,
     ];
 
-    // TODO - Generate name/subject from the Case number, complainint, and defendent
+    protected $appends = ['date'];
 
     protected static function booted()
     {
-        static::saving(function (PreActionProtocol $preActionProtocol) {
-            // get the case number
-            // foreach through the complaints
+        // TODO - Change the status from pending if the responded_at field is not null
+        // if is dirty and status is pending set responded at to null
+        /**
+         * maybe set an alert on the front end to let the user know that  if the
+         * status is set to pending the  responded_at field is must be null;
+         */
+        static::created(function (PreActionProtocol $preActionProtocol) {
+            PreActionProtocolReceived::dispatch($preActionProtocol);
         });
+
     }
 
     public function claimants(): BelongsToMany
@@ -89,5 +101,59 @@ class PreActionProtocol extends Model
     public function receiver(): BelongsTo
     {
         return $this->belongsTo(Serviceperson::class, 'received_by');
+    }
+
+    public function extensions(): HasMany
+    {
+        return $this->hasMany(PreActionProtocolExtension::class);
+    }
+
+    public function lastExtension(): HasOne
+    {
+        return $this->hasOne(PreActionProtocolExtension::class)->latestOfMany();
+    }
+
+    public function scopeResponded(Builder $query): Builder
+    {
+        return $query->where('responded_at', '!=', null);
+    }
+
+    public function hasResponded(): bool
+    {
+        return $this->responded_at !== null;
+    }
+
+    public function scopeDefaulted(Builder $query): Builder
+    {
+        return $query->whereDate('respond_by', '>', now())
+            ->where('responded_at', null);
+    }
+
+    public function hasDefaulted(): bool
+    {
+        return $this->respond_by->isPast() && $this->responded_at == null;
+    }
+
+    public function scopeRespondedLate(Builder $query): Builder
+    {
+        return $query->whereDate('responded_at', '>', $this->respond_by);
+    }
+
+    public function hasLateResponse(): bool
+    {
+        return $this->responded_at->isAfter($this->respond_by);
+    }
+
+    public function scopeResponseImminent(Builder $query): Builder
+    {
+        return $query->whereDate('respond_by', '<=', now()->addDays(3))
+            ->where('responded_at', null);
+    }
+
+    protected function date(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->dated_at->format(config('legal.date'))
+        );
     }
 }

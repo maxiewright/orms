@@ -42,9 +42,34 @@ trait HasServiceData
         return $this->belongsTo(Battalion::class);
     }
 
+    public function battalionShortName(): Attribute
+    {
+        return Attribute::get(fn () => $this->battalion?->short_name);
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function companyShortName(): Attribute
+    {
+        return Attribute::get(fn () => $this->company?->short_name);
+    }
+
+    public function battalionAndCompanyShortName(): Attribute
+    {
+        return Attribute::get(function () {
+            if ($this->battalion && $this->company) {
+                return $this->battalion?->short_name.' - '.$this->company?->short_name;
+            }
+
+            if ($this->battalion && ! $this->company) {
+                return $this->battalion?->short_name;
+            }
+
+            return 'No unit data on record';
+        });
     }
 
     public function department(): BelongsTo

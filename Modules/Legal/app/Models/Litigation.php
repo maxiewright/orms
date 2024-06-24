@@ -40,6 +40,16 @@ class Litigation extends Model
         return LegalActionFactory::new();
     }
 
+    // TODO - Generate name/subject from the Case number, complainint, and defendent
+
+    protected static function booted()
+    {
+        static::saving(function (Litigation $litigation) {
+            // get the case number
+            // foreach through the complaints
+        });
+    }
+
     public function servicepeople(): BelongsToMany
     {
         return $this->belongsToMany(Serviceperson::class)

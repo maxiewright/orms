@@ -14,6 +14,7 @@ class LegalDatabaseSeeder extends Seeder
         $this->call([
             OffenceSeeder::class,
             LegalCorrespondenceTypeSeeder::class,
+            LegalRolesSeeder::class,
         ]);
     }
 }

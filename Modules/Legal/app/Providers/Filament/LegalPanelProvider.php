@@ -3,6 +3,7 @@
 namespace Modules\Legal\Providers\Filament;
 
 use App\Actions\ChangePasswordAction;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Coolsam\Modules\ModulesPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,7 +34,6 @@ class LegalPanelProvider extends PanelProvider
         return $panel
             ->login()
 
-
             ->brandName('ORMS - Legal')
             ->id('legal')
             ->domain(app()->isProduction() ? 'legal.orms.app' : 'legal.orms.test')
@@ -56,6 +56,8 @@ class LegalPanelProvider extends PanelProvider
                     ->icon('heroicon-o-building-library'),
                 NavigationGroup::make('Ancillary')
                     ->icon('heroicon-o-cog'),
+                NavigationGroup::make()->label('Access Control')
+                    ->collapsed(),
             ])
             ->navigationItems([
                 NavigationItem::make('Home')
@@ -64,6 +66,7 @@ class LegalPanelProvider extends PanelProvider
                         return filament()->getPanel('servicepeople')->route('pages.servicepeople-dashboard');
                     }),
             ])
+            ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/Legal/Resources'), for: 'App\\Filament\\Legal\\Resources')
             ->discoverPages(in: app_path('Filament/Legal/Pages'), for: 'App\\Filament\\Legal\\Pages')
             ->pages([])
@@ -87,6 +90,22 @@ class LegalPanelProvider extends PanelProvider
                 Authenticate::class,
                 OnboardMiddleware::class,
             ])->plugins([
+                FilamentShieldPlugin::make()
+                    ->gridColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 2,
+                    ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 3,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ]),
                 ModulesPlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 BreezyCore::make()->myProfile(),

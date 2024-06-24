@@ -105,11 +105,4 @@ class CourtAppearance extends Model
         return $query->where('attended_at', '>', now());
     }
 
-
-
-//    public function u()
-//    {
-//
-//    }
-
 }

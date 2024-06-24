@@ -6,28 +6,28 @@ use Filament\Tables\Filters\SelectFilter;
 
 class ServicepersonFilter
 {
-    public static function rank(): SelectFilter
+    public static function rank($name = 'serviceperson'): SelectFilter
     {
         return SelectFilter::make('rank')
-            ->relationship('serviceperson.rank', 'regiment_abbreviation')
+            ->relationship("$name.rank", 'regiment_abbreviation')
             ->label('Rank')
             ->multiple()
             ->preload();
     }
 
-    public static function battalion(): SelectFilter
+    public static function battalion($name = 'serviceperson'): SelectFilter
     {
         return SelectFilter::make('battalion')
-            ->relationship('serviceperson.battalion', 'short_name')
+            ->relationship("$name.battalion", 'short_name')
             ->label('Battalion')
             ->multiple()
             ->preload();
     }
 
-    public static function company(): SelectFilter
+    public static function company($name = 'serviceperson'): SelectFilter
     {
         return SelectFilter::make('company')
-            ->relationship('serviceperson.company', 'short_name')
+            ->relationship("$name.company", 'short_name')
             ->label('Company')
             ->multiple()
             ->preload();

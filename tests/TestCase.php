@@ -11,7 +11,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use RefreshDatabase;
-    //    use LazilyRefreshDatabase;
 
     protected function setUp(): void
     {

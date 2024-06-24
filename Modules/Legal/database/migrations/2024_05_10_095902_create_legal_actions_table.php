@@ -43,7 +43,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -73,8 +73,19 @@ return new class extends Migration
             $table->dateTime('respond_by');
             $table->string('status');
             $table->dateTime('responded_at')->nullable();
+            $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('pre_action_protocol_extensions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(PreActionProtocol::class);
+            $table->dateTime('extended_on');
+            $table->dateTime('extended_to');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['pre_action_protocol_id', 'extended_to'], 'pre_action_protocol_extension_date');
         });
 
         Schema::create('litigations', function (Blueprint $table) {
@@ -94,6 +105,7 @@ return new class extends Migration
         });
 
         Schema::create('serviceperson_litigation', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Serviceperson::class);
             $table->foreignIdFor(Litigation::class);
             $table->unique(['serviceperson_number', 'litigation_id'], 'serviceperson_litigation_unique');
@@ -101,6 +113,7 @@ return new class extends Migration
         });
 
         Schema::create('serviceperson_pre_action_protocol', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Serviceperson::class);
             $table->foreignIdFor(PreActionProtocol::class);
             $table->unique(['serviceperson_number', 'pre_action_protocol_id'], 'serviceperson_pre_action_protocol_unique');
@@ -108,6 +121,7 @@ return new class extends Migration
         });
 
         Schema::create('defendant_litigation', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Defendant::class)->constrained();
             $table->foreignIdFor(Litigation::class)->constrained();
             $table->unique(['defendant_id', 'litigation_id'], 'defendant_litigation_unique');
@@ -115,6 +129,7 @@ return new class extends Migration
         });
 
         Schema::create('defendant_pre_action_protocol', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Defendant::class)->constrained();
             $table->foreignIdFor(PreActionProtocol::class)->constrained();
             $table->unique(['defendant_id', 'pre_action_protocol_id'], 'defendant_pre_action_protocol_unique');
@@ -122,9 +137,12 @@ return new class extends Migration
         });
 
         Schema::create('legal_professional_pre_action_protocol', function (Blueprint $table) {
-            $table->foreignIdFor(LegalProfessional::class)->constrained();
-            $table->foreignIdFor(PreActionProtocol::class)->constrained();
-            $table->unique(['legal_professional', 'pre_action_protocol_id'], 'legal_professional_pre_action_protocol_unique');
+            $table->id();
+            $table->foreignIdFor(LegalProfessional::class)
+                ->constrained(indexName: 'pre_action_protocol_legal_professional');
+            $table->foreignIdFor(PreActionProtocol::class)
+                ->constrained(indexName: 'legal_professional_pre_action_protocol');
+            $table->unique(['legal_professional_id', 'pre_action_protocol_id'], 'legal_professional_pre_action_protocol_unique');
             $table->timestamps();
         });
 
@@ -135,11 +153,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('legal_professional_pre_action_protocol');
         Schema::dropIfExists('defendant_pre_action_protocol');
         Schema::dropIfExists('defendant_litigation');
         Schema::dropIfExists('serviceperson_pre_action_protocol');
         Schema::dropIfExists('serviceperson_litigation');
         Schema::dropIfExists('litigations');
+        Schema::dropIfExists('pre_action_protocol_extensions');
+        Schema::dropIfExists('pre_action_protocols');
         Schema::dropIfExists('pre_action_protocol_types');
         Schema::dropIfExists('defendants');
         Schema::dropIfExists('litigation_rulings');

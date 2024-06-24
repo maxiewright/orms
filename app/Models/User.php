@@ -20,6 +20,9 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
     use HasPageShield;
     use HasPanelShield;
+    use Notifiable;
+
+    protected $with = ['serviceperson'];
 
     protected static function booted()
     {
@@ -78,7 +81,11 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             return true;
         }
 
-        return true;
+        if ($panel->getId() === 'legal') {
+            return true;
+        }
+
+        return false;
     }
 
     public function passwordChanged(): bool

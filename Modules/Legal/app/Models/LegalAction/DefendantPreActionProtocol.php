@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class DefendantPreActionProtocol extends Pivot
 {
     protected $fillable = [
-
+        'defendant_id',
+        'pre_action_protocol_id',
     ];
 
     public function defendant(): BelongsTo

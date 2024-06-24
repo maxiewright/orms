@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Policies;
+namespace Modules\Legal\Policies;
 
 use App\Models\User;
-use App\Models\Officer;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Modules\Legal\Models\CourtAppearance;
 
-class OfficerPolicy
+class CourtAppearancePolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class OfficerPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_officer');
+        return $user->can('view_any_court::appearance');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Officer $officer): bool
+    public function view(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('view_officer');
+        return $user->can('view_court::appearance');
     }
 
     /**
@@ -31,23 +31,23 @@ class OfficerPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_officer');
+        return $user->can('create_court::appearance');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Officer $officer): bool
+    public function update(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('update_officer');
+        return $user->can('update_court::appearance');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Officer $officer): bool
+    public function delete(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('delete_officer');
+        return $user->can('delete_court::appearance');
     }
 
     /**
@@ -55,15 +55,15 @@ class OfficerPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_officer');
+        return $user->can('delete_any_court::appearance');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, Officer $officer): bool
+    public function forceDelete(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('force_delete_officer');
+        return $user->can('force_delete_court::appearance');
     }
 
     /**
@@ -71,15 +71,15 @@ class OfficerPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_officer');
+        return $user->can('force_delete_any_court::appearance');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, Officer $officer): bool
+    public function restore(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('restore_officer');
+        return $user->can('restore_court::appearance');
     }
 
     /**
@@ -87,15 +87,15 @@ class OfficerPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_officer');
+        return $user->can('restore_any_court::appearance');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, Officer $officer): bool
+    public function replicate(User $user, CourtAppearance $courtAppearance): bool
     {
-        return $user->can('replicate_officer');
+        return $user->can('replicate_court::appearance');
     }
 
     /**
@@ -103,6 +103,6 @@ class OfficerPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_officer');
+        return $user->can('reorder_court::appearance');
     }
 }

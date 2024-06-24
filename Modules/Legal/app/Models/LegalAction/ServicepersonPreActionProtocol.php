@@ -20,6 +20,6 @@ class ServicepersonPreActionProtocol extends Pivot
 
     public function preActionProtocol(): BelongsTo
     {
-        return $this->belongsTo(PreActionProtocol::class);
+        return $this->belongsTo(PreActionProtocol::class, 'pre_action_protocol_id');
     }
 }

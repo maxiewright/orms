@@ -7,10 +7,13 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Legal\Database\Factories\LegalProfessionalFactory;
 use Modules\Legal\Enums\LegalProfessionalType;
 use Modules\Legal\Models\CourtAppearance;
+use Modules\Legal\Models\LegalAction\LegalProfessionalPreActionProtocol;
+use Modules\Legal\Models\LegalAction\PreActionProtocol;
 
 class LegalProfessional extends Model
 {
@@ -38,6 +41,13 @@ class LegalProfessional extends Model
     public function courtAppearance(): HasMany
     {
         return $this->hasMany(CourtAppearance::class);
+    }
+
+    public function preActionProtocols(): BelongsToMany
+    {
+        return $this->belongsToMany(PreActionProtocol::class, 'legal_professional_pre_action_protocol')
+            ->using(LegalProfessionalPreActionProtocol::class)
+            ->withTimestamps();
     }
 
     public static function getForm($type = null): array

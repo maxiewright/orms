@@ -21,6 +21,7 @@ use Modules\Legal\Models\Interdiction;
 use Modules\Legal\Services\Filters\DateBetweenFilter;
 use Modules\Legal\Services\Filters\ServicepersonFilter;
 use Modules\Legal\Services\Filters\StatusFilter;
+use Modules\Legal\Services\Table\TableColumn;
 
 class InterdictionResource extends Resource
 {
@@ -127,12 +128,7 @@ class InterdictionResource extends Resource
                 ])
             )
             ->columns([
-                Tables\Columns\TextColumn::make('serviceperson.military_name')
-                    ->description(function ($record) {
-                        return $record->serviceperson?->company?->short_name;
-                    })
-                    ->searchable(['name', 'first_name', 'last_name'])
-                    ->label('Serviceperson'),
+                TableColumn::serviceperson(),
                 Tables\Columns\TextColumn::make('incident.type')
                     ->label('Incident')
                     ->description(fn ($record) => $record->incident->date),
