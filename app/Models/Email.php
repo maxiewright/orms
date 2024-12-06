@@ -14,9 +14,12 @@ class Email extends Model
 
     public $guarded = [];
 
-    protected $casts = [
-        'type' => EmailTypeEnum::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'type' => EmailTypeEnum::class,
+        ];
+    }
 
     public function emailable(): MorphTo
     {

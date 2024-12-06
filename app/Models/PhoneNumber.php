@@ -13,9 +13,12 @@ class PhoneNumber extends Model
 
     public $guarded = [];
 
-    protected $casts = [
-        'type' => PhoneTypeEnum::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'type' => PhoneTypeEnum::class,
+        ];
+    }
 
     public function phoneable(): MorphTo
     {

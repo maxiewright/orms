@@ -19,15 +19,18 @@ class Interview extends Model
 
     public $guarded = [];
 
-    protected $casts = [
-        'requested_at' => 'datetime',
-        'seen_at' => 'datetime',
-        'interview_status' => InterviewStatusEnum::class,
-    ];
-
     protected $with = [
         'company.battalion',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'requested_at' => 'datetime',
+            'seen_at' => 'datetime',
+            'interview_status' => InterviewStatusEnum::class,
+        ];
+    }
 
     public function servicepeople(): BelongsToMany
     {

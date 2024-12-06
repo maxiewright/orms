@@ -18,27 +18,25 @@ class OfficerPerformanceAppraisalChecklist extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'appraisal_start_at' => 'datetime',
-        'appraisal_end_at' => 'datetime',
-        'is_appointment_correct' => 'boolean',
-        'is_assessment_rubric_complete' => 'boolean',
-        // Company Commander
-        'has_company_commander' => 'boolean',
-        'has_company_commander_comments' => 'boolean',
-        'has_company_commander_signature' => 'boolean',
-        // Unit Commander
-        'has_unit_commander' => 'boolean',
-        'has_unit_commander_comments' => 'boolean',
-        'has_unit_commander_signature' => 'boolean',
-        // Grading and Discipline
-        'has_disciplinary_action' => 'boolean',
-        // Formation Commander
-        'has_formation_commander_comments' => 'boolean',
-        'has_formation_commander_signature' => 'boolean',
-        // Serviceperson
-        'has_serviceperson_signature' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'appraisal_start_at' => 'datetime',
+            'appraisal_end_at' => 'datetime',
+            'is_appointment_correct' => 'boolean',
+            'is_assessment_rubric_complete' => 'boolean',
+            'has_company_commander' => 'boolean',
+            'has_company_commander_comments' => 'boolean',
+            'has_company_commander_signature' => 'boolean',
+            'has_unit_commander' => 'boolean',
+            'has_unit_commander_comments' => 'boolean',
+            'has_unit_commander_signature' => 'boolean',
+            'has_disciplinary_action' => 'boolean',
+            'has_formation_commander_comments' => 'boolean',
+            'has_formation_commander_signature' => 'boolean',
+            'has_serviceperson_signature' => 'boolean',
+        ];
+    }
 
     public function serviceperson(): BelongsTo
     {
