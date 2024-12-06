@@ -12,7 +12,7 @@ class AdminAndPersonnelJobSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $jobs = [
             //            G1 Shop

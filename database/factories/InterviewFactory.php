@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InterviewFactory extends Factory
 {
-    public function definition()
+    public function definition(): array
     {
 
         return [

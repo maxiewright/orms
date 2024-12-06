@@ -9,9 +9,9 @@ use Illuminate\Validation\ValidationException;
 
 class FilamentServiceProvider extends ServiceProvider
 {
-    public function register() {}
+    public function register(): void {}
 
-    public function boot()
+    public function boot(): void
     {
 
         Page::$reportValidationErrorUsing = function (ValidationException $exception) {

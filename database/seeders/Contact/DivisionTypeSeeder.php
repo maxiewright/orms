@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class DivisionTypeSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $types = ['Region', 'Borough', 'City', 'Ward'];
 

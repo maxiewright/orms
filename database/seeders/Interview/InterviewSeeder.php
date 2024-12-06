@@ -15,7 +15,7 @@ class InterviewSeeder extends Seeder
         'interview_statuses',
     ];
 
-    public function run()
+    public function run(): void
     {
         Model::unguard();
 

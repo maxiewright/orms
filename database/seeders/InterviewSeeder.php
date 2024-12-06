@@ -12,7 +12,7 @@ class InterviewSeeder extends Seeder
 {
     protected $toTruncate = ['users', 'interviews', 'serviceperson_interview', 'servicepeople'];
 
-    public function run()
+    public function run(): void
     {
         Model::unguard();
 

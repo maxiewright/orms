@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 
 class ReleaseServicepersonEmploymentStatusSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $this->call([
             ContactSeeder::class,

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class CitySeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $cities = [
             [

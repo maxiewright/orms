@@ -12,7 +12,7 @@ class CommandJobSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $jobs = [
             [

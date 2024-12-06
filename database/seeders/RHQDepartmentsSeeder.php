@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class RHQDepartmentsSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $departments = [
             [

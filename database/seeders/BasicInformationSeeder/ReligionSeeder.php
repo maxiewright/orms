@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class ReligionSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $religions = [
             'Anglican',

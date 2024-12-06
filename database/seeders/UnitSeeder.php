@@ -13,7 +13,7 @@ class UnitSeeder extends Seeder
 {
     protected $toTruncate = ['battalions', 'companies'];
 
-    public function run()
+    public function run(): void
     {
         Model::unguard();
 
