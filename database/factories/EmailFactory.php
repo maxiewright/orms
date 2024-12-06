@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmailFactory extends Factory
 {
-    protected $model = Email::class;
-
     public function definition()
     {
         return [

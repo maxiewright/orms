@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PhoneNumberFactory extends Factory
 {
-    protected $model = PhoneNumber::class;
-
     public function definition()
     {
         return [
