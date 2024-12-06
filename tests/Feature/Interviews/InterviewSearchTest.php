@@ -52,7 +52,6 @@ it('can be filtered by interview', function (string $name, string $field, int $f
         ->filterTable($name)
         ->assertCanSeeTableRecords($interviews->where($field, $filter))
         ->assertCanNotSeeTableRecords($interviews->where($field, '!=', $filter));
-    ;
 
 })->with([
     ['status', 'interview_status_id', fn () => InterviewStatus::all()->random()->id],

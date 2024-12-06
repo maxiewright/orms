@@ -9,9 +9,7 @@ use Illuminate\Validation\ValidationException;
 
 class FilamentServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-    }
+    public function register() {}
 
     public function boot()
     {

@@ -41,7 +41,7 @@ class InterviewFactory extends Factory
     {
         return $this->state(fn () => [
             'interview_status_id' => Status::PENDING,
-        ]+ $this->notSeen());
+        ] + $this->notSeen());
     }
 
     public function cancelled(): InterviewFactory

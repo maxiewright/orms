@@ -12,7 +12,6 @@
 */
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\TestCase;
 
 uses(
     Tests\TestCase::class)->in('Feature');

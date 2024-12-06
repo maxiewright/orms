@@ -14,8 +14,7 @@ class RequireIfFieldIsTrue implements DataAwareRule, ValidationRule
     public function __construct(
         protected string $field,
         protected ?string $fieldName = null
-    ) {
-    }
+    ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

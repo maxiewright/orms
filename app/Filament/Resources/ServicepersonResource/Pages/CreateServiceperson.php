@@ -2,28 +2,11 @@
 
 namespace App\Filament\Resources\ServicepersonResource\Pages;
 
-use App\Enums\Serviceperson\EmailTypeEnum;
-use App\Enums\Serviceperson\EmergencyContactTypeEnum;
-use App\Enums\Serviceperson\PhoneTypeEnum;
 use App\Filament\Resources\ServicepersonResource;
 use App\Filament\Traits\RedirectToIndex;
-use App\Models\Metadata\Contact\City;
-use App\Models\Metadata\Contact\Division;
 use App\Models\Serviceperson;
-use App\Models\Unit\Company;
-use App\Models\Unit\Formation;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Collection;
 
 class CreateServiceperson extends CreateRecord
 {
