@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Enums\CourtApperance;
+namespace Modules\Legal\Enums\CourtAppearance;
 
 use Filament\Support\Contracts\HasLabel;
 

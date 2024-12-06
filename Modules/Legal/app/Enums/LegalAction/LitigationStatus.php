@@ -13,6 +13,10 @@ enum LitigationStatus: string implements HasLabel
     case Verdict = 'verdict';
     case Appeal = 'appeal';
 
+
+
+//'pending', 'active', 'settled', 'dismissed', 'judgment issued'
+
     public function getLabel(): ?string
     {
         return match ($this) {

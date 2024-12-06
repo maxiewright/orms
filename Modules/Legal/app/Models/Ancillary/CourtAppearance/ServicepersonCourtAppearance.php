@@ -5,7 +5,7 @@ namespace Modules\Legal\Models\Ancillary\CourtAppearance;
 use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Modules\Legal\Enums\CourtApperance\CourtAppearanceReason;
+use Modules\Legal\Enums\CourtAppearance\CourtAppearanceReason;
 use Modules\Legal\Models\CourtAppearance;
 use Modules\Legal\Models\Incident;
 

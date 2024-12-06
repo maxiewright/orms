@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Legal\Enums\CourtApperance;
+namespace Modules\Legal\Enums\CourtAppearance;
 
 use Filament\Support\Contracts\HasLabel;
 
@@ -16,6 +16,7 @@ enum CourtAppearanceOutcome: string implements HasLabel
     case Appealed = 'appealed';
     case ConditionalDischarge = 'conditional discharge';
     case ContemptOfCourt = 'contempt of court';
+    case Ruling = 'ruling';
 
     public function getLabel(): ?string
     {
@@ -30,6 +31,7 @@ enum CourtAppearanceOutcome: string implements HasLabel
             self::Appealed => 'Appealed',
             self::ConditionalDischarge => 'Conditional Discharge',
             self::ContemptOfCourt => 'Contempt of Court',
+            self::Ruling => 'Ruling',
         };
     }
 }

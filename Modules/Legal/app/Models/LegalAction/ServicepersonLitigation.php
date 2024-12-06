@@ -1,10 +1,11 @@
 <?php
 
-namespace Modules\Legal\Models;
+namespace Modules\Legal\Models\LegalAction;
 
 use App\Models\Serviceperson;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Modules\Legal\Models\Litigation;
 
 class ServicepersonLitigation extends Pivot
 {
@@ -14,7 +15,8 @@ class ServicepersonLitigation extends Pivot
     {
         return $this->belongsTo(Serviceperson::class);
     }
-    public function legalAction(): BelongsTo
+
+    public function litigation(): BelongsTo
     {
         return $this->belongsTo(Litigation::class);
     }

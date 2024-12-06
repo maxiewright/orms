@@ -7,9 +7,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\Legal\Models\Ancillary\CourtAppearance\LegalProfessional;
+use Modules\Legal\Models\Ancillary\Litigation\LitigationCategory;
 use Modules\Legal\Models\Ancillary\Litigation\LitigationReason;
-use Modules\Legal\Models\Ancillary\Litigation\LitigationRuling;
 use Modules\Legal\Models\Ancillary\Litigation\PreActionProtocolType;
+use Modules\Legal\Models\CourtAppearance;
 use Modules\Legal\Models\LegalAction\Defendant;
 use Modules\Legal\Models\LegalAction\PreActionProtocol;
 use Modules\Legal\Models\Litigation;
@@ -21,20 +22,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('litigation_reasons', function (Blueprint $table) {
+        Schema::create('litigation_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('type');
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('litigation_rulings', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->unique(['type', 'name'], 'litigation_category_type_name_unique');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -91,14 +85,19 @@ return new class extends Migration
         Schema::create('litigations', function (Blueprint $table) {
             $table->id();
             $table->string('case_number')->unique();
-            $table->string('type');
-            $table->string('status');
+            $table->foreignId('type_id')->constrained('litigation_categories');
+            $table->foreignId('status_id')->constrained('litigation_categories');
             $table->foreignIdFor(PreActionProtocol::class)->nullable()->constrained();
+            $table->foreignId('reason_id')->constrained('litigation_categories');
+            $table->foreignId('outcome_id')->nullable()->constrained('litigation_categories');
             $table->foreignIdFor(LitigationReason::class)->constrained();
-            $table->foreignIdFor(LitigationRuling::class)->nullable()->constrained();
+            $table->foreignIdFor(LitigationCategory::class)->nullable()->constrained();
             $table->dateTime('filed_at');
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
+            $table->integer('damages_awarded')->nullable();
+            $table->date('settlement_date')->nullable();
+            $table->integer('settlement_amount')->nullable();
             $table->text('particulars')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -146,6 +145,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('litigation_court_appearance', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Litigation::class)->constrained();
+            $table->foreignIdFor(CourtAppearance::class)->constrained();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -153,6 +158,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('litigation_court_appearance');
         Schema::dropIfExists('legal_professional_pre_action_protocol');
         Schema::dropIfExists('defendant_pre_action_protocol');
         Schema::dropIfExists('defendant_litigation');

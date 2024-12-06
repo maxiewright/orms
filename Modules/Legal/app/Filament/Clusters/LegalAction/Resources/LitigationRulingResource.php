@@ -8,11 +8,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Modules\Legal\Filament\Clusters\LegalAction;
 use Modules\Legal\Filament\Clusters\LegalAction\Resources\LitigationRulingResource\Pages;
-use Modules\Legal\Models\Ancillary\Litigation\LitigationRuling;
+use Modules\Legal\Models\Ancillary\Litigation\LitigationCategory;
 
 class LitigationRulingResource extends Resource
 {
-    protected static ?string $model = LitigationRuling::class;
+    protected static ?string $model = LitigationCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

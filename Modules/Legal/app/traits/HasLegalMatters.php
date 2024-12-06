@@ -10,9 +10,9 @@ use Modules\Legal\Models\Incarceration;
 use Modules\Legal\Models\Incident;
 use Modules\Legal\Models\Interdiction;
 use Modules\Legal\Models\LegalAction\PreActionProtocol;
+use Modules\Legal\Models\LegalAction\ServicepersonLitigation;
 use Modules\Legal\Models\LegalAction\ServicepersonPreActionProtocol;
 use Modules\Legal\Models\Litigation;
-use Modules\Legal\Models\ServicepersonLitigation;
 
 trait HasLegalMatters
 {
@@ -38,16 +38,17 @@ trait HasLegalMatters
             ->using(ServicepersonCourtAppearance::class);
     }
 
-    public function legalActions(): BelongsToMany
-    {
-        return $this->belongsToMany(Litigation::class)
-            ->using(ServicepersonLitigation::class);
-    }
-
     public function preActionProtocol(): BelongsToMany
     {
         return $this->belongsToMany(PreActionProtocol::class)
             ->using(ServicepersonPreActionProtocol::class)
+            ->withTimestamps();
+    }
+
+    public function litigations(): BelongsToMany
+    {
+        return $this->belongsToMany(Litigation::class)
+            ->using(ServicepersonLitigation::class)
             ->withTimestamps();
     }
 }
