@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class MaritalStatusSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $maritalStatuses = [
             'Single',

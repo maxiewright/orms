@@ -7,9 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class GoogleDriveServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
@@ -21,7 +19,7 @@ class GoogleDriveServiceProvider extends ServiceProvider
                     $options['teamDriveId'] = $config['teamDriveId'];
                 }
 
-                $client = new \Google\Client();
+                $client = new \Google\Client;
                 $client->setClientId($config['clientId']);
                 $client->setClientSecret($config['clientSecret']);
                 $client->refreshToken($config['refreshToken']);

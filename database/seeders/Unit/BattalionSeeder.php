@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class BattalionSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $battalions = [
             [

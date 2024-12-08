@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class CompanySeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $companies = [
             //1Engr

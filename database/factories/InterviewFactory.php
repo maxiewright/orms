@@ -12,9 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InterviewFactory extends Factory
 {
-    protected $model = Interview::class;
-
-    public function definition()
+    public function definition(): array
     {
 
         return [
@@ -41,7 +39,7 @@ class InterviewFactory extends Factory
     {
         return $this->state(fn () => [
             'interview_status_id' => Status::PENDING,
-        ]+ $this->notSeen());
+        ] + $this->notSeen());
     }
 
     public function cancelled(): InterviewFactory

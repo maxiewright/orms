@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class EthnicitySeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $ethnicities = [
             'African-Trinbagonian',

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class AttendeeRoleSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $roles = [
             'witness',

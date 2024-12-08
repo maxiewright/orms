@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class DivisionSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $divisions = [
             [
