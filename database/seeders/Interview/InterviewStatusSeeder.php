@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class InterviewStatusSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $statuses = [
             'pending', 'cancelled', 'seen',

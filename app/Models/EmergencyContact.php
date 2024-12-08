@@ -15,9 +15,12 @@ class EmergencyContact extends Model
 
     public $guarded = [];
 
-    protected $casts = [
-        'type' => EmergencyContactTypeEnum::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'type' => EmergencyContactTypeEnum::class,
+        ];
+    }
 
     public function serviceperson(): BelongsTo
     {

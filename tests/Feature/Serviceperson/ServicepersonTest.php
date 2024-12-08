@@ -1,7 +1,6 @@
 <?php
 
 use App\Filament\Resources\ServicepersonResource;
-use App\Filament\Resources\ServicepersonResource\Pages\CreateServiceperson;
 use App\Filament\Resources\ServicepersonResource\Pages\ListServicepeople;
 use App\Models\Serviceperson;
 use Filament\Tables\Actions\EditAction;

@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 
 class ContactSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $this->call([
             DivisionTypeSeeder::class,

@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 
 class ServicepeopleWithInterviewsSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         Serviceperson::factory(50)
             ->has(Interview::factory()->whereStatus(Status::PENDING))

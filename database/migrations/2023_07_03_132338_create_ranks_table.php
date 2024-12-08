@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('regiment_abbreviation')->unique();
             $table->string('coast_guard')->unique();
             $table->string('coast_guard_abbreviation')->unique();
-            $table->json('air_guard')->unique();
-            $table->json('air_guard_abbreviation')->unique();
+            $table->json('air_guard');
+            $table->json('air_guard_abbreviation');
             $table->timestamps();
             $table->softDeletes();
         });

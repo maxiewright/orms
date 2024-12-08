@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         if (! Schema::hasTable('employment_statuses')) {
             Schema::create('employment_statuses', function (Blueprint $table) {

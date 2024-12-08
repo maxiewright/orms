@@ -37,15 +37,18 @@ class Serviceperson extends Model
         'address',
     ];
 
-    protected $casts = [
-        'date_of_birth' => 'date',
-        'enlistment_date' => 'date',
-        'assumption_date' => 'date',
-    ];
-
     protected $with = [
         'rank', 'formation',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'date',
+            'enlistment_date' => 'date',
+            'assumption_date' => 'date',
+        ];
+    }
 
     public function user(): HasOne
     {

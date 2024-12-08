@@ -9,8 +9,8 @@ use Filament\Pages\Dashboard;
 
 class OfficerDashboard extends Dashboard
 {
-
     use HasPageShield;
+
     protected static string $routePath = 'officers/dashboard';
 
     protected static ?string $title = 'Officers Dashboard';

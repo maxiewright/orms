@@ -101,7 +101,7 @@ class AdminPanelProvider extends PanelProvider
                                         ->required(),
                                 ]),
                             ])->wizardSubmitFormUsing(function (array $state, Wizard $livewire) {
-                                (new FilamentPasswordAction())->update($state, $livewire);
+                                (new FilamentPasswordAction)->update($state, $livewire);
                             }),
                     ])->completeBeforeAccess()),
             ]);

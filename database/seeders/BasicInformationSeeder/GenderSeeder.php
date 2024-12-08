@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class GenderSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $genders = [
             'male',

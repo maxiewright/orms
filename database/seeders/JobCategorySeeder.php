@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class JobCategorySeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $jobCategories = [
             [

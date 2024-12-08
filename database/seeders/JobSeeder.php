@@ -24,7 +24,7 @@ use Illuminate\Database\Seeder;
 
 class JobSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $this->call([
             AdminAndPersonnelJobSeeder::class,

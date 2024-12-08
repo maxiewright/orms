@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table('officer_performance_appraisal_checklists', function (Blueprint $table) {
             if (! Schema::hasColumn('officer_performance_appraisal_checklists', 'battalion_id')) {

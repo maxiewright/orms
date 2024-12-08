@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class DepartmentSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $departments = [
             'Headquarters' => 'HQ',
