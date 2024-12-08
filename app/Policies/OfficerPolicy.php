@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Officer;
 use App\Models\User;
+use App\Models\Officer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OfficerPolicy

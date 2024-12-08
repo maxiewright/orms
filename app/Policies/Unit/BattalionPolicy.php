@@ -2,8 +2,8 @@
 
 namespace App\Policies\Unit;
 
-use App\Models\Unit\Battalion;
 use App\Models\User;
+use App\Models\Unit\Battalion;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BattalionPolicy

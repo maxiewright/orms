@@ -2,8 +2,8 @@
 
 namespace App\Policies\Metadata;
 
-use App\Models\Metadata\AttendeeRole;
 use App\Models\User;
+use App\Models\Metadata\AttendeeRole;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AttendeeRolePolicy

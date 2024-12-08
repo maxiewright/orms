@@ -2,8 +2,8 @@
 
 namespace App\Policies\Metadata;
 
-use App\Models\Metadata\EnlistmentType;
 use App\Models\User;
+use App\Models\Metadata\EnlistmentType;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EnlistmentTypePolicy

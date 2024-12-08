@@ -2,8 +2,8 @@
 
 namespace App\Policies\Metadata;
 
-use App\Models\Metadata\InterviewReason;
 use App\Models\User;
+use App\Models\Metadata\InterviewReason;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InterviewReasonPolicy

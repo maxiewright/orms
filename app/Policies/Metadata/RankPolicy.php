@@ -2,8 +2,8 @@
 
 namespace App\Policies\Metadata;
 
-use App\Models\Metadata\Rank;
 use App\Models\User;
+use App\Models\Metadata\Rank;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RankPolicy

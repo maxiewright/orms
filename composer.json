@@ -8,7 +8,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "bezhansalleh/filament-shield": "^3.0@beta",
+        "bezhansalleh/filament-shield": "^3.3",
         "bfinlay/laravel-excel-seeder": "^3.3",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.2",
@@ -35,10 +35,9 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
-        "pestphp/pest": "^2.8",
-        "pestphp/pest-plugin-laravel": "^2.2",
-        "pestphp/pest-plugin-livewire": "^2.1",
-        "phpunit/phpunit": "^11.0.1",
+        "pestphp/pest": "^3.6",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "pestphp/pest-plugin-livewire": "^3.0",
         "spatie/laravel-stubs": "^2.5"
     },
     "autoload": {

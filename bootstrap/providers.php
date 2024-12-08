@@ -5,4 +5,5 @@ return [
     App\Providers\Filament\AdminPanelProvider::class,
     App\Providers\GoogleDriveServiceProvider::class,
     App\Providers\FilamentServiceProvider::class,
+    \BezhanSalleh\FilamentShield\FilamentShieldServiceProvider::class
 ];

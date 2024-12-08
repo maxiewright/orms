@@ -2,8 +2,8 @@
 
 namespace App\Policies\Metadata;
 
-use App\Models\Metadata\OfficerAppraisalGrade;
 use App\Models\User;
+use App\Models\Metadata\OfficerAppraisalGrade;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OfficerAppraisalGradePolicy

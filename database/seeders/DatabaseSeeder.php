@@ -45,8 +45,6 @@ class DatabaseSeeder extends Seeder
             RankSeeder::class,
             GenderSeeder::class,
             EnlistmentTypeSeeder::class,
-            //            SpreadsheetSeeder::class,
-            AdminSeeder::class,
             OfficerAppraisalGradeSeeder::class,
 
             // Units
@@ -61,5 +59,13 @@ class DatabaseSeeder extends Seeder
             //Employment
             ReleaseServicepersonEmploymentStatusSeeder::class,
         ]);
+
+        if (! app()->environment('production')) {
+            $this->call([
+
+                SpreadsheetSeeder::class,
+                AdminSeeder::class,
+            ]);
+        }
     }
 }

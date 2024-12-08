@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Interview;
 use App\Models\User;
+use App\Models\Interview;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InterviewPolicy
