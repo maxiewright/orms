@@ -14,7 +14,7 @@ class FilamentServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        Page::$reportValidationErrorUsing = function (ValidationException $exception) {
+        Page::$reportValidationErrorUsing = function (ValidationException $exception): void {
             Notification::make()
                 ->title($exception->getMessage())
                 ->danger()

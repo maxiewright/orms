@@ -7,9 +7,10 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "bezhansalleh/filament-shield": "^3.3",
         "bfinlay/laravel-excel-seeder": "^3.3",
+        "coolsam/modules": "^4",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.4.0",
         "jeffgreco13/filament-breezy": "*",
@@ -38,6 +39,7 @@
         "pestphp/pest": "^3.6",
         "pestphp/pest-plugin-laravel": "^3.0",
         "pestphp/pest-plugin-livewire": "^3.0",
+        "rector/rector": "^2.0",
         "spatie/laravel-stubs": "^3.1"
     },
     "autoload": {
@@ -81,6 +83,11 @@
             "dont-discover": [
                 "laravel/telescope"
             ]
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ]
         }
     },
     "config": {
@@ -90,7 +97,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
-            "ralphjsmit/packages": true
+            "ralphjsmit/packages": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "repositories": [

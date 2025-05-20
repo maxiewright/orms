@@ -12,7 +12,7 @@ class FilamentPasswordAction
 {
     public function update(array $state, Wizard $livewire): void
     {
-        $user = tap(Filament::auth()->user(), function ($user) use ($state) {
+        $user = tap(Filament::auth()->user(), function ($user) use ($state): void {
             $user->password = Hash::make($state['new_password']);
             $user->password_changed_at = now();
             $user->save();

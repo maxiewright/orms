@@ -17,7 +17,7 @@ function createAppraisalChecklists($count): OfficerPerformanceAppraisalChecklist
         ->create();
 }
 
-it('it can access the appraisal checklist resource', function () {
+it('it can access the appraisal checklist resource', function (): void {
     // Arrange
     logInAsUserWithRole();
 
@@ -27,7 +27,7 @@ it('it can access the appraisal checklist resource', function () {
 
 });
 
-it('it shows appraisal checklist list', function () {
+it('it shows appraisal checklist list', function (): void {
     // Arrange
     $appraisals = createAppraisalChecklists(count: 10);
     logInAsUserWithRole();

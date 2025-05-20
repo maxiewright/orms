@@ -100,7 +100,7 @@ class OfficerResource extends Resource
                         'category' => ($record->job) ? $record->job->category->id : '',
                         'job_id' => $record->job_id,
                     ])
-                    ->using(function (Serviceperson $record, array $data) {
+                    ->using(function (Serviceperson $record, array $data): void {
                         $record->update([
                             'employment_status_id' => $data['employment_status_id'],
                             'battalion_id' => $data['battalion_id'],
@@ -115,7 +115,7 @@ class OfficerResource extends Resource
                     Tables\Actions\BulkAction::make('Administrate Selected')
                         ->icon('heroicon-o-clipboard-document-check')
                         ->form(self::administrationForm())
-                        ->action(function (Collection $records, array $data) {
+                        ->action(function (Collection $records, array $data): void {
                             foreach ($records as $record) {
                                 $record->update([
                                     'employment_status_id' => $data['employment_status_id'],

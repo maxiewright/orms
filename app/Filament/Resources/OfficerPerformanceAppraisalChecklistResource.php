@@ -106,7 +106,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Toggle::make('has_company_commander')
                         ->label('Does this officer have a company commander?')
                         ->reactive()
-                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state): void {
                             if (! $state) {
                                 $set('has_company_commander_comments', false);
                                 $set('has_company_commander_signature', false);
@@ -116,7 +116,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Does it have company commander comments?')
                         ->hidden(fn (\Filament\Forms\Get $get) => $get('has_company_commander') === false)
                         ->reactive()
-                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state): void {
                             if (! $state) {
                                 $set('has_company_commander_signature', false);
                             }
@@ -159,7 +159,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                     Forms\Components\Toggle::make('has_unit_commander')
                         ->label('Does this officer have a unit commander or SSO?')
                         ->reactive()
-                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state): void {
                             if (! $state) {
                                 $set('has_unit_commander_comments', false);
                                 $set('has_unit_commander_signature', false);
@@ -170,7 +170,7 @@ class OfficerPerformanceAppraisalChecklistResource extends Resource
                         ->label('Does it have unit commander or SSO comments?')
                         ->hidden(fn (\Filament\Forms\Get $get) => $get('has_unit_commander') === false)
                         ->reactive()
-                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state): void {
                             if (! $state) {
                                 $set('has_unit_commander_signature', false);
                             }

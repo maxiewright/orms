@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Actions\FilamentPasswordAction;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Coolsam\Modules\ModulesPlugin;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step as WizardStep;
 use Filament\Http\Middleware\Authenticate;
@@ -69,6 +70,7 @@ class AdminPanelProvider extends PanelProvider
                 OnboardMiddleware::class,
             ])
             ->plugins([
+                ModulesPlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 FilamentShieldPlugin::make(),
                 BreezyCore::make()->myProfile(),
@@ -100,7 +102,7 @@ class AdminPanelProvider extends PanelProvider
                                         ->same('new_password')
                                         ->required(),
                                 ]),
-                            ])->wizardSubmitFormUsing(function (array $state, Wizard $livewire) {
+                            ])->wizardSubmitFormUsing(function (array $state, Wizard $livewire): void {
                                 (new FilamentPasswordAction)->update($state, $livewire);
                             }),
                     ])->completeBeforeAccess()),

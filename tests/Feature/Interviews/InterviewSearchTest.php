@@ -9,18 +9,18 @@ use App\Models\Serviceperson;
 
 use function Pest\Livewire\livewire;
 
-beforeEach(function () {
+beforeEach(function (): void {
     logInAsUserWithRole();
 });
 
-it('can searched for by number, first_name, middle_name and last_name', function () {
+it('can searched for by number, first_name, middle_name and last_name', function (): void {
     // Arrange
 
     // Act and Assert
 
 })->todo();
 
-it('can be filtered by serviceperson rank', function () {
+it('can be filtered by serviceperson rank', function (): void {
     // Arrange
     $interviews = Interview::factory()->count(10)->pending()
         ->has(Serviceperson::factory()->enlisted())
@@ -39,7 +39,7 @@ it('can be filtered by serviceperson rank', function () {
         ->assertCanNotSeeTableRecords($servicepeople->where('rank_id', '!=', $rank));
 });
 
-it('can be filtered by interview', function (string $name, string $field, int $filter) {
+it('can be filtered by interview', function (string $name, string $field, int $filter): void {
     // Arrange
     $interviews = Interview::factory()->count(10)
         ->pending()->seen()

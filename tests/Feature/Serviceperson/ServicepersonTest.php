@@ -9,11 +9,11 @@ use Filament\Tables\Actions\ViewAction;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
-beforeEach(function () {
+beforeEach(function (): void {
     logInAsUserWithRole();
 });
 
-it('can list servicepeople', function () {
+it('can list servicepeople', function (): void {
     $officer = Serviceperson::factory()->officer()->create();
     $enlisted = Serviceperson::factory()->enlisted()->create();
 
@@ -26,7 +26,7 @@ it('can list servicepeople', function () {
 
 });
 
-it('it displays the view page table record is clicked', function () {
+it('it displays the view page table record is clicked', function (): void {
     // Arrange
     $serviceperson = Serviceperson::factory()->officer()->create();
 
@@ -38,7 +38,7 @@ it('it displays the view page table record is clicked', function () {
 
 });
 
-it('shows the serviceperson', function () {
+it('shows the serviceperson', function (): void {
     // Arrange
     $serviceperson = Serviceperson::factory()->officer()->create();
 

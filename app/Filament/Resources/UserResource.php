@@ -34,7 +34,7 @@ class UserResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->reactive()
-                    ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                    ->afterStateUpdated(function (\Filament\Forms\Set $set, $state): void {
                         $serviceperson = Serviceperson::query()->find($state);
                         $userName = $serviceperson->number.
                             Str::lower($serviceperson->last_name).

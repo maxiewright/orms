@@ -3,7 +3,7 @@
 use App\Models\Serviceperson;
 use App\Models\User;
 
-beforeEach(function () {
+beforeEach(function (): void {
 
     $serviceperson = Serviceperson::factory()
         ->officer()
@@ -14,7 +14,7 @@ beforeEach(function () {
 
 });
 
-it('does not allow user to view dashboard if password is not changed', function () {
+it('does not allow user to view dashboard if password is not changed', function (): void {
 
     logInAsUserWithRole()->update([
         'password_changed_at' => null,
@@ -24,7 +24,7 @@ it('does not allow user to view dashboard if password is not changed', function 
         ->assertRedirect(route('filament.admin.filament.onboard.onboard'));
 });
 
-it('allows user to access the dashboard if password is changed', function () {
+it('allows user to access the dashboard if password is changed', function (): void {
     $this->actingAs($this->user);
 
     $this->get(route('filament.admin.filament.onboard.onboard'))->assertSuccessful();
