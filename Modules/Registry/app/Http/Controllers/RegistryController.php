@@ -5,7 +5,7 @@ namespace Modules\Registry\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class RegistryController extends Controller
+class   RegistryController extends Controller
 {
     /**
      * Display a listing of the resource.

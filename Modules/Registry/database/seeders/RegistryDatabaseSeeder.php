@@ -11,6 +11,10 @@ class RegistryDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            IndexGroupSeeder::class,
+            IndexSubGroupSeeder::class,
+            IndexSubjectSeeder::class,
+        ]);
     }
 }

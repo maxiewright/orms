@@ -2,8 +2,9 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\GoogleDriveServiceProvider::class,
     App\Providers\FilamentServiceProvider::class,
-    \BezhanSalleh\FilamentShield\FilamentShieldServiceProvider::class
+    App\Providers\Filament\AdminPanelProvider::class,
+    App\Providers\Filament\RegistryPanelProvider::class,
+    App\Providers\GoogleDriveServiceProvider::class,
+    BezhanSalleh\FilamentShield\FilamentShieldServiceProvider::class,
 ];

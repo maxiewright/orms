@@ -1,0 +1,32 @@
+feat(Registry): Implement Correspondence Management System
+
+This commit implements a comprehensive Correspondence Management System within the Registry module, including:
+
+- Create database migrations for correspondence tables and related entities
+- Implement Eloquent models with proper relationships:
+  - Correspondence
+  - CorrespondenceRecipient
+  - CorrespondenceAttachment
+  - CorrespondenceReferences
+  - CorrespondenceRouting
+  - CorrespondenceDispatchManifest
+  - CorrespondenceDispatch
+  - Tag
+
+- Add factory classes for all models to support testing
+- Implement enums with FilamentPHP support (HasLabel, HasIcon, HasColor, HasDescription):
+  - CorrespondenceType
+  - CorrespondenceStatus
+  - CorrespondencePriority
+  - CorrespondenceClassification
+  - CorrespondenceAttachmentType
+  - CorrespondenceRecipientType
+  - CorrespondenceReferenceType
+  - CorrespondencePhysicalCondition
+  - CorrespondenceDispatchMethod
+  - CorrespondenceDispatchManifestStatus
+  - CorrespondenceDispatchStatus
+  - CorrespondenceRoutingStatus
+  - CorrespondenceRoutingActionOutcome
+
+This system provides a complete solution for tracking, routing, and managing correspondence within the organization, with support for physical and digital documents, attachments, and dispatch management.

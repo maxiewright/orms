@@ -17,7 +17,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(
     RefreshDatabase::class,
     Tests\TestCase::class
-)->in('Feature', 'Unit');
+)->in('Feature', 'Unit', '../Modules/*/Tests/*');
 
 /*
 |--------------------------------------------------------------------------

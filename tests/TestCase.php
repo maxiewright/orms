@@ -16,6 +16,7 @@ abstract class TestCase extends BaseTestCase
         $this->artisan('shield:seeder');
 
         $user = User::find(1);
+
         $this->actingAs($user);
 
         $this->artisan('shield:super-admin', ['--user' => 1]);
