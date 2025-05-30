@@ -17,7 +17,7 @@ abstract class RegistryTestCase extends BaseTestCase
         parent::setUp();
 
         // Modify the users table to make serviceperson_number nullable for testing
-        Schema::table('users', function ($table) {
+        Schema::table('users', function ($table): void {
             $table->foreignId('serviceperson_number')->nullable()->change();
         });
 

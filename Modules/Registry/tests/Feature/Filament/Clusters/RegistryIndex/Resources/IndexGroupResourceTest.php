@@ -15,12 +15,12 @@ uses(RegistryTestCase::class);
 //     logInAsUserWithRole();
 // });
 
-it('can render index page', function () {
+it('can render index page', function (): void {
     get(IndexGroupResource::getUrl('index'))
         ->assertSuccessful();
 });
 
-it('can list index groups', function () {
+it('can list index groups', function (): void {
     // Create some index groups
     $groups = IndexGroup::factory()->count(5)->create();
 
@@ -29,7 +29,7 @@ it('can list index groups', function () {
         ->assertCanSeeTableRecords($groups);
 });
 
-it('can create an index group', function () {
+it('can create an index group', function (): void {
     $newGroup = [
         'name' => 'Test Group',
     ];
@@ -45,7 +45,7 @@ it('can create an index group', function () {
     ]);
 });
 
-it('can edit an index group', function () {
+it('can edit an index group', function (): void {
     // Create a group
     $group = IndexGroup::factory()->create();
 
@@ -66,7 +66,7 @@ it('can edit an index group', function () {
     ]);
 });
 
-it('validates required fields when creating a group', function () {
+it('validates required fields when creating a group', function (): void {
     livewire(IndexGroupResource\Pages\CreateIndexGroup::class)
         ->fillForm([
             'name' => '',

@@ -96,14 +96,14 @@ trait HasForms
                 Select::make('division')
                     ->options(Division::query()->pluck('name', 'id'))
                     ->live()
-                    ->afterStateUpdated(fn (Set $set) => $set('city_id', null)),
+                    ->afterStateUpdated(fn (Set $set): mixed => $set('city_id', null)),
                 Select::make('city_id')
                     ->label('City')
                     ->placeholder(fn (Get $get): string => $get('division')
                         ? 'Select City'
                         : 'Select a division first'
                     )
-                    ->searchable(fn (Get $get) => $get('division'))
+                    ->searchable(fn (Get $get): mixed => $get('division'))
                     ->options(fn (Get $get): Collection => City::query()
                         ->where('division_id', $get('division'))
                         ->pluck('name', 'id'))

@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InterviewStatus extends Model
 {
-    use SluggableByName, SoftDeletes;
-
+    use SluggableByName;
+    use SoftDeletes;
     public $guarded = [];
 
     public function interviews(): HasMany
@@ -23,7 +23,7 @@ class InterviewStatus extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucfirst($value),
+            get: fn (string $value): string => ucfirst($value),
         );
     }
 }

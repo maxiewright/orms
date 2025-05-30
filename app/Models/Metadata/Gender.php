@@ -11,8 +11,8 @@ use Spatie\Sluggable\SlugOptions;
 
 class Gender extends Model
 {
-    use HasSlug, SoftDeletes;
-
+    use HasSlug;
+    use SoftDeletes;
     public $guarded = [];
 
     public function getSlugOptions(): SlugOptions

@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('index_groups', function (Blueprint $table) {
+        Schema::create('index_groups', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->timestamps();
         });
 
-        Schema::create('index_sub_groups', function (Blueprint $table) {
+        Schema::create('index_sub_groups', function (Blueprint $table): void {
             $table->id();
             $table->string('reference_number')->unique();
             $table->string('name')->unique();
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('index_subjects', function (Blueprint $table) {
+        Schema::create('index_subjects', function (Blueprint $table): void {
             $table->id();
             $table->string('reference_number')->unique();
             $table->foreignIdFor(IndexSubGroup::class)->constrained();

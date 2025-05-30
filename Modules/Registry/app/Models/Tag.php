@@ -10,8 +10,8 @@ use Modules\Registry\Database\Factories\TagFactory;
 
 class Tag extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      */

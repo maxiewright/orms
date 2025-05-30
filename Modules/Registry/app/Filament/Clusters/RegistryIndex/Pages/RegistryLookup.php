@@ -83,7 +83,7 @@ class RegistryLookup extends Page implements HasForms
                             ->options(IndexGroup::pluck('name', 'id'))
                             ->searchable()
                             ->live()
-                            ->afterStateUpdated(function () {
+                            ->afterStateUpdated(function (): void {
                                 $this->indexSubGroup = null;
                                 $this->indexSubject = null;
                                 $this->showReferenceNumber = false;
@@ -102,8 +102,8 @@ class RegistryLookup extends Page implements HasForms
                             })
                             ->searchable()
                             ->live()
-                            ->visible(fn (callable $get) => $get('indexGroup') !== null)
-                            ->afterStateUpdated(function (callable $get) {
+                            ->visible(fn (callable $get): bool => $get('indexGroup') !== null)
+                            ->afterStateUpdated(function (callable $get): void {
                                 $this->indexSubject = null;
 
                                 $subGroupId = $get('indexSubGroup');
@@ -157,7 +157,7 @@ class RegistryLookup extends Page implements HasForms
 
                                 return $subjectsCount > 0;
                             })
-                            ->afterStateUpdated(function (callable $get) {
+                            ->afterStateUpdated(function (callable $get): void {
                                 $subjectId = $get('indexSubject');
                                 if (! $subjectId) {
                                     return;
@@ -172,15 +172,15 @@ class RegistryLookup extends Page implements HasForms
 
                         TextInput::make('referenceNumber')
                             ->label('Reference Number')
-                            ->default(fn () => $this->referenceNumber)
+                            ->default(fn (): ?string => $this->referenceNumber)
                             ->disabled()
                             ->placeholder('Select a group, subgroup, and subject to see the reference number')
-                            ->visible(fn () => $this->showReferenceNumber)
+                            ->visible(fn (): bool => $this->showReferenceNumber)
                             ->suffixAction(
                                 ComponentAction::make('copy')
                                     ->icon('heroicon-m-clipboard')
                                     ->label('Copy Reference Number')
-                                    ->action(function ($livewire, $state) {
+                                    ->action(function ($livewire, $state): void {
                                         $referenceNumber = json_encode($state);
 
                                         $livewire->js("window.navigator.clipboard.writeText($referenceNumber)");
@@ -209,7 +209,7 @@ class RegistryLookup extends Page implements HasForms
                             ->placeholder('Enter reference number')
                             ->required()
                             ->live()
-                            ->afterStateUpdated(function ($state) {
+                            ->afterStateUpdated(function ($state): void {
                                 $trimmedState = trim((string) $state);
                                 if (strlen($trimmedState) >= 2) {
                                     $this->searchReferenceNumber = $trimmedState;
@@ -227,7 +227,7 @@ class RegistryLookup extends Page implements HasForms
                                 'results' => $this->searchResults,
                                 'showResults' => $this->showReverseLookupResults,
                             ])
-                            ->visible(fn () => $this->showReverseLookupResults),
+                            ->visible(fn (): bool => $this->showReverseLookupResults),
                     ])
                     ->extraAttributes(['class' => 'mt-8']),
 

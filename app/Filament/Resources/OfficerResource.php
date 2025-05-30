@@ -95,7 +95,7 @@ class OfficerResource extends Resource
                     ->icon('heroicon-o-clipboard-document-check')
                     ->label('Administrate')
                     ->modalHeading(fn (Serviceperson $record): string => "Administrate {$record->military_name}")
-                    ->fillForm(fn (Serviceperson $record) => [
+                    ->fillForm(fn (Serviceperson $record): array => [
                         'company_id' => $record->company_id,
                         'category' => ($record->job) ? $record->job->category->id : '',
                         'job_id' => $record->job_id,

@@ -16,12 +16,12 @@ uses(RegistryTestCase::class);
 //     logInAsUserWithRole();
 // });
 
-it('can render the registry lookup page', function () {
+it('can render the registry lookup page', function (): void {
     get(RegistryLookup::getUrl())
         ->assertSuccessful();
 });
 
-it('can perform dynamic lookup', function () {
+it('can perform dynamic lookup', function (): void {
     // Create test data
     $group = IndexGroup::factory()->create(['name' => 'Test Group']);
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create([
@@ -55,7 +55,7 @@ it('can perform dynamic lookup', function () {
     $component->assertSee($subject->reference_number);
 });
 
-it('shows subgroup reference number when subgroup is selected', function () {
+it('shows subgroup reference number when subgroup is selected', function (): void {
     // Create test data
     $group = IndexGroup::factory()->create();
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create([
@@ -69,7 +69,7 @@ it('shows subgroup reference number when subgroup is selected', function () {
         ->assertSee($subgroup->reference_number);
 });
 
-it('can perform reverse lookup by reference number', function () {
+it('can perform reverse lookup by reference number', function (): void {
     // Create test data
     $group = IndexGroup::factory()->create(['name' => 'Test Group']);
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create([
@@ -95,13 +95,13 @@ it('can perform reverse lookup by reference number', function () {
         ->assertSee('Test Group');
 });
 
-it('shows no results message when no matches found in reverse lookup', function () {
+it('shows no results message when no matches found in reverse lookup', function (): void {
     livewire(RegistryLookup::class)
         ->fillForm(['reverseLookupData.searchReferenceNumber' => 'nonexistent/reference'])
         ->assertSee('No matching records found');
 });
 
-it('can copy reference number to clipboard', function () {
+it('can copy reference number to clipboard', function (): void {
     // This test would normally use browser testing to verify clipboard functionality
     // Since we can't test clipboard operations directly in PHPUnit, we'll just verify
     // that the copy button is present

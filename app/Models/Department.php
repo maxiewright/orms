@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use HasServicepeople, SoftDeletes;
-
+    use HasServicepeople;
+    use SoftDeletes;
     public $guarded = [];
 
     public function companies(): BelongsToMany

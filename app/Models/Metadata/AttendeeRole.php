@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AttendeeRole extends Model
 {
-    use SluggableByName, SoftDeletes;
-
+    use SluggableByName;
+    use SoftDeletes;
     public $guarded = [];
 }

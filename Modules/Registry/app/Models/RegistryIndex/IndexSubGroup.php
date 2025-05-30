@@ -15,8 +15,8 @@ use Modules\Registry\Database\Factories\RegirstryIndex\IndexSubGroupFactory;
 
 class IndexSubGroup extends Model
 {
-    use HasFactory, Sluggable;
-
+    use HasFactory;
+    use Sluggable;
     /**
      * The attributes that are mass assignable.
      */
@@ -44,7 +44,7 @@ class IndexSubGroup extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => ucfirst($value),
+            get: fn($value): string => ucfirst($value),
         );
     }
 

@@ -15,8 +15,8 @@ use Modules\Registry\Database\Factories\RegirstryIndex\IndexSubjectFactory;
 
 class IndexSubject extends Model
 {
-    use HasFactory, Sluggable;
-
+    use HasFactory;
+    use Sluggable;
     /**
      * The attributes that are mass assignable.
      */
@@ -51,7 +51,7 @@ class IndexSubject extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => ucfirst($value),
+            get: fn($value): string => ucfirst($value),
         );
     }
 

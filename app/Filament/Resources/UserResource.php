@@ -29,7 +29,7 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Select::make('serviceperson_number')
                     ->relationship('serviceperson', 'number')
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->military_name}")
                     ->searchable(['number', 'first_name', 'last_name'])
                     ->required()
                     ->unique(ignoreRecord: true)

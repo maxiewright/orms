@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaritalStatus extends Model
 {
-    use HasServicepeople, SluggableByName, SoftDeletes;
-
+    use HasServicepeople;
+    use SluggableByName;
+    use SoftDeletes;
     public $guarded = [];
 }

@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DivisionType extends Model
 {
-    use SluggableByName, SoftDeletes;
-
+    use SluggableByName;
+    use SoftDeletes;
     public $guarded = [];
 
     public function divisions(): HasMany

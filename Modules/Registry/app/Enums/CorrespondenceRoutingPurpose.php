@@ -37,6 +37,7 @@ enum CorrespondenceRoutingPurpose: string implements HasLabel, HasIcon, HasColor
     {
         // TODO: Implement getIcon() method.
     }
+
     public function getColor(): string|array|null
     {
         // TODO: Implement getColor() method.

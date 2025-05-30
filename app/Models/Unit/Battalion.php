@@ -12,8 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Battalion extends Model
 {
-    use HasServicepeople, SluggableByName, SoftDeletes;
-
+    use HasServicepeople;
+    use SluggableByName;
+    use SoftDeletes;
     public $guarded = [];
 
     protected $with = [

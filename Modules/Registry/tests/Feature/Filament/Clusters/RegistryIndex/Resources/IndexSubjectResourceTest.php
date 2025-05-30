@@ -15,12 +15,12 @@ uses(RegistryTestCase::class);
 //     logInAsUserWithRole();
 // });
 
-it('can render index page', function () {
+it('can render index page', function (): void {
     $this->get(IndexSubjectResource::getUrl('index'))
         ->assertSuccessful();
 });
 
-it('can list index subjects', function () {
+it('can list index subjects', function (): void {
     // Create some index subjects
     $subjects = IndexSubject::factory()->count(5)->create();
 
@@ -29,7 +29,7 @@ it('can list index subjects', function () {
         ->assertCanSeeTableRecords($subjects);
 });
 
-it('can create an index subject', function () {
+it('can create an index subject', function (): void {
     // Create a group and subgroup first
     $group = IndexGroup::factory()->create();
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create();
@@ -54,7 +54,7 @@ it('can create an index subject', function () {
     ]);
 });
 
-it('can edit an index subject', function () {
+it('can edit an index subject', function (): void {
     // Create a subject
     $subject = IndexSubject::factory()->create();
 
@@ -77,7 +77,7 @@ it('can edit an index subject', function () {
     ]);
 });
 
-it('validates required fields when creating a subject', function () {
+it('validates required fields when creating a subject', function (): void {
     livewire(IndexSubjectResource\Pages\CreateIndexSubject::class)
         ->fillForm([
             'name' => '',

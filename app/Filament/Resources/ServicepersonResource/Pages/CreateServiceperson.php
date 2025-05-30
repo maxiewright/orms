@@ -10,8 +10,8 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateServiceperson extends CreateRecord
 {
-    use CreateRecord\Concerns\HasWizard, RedirectToIndex;
-
+    use CreateRecord\Concerns\HasWizard;
+    use RedirectToIndex;
     protected static string $resource = ServicepersonResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array

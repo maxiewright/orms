@@ -12,11 +12,11 @@ trait Sluggable
      */
     protected static function bootSluggable(): void
     {
-        static::creating(function (Model $model) {
+        static::creating(function (Model $model): void {
             $model->generateSlug();
         });
 
-        static::updating(function (Model $model) {
+        static::updating(function (Model $model): void {
             if ($model->isDirty('name')) {
                 $model->generateSlug();
             }

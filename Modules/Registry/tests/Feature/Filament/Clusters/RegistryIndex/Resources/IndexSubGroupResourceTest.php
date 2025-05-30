@@ -9,12 +9,12 @@ use Modules\Registry\Tests\TestCase\RegistryTestCase;
 
 uses(RegistryTestCase::class);
 
-it('can render index page', function () {
+it('can render index page', function (): void {
     $this->get(IndexSubGroupResource::getUrl('index'))
         ->assertSuccessful();
 });
 
-it('can list index subgroups', function () {
+it('can list index subgroups', function (): void {
     // Create some index subgroups
     $subgroups = IndexSubGroup::factory()->count(5)->create();
 
@@ -23,7 +23,7 @@ it('can list index subgroups', function () {
         ->assertCanSeeTableRecords($subgroups);
 });
 
-it('can create an index subgroup', function () {
+it('can create an index subgroup', function (): void {
     // Create a group first
     $group = IndexGroup::factory()->create();
 
@@ -46,7 +46,7 @@ it('can create an index subgroup', function () {
     ]);
 });
 
-it('can edit an index subgroup', function () {
+it('can edit an index subgroup', function (): void {
     // Create a subgroup
     $subgroup = IndexSubGroup::factory()->create();
 
@@ -69,7 +69,7 @@ it('can edit an index subgroup', function () {
     ]);
 });
 
-it('validates required fields when creating a subgroup', function () {
+it('validates required fields when creating a subgroup', function (): void {
     livewire(IndexSubGroupResource\Pages\CreateIndexSubGroup::class)
         ->fillForm([
             'name' => '',

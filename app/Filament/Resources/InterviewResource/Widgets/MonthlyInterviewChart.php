@@ -62,19 +62,19 @@ class MonthlyInterviewChart extends ApexChartWidget
             'series' => [
                 [
                     'name' => 'Seen',
-                    'data' => $seen->map(fn (TrendValue $value) => $value->aggregate),
+                    'data' => $seen->map(fn (TrendValue $value): mixed => $value->aggregate),
                 ],
                 [
                     'name' => 'Pending',
-                    'data' => $pending->map(fn (TrendValue $value) => $value->aggregate),
+                    'data' => $pending->map(fn (TrendValue $value): mixed => $value->aggregate),
                 ],
                 [
                     'name' => 'Cancelled',
-                    'data' => $cancelled->map(fn (TrendValue $value) => $value->aggregate),
+                    'data' => $cancelled->map(fn (TrendValue $value): mixed => $value->aggregate),
                 ],
             ],
             'xaxis' => [
-                'categories' => $data->map(fn (TrendValue $value) => Carbon::make($value->date)->format('M')),
+                'categories' => $data->map(fn (TrendValue $value): string => Carbon::make($value->date)->format('M')),
                 'labels' => [
                     'style' => [
                         'fontFamily' => 'inherit',

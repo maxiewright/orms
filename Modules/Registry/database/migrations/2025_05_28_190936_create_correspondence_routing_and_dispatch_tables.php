@@ -16,7 +16,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('correspondence_routings', function (Blueprint $table) {
+        Schema::create('correspondence_routings', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Correspondence::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(CorrespondenceRouting::class, 'parent_id')->nullable()->constrained();
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('correspondence_dispatch_manifests', function (Blueprint $table) {
+        Schema::create('correspondence_dispatch_manifests', function (Blueprint $table): void {
             $table->id();
             $table->string('reference_number')->unique();
             $table->morphs('destination'); // Morphs to allow flexibility in destination types
@@ -65,7 +65,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('correspondence_dispatches', function (Blueprint $table) {
+        Schema::create('correspondence_dispatches', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(CorrespondenceRecipient::class)->constrained();
             $table->string('method', 50)->index();

@@ -62,7 +62,7 @@ trait HasServiceData
         $rank = $this->getAbbreviatedRank();
 
         return Attribute::make(
-            get: fn () => ($this->rank_id <= RankEnum::E6->value)
+            get: fn (): string => ($this->rank_id <= RankEnum::E6->value)
                 ? $this->number.' '.$rank.' '.$this->last_name.' '.substr($this->first_name, 0, 1)
                 : $this->number.' '.$rank.' '.substr($this->first_name, 0, 1).' '.$this->last_name
         );
@@ -73,7 +73,7 @@ trait HasServiceData
         $rank = $this->getRank();
 
         return Attribute::make(
-            get: fn () => ($this->rank_id <= RankEnum::E6->value)
+            get: fn (): string => ($this->rank_id <= RankEnum::E6->value)
                 ? $this->number.' '.$rank.' '.$this->last_name.', '.$this->first_name
                 : $this->number.' '.$rank.' '.$this->first_name.' '.$this->last_name
         );

@@ -7,7 +7,7 @@ use Modules\Registry\Tests\TestCase\RegistryTestCase;
 
 uses(RegistryTestCase::class);
 
-it('can create an index group', function () {
+it('can create an index group', function (): void {
     $group = IndexGroup::factory()->create();
 
     $this->assertDatabaseHas('index_groups', [
@@ -16,7 +16,7 @@ it('can create an index group', function () {
     ]);
 });
 
-it('can create an index subgroup', function () {
+it('can create an index subgroup', function (): void {
     $group = IndexGroup::factory()->create();
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create();
 
@@ -27,7 +27,7 @@ it('can create an index subgroup', function () {
     ]);
 });
 
-it('can create an index subject', function () {
+it('can create an index subject', function (): void {
     $group = IndexGroup::factory()->create();
     $subgroup = IndexSubGroup::factory()->forGroup($group)->create();
     $subject = IndexSubject::factory()->forSubGroup($subgroup)->create();

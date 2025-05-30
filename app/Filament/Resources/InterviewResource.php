@@ -79,7 +79,7 @@ class InterviewResource extends Resource
                                 name: 'servicepeople',
                                 titleAttribute: 'number',
                             )
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->military_name}")
                             ->searchable(['number', 'first_name', 'middle_name', 'last_name'])
                             ->required(),
                     ]),
@@ -110,7 +110,7 @@ class InterviewResource extends Resource
                         Select::make('requested_by')
                             ->relationship('requestedBy', 'number',
                                 fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->military_name}")
                             ->searchable(['number', 'first_name', 'last_name'])
                             ->required(),
                         DatePicker::make('requested_at')
@@ -139,7 +139,7 @@ class InterviewResource extends Resource
                         Select::make('serviceperson_number')
                             ->label('Attendee (s)')
                             ->relationship('serviceperson', 'number')
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->military_name}")
                             ->searchable(['number', 'first_name', 'last_name']),
                         Select::make('attendee_role_id')
                             ->label('Role')
@@ -155,7 +155,7 @@ class InterviewResource extends Resource
                         Select::make('seen_by')
                             ->relationship('seenBy', 'number',
                                 fn (Builder $query) => $query->where('rank_id', '>=', RankEnum::O1))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->military_name}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->military_name}")
                             ->searchable(['number', 'first_name', 'last_name']),
                         DatePicker::make('seen_at')
                             ->format('d M Y')

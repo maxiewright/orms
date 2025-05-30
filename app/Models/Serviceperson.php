@@ -19,7 +19,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Serviceperson extends Model
 {
-    use HasBasicInformation, HasContactInformation, HasFactory, HasInterview, HasServiceData;
+    use HasBasicInformation;
+    use HasContactInformation;
+    use HasFactory;
+    use HasInterview;
+    use HasServiceData;
     use HasForms;
 
     protected $primaryKey = 'number';
@@ -73,7 +77,7 @@ class Serviceperson extends Model
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->middle_name)
+            get: fn (): string => ($this->middle_name)
                 ? $this->first_name.' '.$this->middle_name.' '.$this->last_name
                 : $this->first_name.' '.$this->last_name
         );

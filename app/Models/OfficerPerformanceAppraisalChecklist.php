@@ -14,8 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfficerPerformanceAppraisalChecklist extends Model
 {
-    use HasCompletionElements, HasCompletionScopes, HasFactory;
-
+    use HasCompletionElements;
+    use HasCompletionScopes;
+    use HasFactory;
     protected $guarded = [];
 
     protected function casts(): array
@@ -61,7 +62,7 @@ class OfficerPerformanceAppraisalChecklist extends Model
     public function status(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->completed() ? 'Completed' : 'Incomplete'
+            get: fn (): string => $this->completed() ? 'Completed' : 'Incomplete'
         );
     }
 

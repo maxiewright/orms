@@ -92,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
                         'Maxe Wright' => 'maxie.wright@ttdf.mil.tt',
                     ]),
                 FilamentOnboard::make()
-                    ->addTrack(fn () => Track::make([
+                    ->addTrack(fn (): \RalphJSmit\Filament\Onboard\Track => Track::make([
                         Step::make(name: 'Change Password', identifier: 'widget::change-password')
                             ->description('Change your password before continuing to your workspace')
                             ->completeIf(fn () => auth()->user()->passwordChanged())

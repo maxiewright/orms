@@ -15,8 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Interview extends Model
 {
-    use HasFactory, HasInterviewStatus, SoftDeletes;
-
+    use HasFactory;
+    use HasInterviewStatus;
+    use SoftDeletes;
     public $guarded = [];
 
     protected $with = [

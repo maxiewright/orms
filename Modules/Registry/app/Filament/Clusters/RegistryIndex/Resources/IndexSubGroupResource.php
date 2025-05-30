@@ -19,6 +19,7 @@ class IndexSubGroupResource extends Resource
     protected static ?string $model = IndexSubGroup::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $cluster = RegistryIndex::class;
 
     public static function getModelLabel(): string

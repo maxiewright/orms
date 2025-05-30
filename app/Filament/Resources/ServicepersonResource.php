@@ -51,7 +51,7 @@ class ServicepersonResource extends Resource
                     ->sortable(['rank_id', 'number'], query: fn ($query) => $query
                         ->orderBy('rank_id', 'desc')
                         ->orderBy('number'))
-                    ->searchable(query: fn (Builder $query, $search) => Serviceperson::militaryNameSearch($query, $search))
+                    ->searchable(query: fn (Builder $query, $search): \Illuminate\Database\Eloquent\Builder => Serviceperson::militaryNameSearch($query, $search))
                     ->label('Name'),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date('d M Y'),

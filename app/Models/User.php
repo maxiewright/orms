@@ -16,12 +16,15 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use HasRoles;
+    use Notifiable;
     use HasPageShield;
 
     protected static function booted()
     {
-        static::creating(fn (User $user) => [
+        static::creating(fn (User $user): array => [
             $user->password = bcrypt('Password1'),
         ]);
     }

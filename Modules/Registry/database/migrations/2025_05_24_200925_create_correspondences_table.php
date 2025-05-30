@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('correspondences', function (Blueprint $table) {
+        Schema::create('correspondences', function (Blueprint $table): void {
             $table->id();
             $table->string('file_path')->nullable()->unique();
             $table->string('reference_number')->unique();
@@ -57,7 +57,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('correspondence_recipients', function (Blueprint $table) {
+        Schema::table('correspondence_recipients', function (Blueprint $table): void {
             $table->id();
 
             $table->foreignIdFor(Correspondence::class)
@@ -82,7 +82,7 @@ return new class extends Migration
 
         });
 
-        Schema::create('correspondence_references', function (Blueprint $table) {
+        Schema::create('correspondence_references', function (Blueprint $table): void {
             $table->id();
 
             $table->foreignIdFor(Correspondence::class, 'source_correspondence_id')
@@ -100,7 +100,7 @@ return new class extends Migration
             ], 'correspondence_references_unique');
         });
 
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
@@ -109,7 +109,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('correspondence_tags', function (Blueprint $table) {
+        Schema::create('correspondence_tags', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Tag::class)->constrained();
             $table->foreignIdFor(Correspondence::class)->constrained();
@@ -117,7 +117,7 @@ return new class extends Migration
             $table->unique(['tag_id', 'correspondence_id'], 'correspondence_tags_unique');
         });
 
-        Schema::create('correspondence_attachments', function (Blueprint $table) {
+        Schema::create('correspondence_attachments', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Correspondence::class)
                 ->constrained()
